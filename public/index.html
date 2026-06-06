@@ -1,119 +1,308 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Plataforma Expert - Monitoramento</title>
+    <title>ExpeRT - Plataforma de Monitoramento</title>
     <link rel="stylesheet" href="style.css" />
-    <!-- Biblioteca Chart.js adicionada para gerar graficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Plataforma Expert - Monitoramento</h1>
+            <div class="header-content">
+                <!-- Logo estilizada com destaque na sigla RT -->
+                <div class="logo">
+                    <h1>Expe<span>RT</span></h1>
+                    <p>plataforma</p>
+                </div>
+                <!-- Navegação entre telas (usar dispositivos, tutoriais, sobre) -->
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active">USAR DISPOSITIVOS</a></li>
+                        <li><a href="#">TUTORIAIS</a></li>
+                        <li><a href="#">SOBRE NÓS</a></li>
+                    </ul>
+                </nav>
+                <!-- Botão para alternar entre tema claro/escuro -->
+                <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+                    ◑
+                </button>
+            </div>
+
+            <!-- Controle de amostragem (intervalo de coleta) com botão voltar -->
+            <div id="samplingWrapper" class="sampling-control" style="display:none;">
+                <div class="sampling-compact">
+                    <button class="back-ball-btn" onclick="closeView()" aria-label="Voltar">
+                        &lt;
+                    </button>
+                    <span class="sampling-label">Amostragem:</span>
+                    <select id="samplingSelect" onchange="setSamplingInterval(Number(this.value))">
+                        <option value="0.1">0.1 s</option>
+                        <option value="0.5">0.5 s</option>
+                        <option value="1" selected>1 s</option>
+                        <option value="5">5 s</option>
+                        <option value="10">10 s</option>
+                    </select>
+                </div>
+            </div>
         </header>
 
-        <!-- Modal que aparece para escolher entre visualizacao em tabela ou grafico -->
-        <div class="modal" id="viewModal" aria-hidden="true">
-            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
-                <h3 id="viewModalTitle">Escolha o tipo de visualização</h3>
-                <button class="view-btn" onclick="selectView('table')">Tabela</button>
-                <button class="view-btn" onclick="selectView('graph')">Gráfico</button>
-            </div>
-        </div>
-
-        <!-- Tela inicial com botoes para cada sensor (antes os botoes ficavam direto na tela principal) -->
-        <div class="main-menu" id="mainMenu" role="navigation" aria-label="Menu principal">
-            <button class="menu-btn" onclick="showMonitor('temperature')" aria-label="Temperatura">Temperatura</button>
-            <button class="menu-btn" onclick="showMonitor('distance')" aria-label="Distância">Distância</button>
-            <button class="menu-btn" onclick="showMonitor('oscillator')" aria-label="Oscilador">Oscilador</button>
-            <button class="menu-btn" onclick="showMonitor('light')" aria-label="Luminosidade">Luminosidade</button>
-        </div>
-
-        <!-- ========== TELA DE TEMPERATURA ========== -->
-        <div class="monitor-screen" id="temperatureScreen" style="display:none;">
-            <h2>Temperatura</h2>
-            <!-- Visualizacao tipo tabela: mostra o valor numerico grande -->
-            <div class="view-container table-view">
-                <div class="big-value"><span id="temperature">0.0</span>°C</div>
-            </div>
-            <!-- Visualizacao tipo grafico: usa Chart.js -->
-            <div class="view-container graph-view">
-                <div class="chart-wrapper" style="height:260px;">
-                    <canvas id="temperatureChart"></canvas>
+        <main class="main-content">
+            <!-- Tela inicial com dispositivos (cards com ícones e descrições) -->
+            <div class="main-menu" id="mainMenu">
+                <h2 class="page-title">Usar Dispositivos</h2>
+                <div class="devices-grid">
+                    <!-- Card para Temperatura -->
+                    <div class="device-card" onclick="showMonitor('temperature')">
+                        <div class="device-icon temperature-icon"></div>
+                        <h3>Temperatura</h3>
+                        <p>Monitoramento de temperatura em tempo real</p>
+                    </div>
+                    <!-- Card para Distância -->
+                    <div class="device-card" onclick="showMonitor('distance')">
+                        <div class="device-icon distance-icon"></div>
+                        <h3>Distância</h3>
+                        <p>Medição de distância com sensores</p>
+                    </div>
+                    <!-- Card para Oscilador (período) -->
+                    <div class="device-card" onclick="showMonitor('period')">
+                        <div class="device-icon oscillator-icon"></div>
+                        <h3>Oscilador</h3>
+                        <p>Análise de períodos oscilatórios</p>
+                    </div>
+                    <!-- Card para Luminosidade -->
+                    <div class="device-card" onclick="showMonitor('light')">
+                        <div class="device-icon light-icon"></div>
+                        <h3>Luminosidade</h3>
+                        <p>Percentual de luz</p>
+                    </div>
                 </div>
             </div>
-            <!-- Botoes de controle: Iniciar, Pausar, Reiniciar e Voltar ao menu -->
-            <div class="control-buttons">
-                <button class="start-btn" onclick="sendCommand('1')">Iniciar</button>
-                <button class="pause-btn" onclick="sendCommand('1p')">Pausar</button>
-                <button class="restart-btn" onclick="sendCommand('1r')">Reiniciar</button>
-                <button class="back-btn" onclick="showMenu()">Voltar</button>
-            </div>
-        </div>
 
-        <!-- ========== TELA DE DISTANCIA ========== -->
-        <div class="monitor-screen" id="distanceScreen" style="display:none;">
-            <h2>Distância</h2>
-            <div class="view-container table-view">
-                <div class="big-value"><span id="distance">0.0</span>cm</div>
-            </div>
-            <div class="view-container graph-view">
-                <div class="chart-wrapper" style="height:260px;">
-                    <canvas id="distanceChart"></canvas>
+            <!-- Modal ainda mantido (agora com ícone e botão fechar) -->
+            <div class="modal" id="viewModal" aria-hidden="true" style="display:none;">
+                <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+                    <button class="modal-close" aria-label="Fechar" onclick="closeModal()">×</button>
+                    <h3 id="viewModalTitle">Escolha o tipo de visualização</h3>
+                    <div class="modal-actions">
+                        <button class="view-btn" onclick="selectView('table')">
+                            <div class="view-icon table-icon"></div>
+                            Tabela
+                        </button>
+                        <button class="view-btn" onclick="selectView('graph')">
+                            <div class="view-icon graph-icon"></div>
+                            Gráfico
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="control-buttons">
-                <button class="start-btn" onclick="sendCommand('2')">Iniciar</button>
-                <button class="pause-btn" onclick="sendCommand('2p')">Pausar</button>
-                <button class="restart-btn" onclick="sendCommand('2r')">Reiniciar</button>
-                <button class="back-btn" onclick="showMenu()">Voltar</button>
-            </div>
-        </div>
 
-        <!-- ========== TELA DO OSCILADOR (PERIODO) ========== -->
-        <div class="monitor-screen" id="oscillatorScreen" style="display:none;">
-            <h2>Oscilador</h2>
-            <div class="view-container table-view">
-                <div class="big-value"><span id="period">0.0</span>ms</div>
-            </div>
-            <div class="view-container graph-view">
-                <div class="chart-wrapper" style="height:260px;">
-                    <canvas id="oscillatorChart"></canvas>
+            <!-- ========== TELA DE TEMPERATURA ========== -->
+            <div class="monitor-screen" id="temperatureScreen" style="display:none;">
+                <div class="screen-header">
+                    <div class="sensor-title">
+                        <h2>Temperatura</h2>
+                    </div>
+                    <!-- Abas para alternar entre tabela e gráfico (substitui o modal) -->
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
+                        <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                </div>
+
+                <!-- Visualização tipo tabela -->
+                <div class="view-container table-view active">
+                    <div class="big-value">
+                        <span id="temperature">0.0</span>
+                        <span class="unit">°C</span>
+                        <!-- Tempo decorrido exibido ao lado do valor -->
+                        <div class="time-display">Tempo: <span id="temperatureTime">00:00</span></div>
+                    </div>
+                </div>
+
+                <!-- Visualização tipo gráfico -->
+                <div class="view-container graph-view">
+                    <div class="chart-title-center">
+                        Temperatura
+                    </div>
+                    <!-- Controle de escala máxima do eixo Y -->
+                    <div class="chart-controls">
+                        <label for="temperatureScale">Escala Y:</label>
+                        <select id="temperatureScale" onchange="setYAxisMax('temperature', this.value)">
+                            <option value="20">20 °C</option>
+                            <option value="50">50 °C</option>
+                            <option value="100" selected>100 °C</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="temperatureChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Botões de controle: Iniciar, Pausar e Limpar (limpar dados do sensor) -->
+                <div class="compact-controls">
+                    <button class="control-btn start" onclick="sendCommand('1')">
+                        <span class="btn-icon">▶</span>
+                        Iniciar
+                    </button>
+                    <button class="control-btn pause" onclick="sendCommand('1p')">
+                        <span class="btn-icon">⏸</span>
+                        Pausar
+                    </button>
+                    <button class="control-btn clear" id="clearBtn-temperature" onclick="clearSensorData('temperature')" style="display:none;">
+                        <span class="btn-icon">✕</span>
+                        Limpar
+                    </button>
                 </div>
             </div>
-            <div class="control-buttons">
-                <button class="start-btn" onclick="sendCommand('3')">Iniciar</button>
-                <button class="pause-btn" onclick="sendCommand('3p')">Pausar</button>
-                <button class="restart-btn" onclick="sendCommand('3r')">Reiniciar</button>
-                <button class="back-btn" onclick="showMenu()">Voltar</button>
-            </div>
-        </div>
 
-        <!-- ========== TELA DE LUMINOSIDADE ========== -->
-        <div class="monitor-screen" id="lightScreen" style="display:none;">
-            <h2>Luminosidade</h2>
-            <div class="view-container table-view">
-                <div class="big-value"><span id="light">0.0</span>%</div>
-            </div>
-            <div class="view-container graph-view">
-                <div class="chart-wrapper" style="height:260px;">
-                    <canvas id="lightChart"></canvas>
+            <!-- ========== TELA DE DISTÂNCIA ========== -->
+            <div class="monitor-screen" id="distanceScreen" style="display:none;">
+                <div class="screen-header">
+                    <div class="sensor-title">
+                        <h2>Distância</h2>
+                    </div>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
+                        <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                </div>
+
+                <div class="view-container table-view active">
+                    <div class="big-value">
+                        <span id="distance">0.0</span>
+                        <span class="unit">cm</span>
+                        <div class="time-display">Tempo: <span id="distanceTime">00:00</span></div>
+                    </div>
+                </div>
+
+                <div class="view-container graph-view">
+                    <div class="chart-title-center">
+                        Distância
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="distanceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="compact-controls">
+                    <button class="control-btn start" onclick="sendCommand('2')">
+                        <span class="btn-icon">▶</span>
+                        Iniciar
+                    </button>
+                    <button class="control-btn pause" onclick="sendCommand('2p')">
+                        <span class="btn-icon">⏸</span>
+                        Pausar
+                    </button>
+                    <button class="control-btn clear" id="clearBtn-distance" onclick="clearSensorData('distance')" style="display:none;">
+                        <span class="btn-icon">✕</span>
+                        Limpar
+                    </button>
                 </div>
             </div>
-            <div class="control-buttons">
-                <button class="start-btn" onclick="sendCommand('4')">Iniciar</button>
-                <button class="pause-btn" onclick="sendCommand('4p')">Pausar</button>
-                <button class="restart-btn" onclick="sendCommand('4r')">Reiniciar</button>
-                <button class="back-btn" onclick="showMenu()">Voltar</button>
-            </div>
-        </div>
 
-        <!-- Indicador de status da conexao WebSocket -->
-        <div class="status">
-            <div id="connectionStatus" class="status-disconnected">Desconectado</div>
-        </div>
+            <!-- ========== TELA DO OSCILADOR (PERÍODO) ========== -->
+            <div class="monitor-screen" id="periodScreen" style="display:none;">
+                <div class="screen-header">
+                    <div class="sensor-title">
+                        <h2>Oscilador</h2>
+                    </div>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
+                        <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                </div>
+
+                <div class="view-container table-view active">
+                    <div class="big-value">
+                        <span id="period">0.0</span>
+                        <span class="unit">ms</span>
+                        <div class="time-display">Tempo: <span id="periodTime">00:00</span></div>
+                    </div>
+                </div>
+
+                <div class="view-container graph-view">
+                    <div class="chart-title-center">
+                        Oscilador
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="periodChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="compact-controls">
+                    <button class="control-btn start" onclick="sendCommand('3')">
+                        <span class="btn-icon">▶</span>
+                        Iniciar
+                    </button>
+                    <button class="control-btn pause" onclick="sendCommand('3p')">
+                        <span class="btn-icon">⏸</span>
+                        Pausar
+                    </button>
+                    <button class="control-btn clear" id="clearBtn-period" onclick="clearSensorData('period')" style="display:none;">
+                        <span class="btn-icon">✕</span>
+                        Limpar
+                    </button>
+                </div>
+            </div>
+
+            <!-- ========== TELA DE LUMINOSIDADE ========== -->
+            <div class="monitor-screen" id="lightScreen" style="display:none;">
+                <div class="screen-header">
+                    <div class="sensor-title">
+                        <h2>Luminosidade</h2>
+                    </div>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
+                        <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                </div>
+
+                <div class="view-container table-view active">
+                    <div class="big-value">
+                        <span id="light">0.0</span>
+                        <span class="unit">%</span>
+                        <div class="time-display">Tempo: <span id="lightTime">00:00</span></div>
+                    </div>
+                </div>
+
+                <div class="view-container graph-view">
+                    <div class="chart-title-center">
+                        Luminosidade
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="lightChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="compact-controls">
+                    <button class="control-btn start" onclick="sendCommand('4')">
+                        <span class="btn-icon">▶</span>
+                        Iniciar
+                    </button>
+                    <button class="control-btn pause" onclick="sendCommand('4p')">
+                        <span class="btn-icon">⏸</span>
+                        Pausar
+                    </button>
+                    <button class="control-btn clear" id="clearBtn-light" onclick="clearSensorData('light')" style="display:none;">
+                        <span class="btn-icon">✕</span>
+                        Limpar
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="status">
+                <!-- Indicador visual de conexão -->
+                <div id="connectionStatus" class="status-disconnected">
+                    <span class="status-indicator"></span>
+                    Desconectado
+                </div>
+            </div>
+            <p>&copy; 2026 ExpeRT Plataforma</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>

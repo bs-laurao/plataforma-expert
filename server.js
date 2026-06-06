@@ -3,7 +3,7 @@ const express = require('express');
 const { SerialPort } = require('serialport');        // Comunicacao serial com Arduino
 const { ReadlineParser } = require('@serialport/parser-readline'); // Leitura linha por linha
 const http = require('http');
-const WebSocket = require('ws');                     // Comunicação em tempo real
+const WebSocket = require('ws');                     // Comunicacao em tempo real com o frontend
 
 const app = express();
 const server = http.createServer(app);
