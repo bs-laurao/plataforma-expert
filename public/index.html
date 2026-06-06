@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma Expert - Monitoramento</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plataforma Expert - Monitoramento</h1>
+            <p>Dados em tempo real do Arduino</p>
+        </header>
+
+        <!-- Botoes para enviar comandos ao Arduino -->
+        <div class="controls">
+            <button onclick="sendCommand('1')" class="btn-temperature">Temperatura</button>
+            <button onclick="sendCommand('2')" class="btn-distance">Distância</button>
+            <button onclick="sendCommand('3')" class="btn-oscillator">Oscilador</button>
+            <button onclick="sendCommand('4')" class="btn-light">Luminosidade</button>
+        </div>
+
+        <!-- Cards para exibir os dados recebidos -->
+        <div class="data-display">
+            <div class="card">
+                <h2>Temperatura</h2>
+                <div class="value" id="temperature">0.0</div>
+                <div class="unit">°C</div>
+            </div>
+
+            <div class="card">
+                <h2>Distância</h2>
+                <div class="value" id="distance">0.0</div>
+                <div class="unit">cm</div>
+            </div>
+
+            <div class="card">
+                <h2>Período</h2>
+                <div class="value" id="period">0.0</div>
+                <div class="unit">ms</div>
+            </div>
+
+            <div class="card">
+                <h2>Luminosidade</h2>
+                <div class="value" id="light">0.0</div>
+                <div class="unit">%</div>
+            </div>
+        </div>
+
+        <!-- Status da conexao com o servidor -->
+        <div class="status">
+            <div id="connectionStatus" class="status-disconnected">Desconectado</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+
+
+{
+  "name": "projeto-arduino",
+  "version": "1.0.0",
+  "description": "Sistema para visualizar dados do Arduino",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "serialport": "^10.5.0",
+    "ws": "^8.13.0"
+  }
+}
