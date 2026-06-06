@@ -1,54 +1,116 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Plataforma Expert - Monitoramento</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
+    <!-- Biblioteca Chart.js adicionada para gerar graficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Plataforma Expert - Monitoramento</h1>
-            <p>Dados em tempo real do Arduino</p>
         </header>
 
-        <!-- Botoes para enviar comandos ao Arduino -->
-        <div class="controls">
-            <button onclick="sendCommand('1')" class="btn-temperature">Temperatura</button>
-            <button onclick="sendCommand('2')" class="btn-distance">Distância</button>
-            <button onclick="sendCommand('3')" class="btn-oscillator">Oscilador</button>
-            <button onclick="sendCommand('4')" class="btn-light">Luminosidade</button>
-        </div>
-
-        <!-- Cards para exibir os dados recebidos -->
-        <div class="data-display">
-            <div class="card">
-                <h2>Temperatura</h2>
-                <div class="value" id="temperature">0.0</div>
-                <div class="unit">°C</div>
-            </div>
-
-            <div class="card">
-                <h2>Distância</h2>
-                <div class="value" id="distance">0.0</div>
-                <div class="unit">cm</div>
-            </div>
-
-            <div class="card">
-                <h2>Período</h2>
-                <div class="value" id="period">0.0</div>
-                <div class="unit">ms</div>
-            </div>
-
-            <div class="card">
-                <h2>Luminosidade</h2>
-                <div class="value" id="light">0.0</div>
-                <div class="unit">%</div>
+        <!-- Modal que aparece para escolher entre visualizacao em tabela ou grafico -->
+        <div class="modal" id="viewModal" aria-hidden="true">
+            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+                <h3 id="viewModalTitle">Escolha o tipo de visualização</h3>
+                <button class="view-btn" onclick="selectView('table')">Tabela</button>
+                <button class="view-btn" onclick="selectView('graph')">Gráfico</button>
             </div>
         </div>
 
-        <!-- Status da conexao com o servidor -->
+        <!-- Tela inicial com botoes para cada sensor (antes os botoes ficavam direto na tela principal) -->
+        <div class="main-menu" id="mainMenu" role="navigation" aria-label="Menu principal">
+            <button class="menu-btn" onclick="showMonitor('temperature')" aria-label="Temperatura">Temperatura</button>
+            <button class="menu-btn" onclick="showMonitor('distance')" aria-label="Distância">Distância</button>
+            <button class="menu-btn" onclick="showMonitor('oscillator')" aria-label="Oscilador">Oscilador</button>
+            <button class="menu-btn" onclick="showMonitor('light')" aria-label="Luminosidade">Luminosidade</button>
+        </div>
+
+        <!-- ========== TELA DE TEMPERATURA ========== -->
+        <div class="monitor-screen" id="temperatureScreen" style="display:none;">
+            <h2>Temperatura</h2>
+            <!-- Visualizacao tipo tabela: mostra o valor numerico grande -->
+            <div class="view-container table-view">
+                <div class="big-value"><span id="temperature">0.0</span>°C</div>
+            </div>
+            <!-- Visualizacao tipo grafico: usa Chart.js -->
+            <div class="view-container graph-view">
+                <div class="chart-wrapper" style="height:260px;">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+            <!-- Botoes de controle: Iniciar, Pausar, Reiniciar e Voltar ao menu -->
+            <div class="control-buttons">
+                <button class="start-btn" onclick="sendCommand('1')">Iniciar</button>
+                <button class="pause-btn" onclick="sendCommand('1p')">Pausar</button>
+                <button class="restart-btn" onclick="sendCommand('1r')">Reiniciar</button>
+                <button class="back-btn" onclick="showMenu()">Voltar</button>
+            </div>
+        </div>
+
+        <!-- ========== TELA DE DISTANCIA ========== -->
+        <div class="monitor-screen" id="distanceScreen" style="display:none;">
+            <h2>Distância</h2>
+            <div class="view-container table-view">
+                <div class="big-value"><span id="distance">0.0</span>cm</div>
+            </div>
+            <div class="view-container graph-view">
+                <div class="chart-wrapper" style="height:260px;">
+                    <canvas id="distanceChart"></canvas>
+                </div>
+            </div>
+            <div class="control-buttons">
+                <button class="start-btn" onclick="sendCommand('2')">Iniciar</button>
+                <button class="pause-btn" onclick="sendCommand('2p')">Pausar</button>
+                <button class="restart-btn" onclick="sendCommand('2r')">Reiniciar</button>
+                <button class="back-btn" onclick="showMenu()">Voltar</button>
+            </div>
+        </div>
+
+        <!-- ========== TELA DO OSCILADOR (PERIODO) ========== -->
+        <div class="monitor-screen" id="oscillatorScreen" style="display:none;">
+            <h2>Oscilador</h2>
+            <div class="view-container table-view">
+                <div class="big-value"><span id="period">0.0</span>ms</div>
+            </div>
+            <div class="view-container graph-view">
+                <div class="chart-wrapper" style="height:260px;">
+                    <canvas id="oscillatorChart"></canvas>
+                </div>
+            </div>
+            <div class="control-buttons">
+                <button class="start-btn" onclick="sendCommand('3')">Iniciar</button>
+                <button class="pause-btn" onclick="sendCommand('3p')">Pausar</button>
+                <button class="restart-btn" onclick="sendCommand('3r')">Reiniciar</button>
+                <button class="back-btn" onclick="showMenu()">Voltar</button>
+            </div>
+        </div>
+
+        <!-- ========== TELA DE LUMINOSIDADE ========== -->
+        <div class="monitor-screen" id="lightScreen" style="display:none;">
+            <h2>Luminosidade</h2>
+            <div class="view-container table-view">
+                <div class="big-value"><span id="light">0.0</span>%</div>
+            </div>
+            <div class="view-container graph-view">
+                <div class="chart-wrapper" style="height:260px;">
+                    <canvas id="lightChart"></canvas>
+                </div>
+            </div>
+            <div class="control-buttons">
+                <button class="start-btn" onclick="sendCommand('4')">Iniciar</button>
+                <button class="pause-btn" onclick="sendCommand('4p')">Pausar</button>
+                <button class="restart-btn" onclick="sendCommand('4r')">Reiniciar</button>
+                <button class="back-btn" onclick="showMenu()">Voltar</button>
+            </div>
+        </div>
+
+        <!-- Indicador de status da conexao WebSocket -->
         <div class="status">
             <div id="connectionStatus" class="status-disconnected">Desconectado</div>
         </div>
