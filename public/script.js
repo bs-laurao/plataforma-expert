@@ -25,16 +25,14 @@ let samplingTimerId = null;       // Timer que executa a coleta periodica
 let timeTickerId = null;
 const TIME_TICK_MS = 200;
 
-// ===== TEMA CLARO/ESCURO (nova funcionalidade) =====
+// ===== TEMA CLARO/ESCURO =====
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('themeToggle');
     const currentTheme = localStorage.getItem('theme') || 'light';
     
-    // Aplica o tema salvo no atributo do html
     document.documentElement.setAttribute('data-theme', currentTheme);
     updateThemeIcon(currentTheme);
     
-    // Alterna entre claro/escuro ao clicar no botao
     themeToggle.addEventListener('click', function() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -43,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('theme', newTheme);
         updateThemeIcon(newTheme);
         
-        // Atualiza cores dos graficos quando o tema muda
         Object.keys(charts).forEach(sensor => {
             if (charts[sensor]) {
                 updateChartTheme(sensor);
@@ -51,22 +48,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Inicializacoes do app
     showMenu();
-    setSamplingInterval(0.1);   // Define amostragem padrao de 0.1 segundo
+    setSamplingInterval(0.1);
 
-    // Inicia o ticker que atualiza os temporizadores na tela
     if (timeTickerId) clearInterval(timeTickerId);
     timeTickerId = setInterval(updateTimeDisplays, TIME_TICK_MS);
 });
 
-// Altera o icone do botao de tema (◑ para claro, ◐ para escuro)
 function updateThemeIcon(theme) {
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.textContent = theme === 'light' ? '◑' : '◐';
 }
 
-// Reconfigura as cores do grafico conforme o tema atual (escuro ou claro)
 function updateChartTheme(sensor) {
     const chart = charts[sensor];
     if (!chart) return;
@@ -88,15 +81,13 @@ function updateChartTheme(sensor) {
     chart.update();
 }
 
-// ===== FUNÇÕES DE NAVEGAÇÃO =====
-// Fecha o modal de escolha de visualizacao e volta ao menu
+// ===== NAVEGAÇÃO =====
 function closeModal() {
     document.getElementById('viewModal').style.display = 'none';
     window._selectedSensorForModal = '';
     showMenu();
 }
 
-// Botao "Voltar" (estilizado como <) - para a coleta, reseta o sensor e retorna ao menu
 function closeView() {
     if (currentSensor) {
         pauseChartForSensor(currentSensor);
@@ -105,7 +96,6 @@ function closeView() {
         const timeEl = document.getElementById(currentSensor + 'Time');
         if (timeEl) timeEl.textContent = '00:00';
         
-        // Esconde o botao "Limpar" ao sair da tela
         const clearBtn = document.getElementById(`clearBtn-${currentSensor}`);
         if (clearBtn) clearBtn.style.display = 'none';
         
@@ -120,7 +110,6 @@ function closeView() {
     window._selectedSensorForModal = '';
 }
 
-// Alterna entre visualizacao em tabela ou grafico usando as abas dentro da tela do sensor
 function selectViewType(viewType) {
     if (!currentSensor) return;
     
@@ -142,8 +131,7 @@ function selectViewType(viewType) {
     }
 }
 
-// ===== CONTROLE DO EIXO Y DOS GRÁFICOS =====
-// Retorna o valor maximo padrao para cada sensor
+// ===== EIXO Y =====
 function getDefaultYAxisMax(sensor) {
     switch (sensor) {
         case 'temperature': return 100;
@@ -158,7 +146,6 @@ function getYAxisMax(sensor) {
     return (chartYAxisMax[sensor] !== undefined) ? chartYAxisMax[sensor] : getDefaultYAxisMax(sensor);
 }
 
-// Ajusta o limite superior do eixo Y (atualmente apenas para temperatura)
 function setYAxisMax(sensor, max) {
     if (sensor !== 'temperature') return;
     const m = Number(max) || getDefaultYAxisMax(sensor);
@@ -171,8 +158,7 @@ function setYAxisMax(sensor, max) {
     console.log(`Y-axis max for ${sensor} set to ${m}`);
 }
 
-// ===== RESET / LIMPEZA DE DADOS =====
-// Reseta os valores e graficos de um sensor (para quando volta ao menu)
+// ===== RESET =====
 function resetSensor(sensor) {
     const el = document.getElementById(sensor);
     if (el) el.textContent = '0.0';
@@ -194,7 +180,6 @@ function resetSensor(sensor) {
     }
 }
 
-// Botao "Limpar": zera os dados e para o sensor, sem sair da tela
 function clearSensorData(sensor) {
     const el = document.getElementById(sensor);
     if (el) el.textContent = '0.0';
@@ -223,7 +208,7 @@ function resetAllSensors() {
     Object.values(SENSOR_MAP).forEach(s => resetSensor(s));
 }
 
-// ===== WEBSOCKET ===== (agora armazena os ultimos valores recebidos, sem atualizar direto a tela)
+// ===== WEBSOCKET =====
 let ws;
 function initWebSocket() {
     try {
@@ -249,7 +234,6 @@ function initWebSocket() {
         setTimeout(initWebSocket, 2000);
     };
 
-    // Ao receber dados, apenas guarda os valores e timestamps (nao atualiza interface diretamente)
     ws.onmessage = function(event) {
         let data;
         try {
@@ -278,14 +262,13 @@ function initWebSocket() {
 }
 initWebSocket();
 
-// ===== CONTROLE DE EXIBICAO DO SELETOR DE AMOSTRAGEM =====
+// ===== CONTROLE DE EXIBIÇÃO =====
 function showSamplingControl(show) {
     const wrap = document.getElementById('samplingWrapper');
     if (!wrap) return;
     wrap.style.display = show ? 'block' : 'none';
 }
 
-// Volta ao menu principal, resetando os sensores e escondendo o seletor de amostragem
 function hideAllInfoPages() {
     document.querySelectorAll('.info-page').forEach(page => page.style.display = 'none');
 }
@@ -313,36 +296,6 @@ function showMenu() {
     setActiveNav('navDevices');
 }
 
-function showTutorials() {
-    showSamplingControl(false);
-    hideAllInfoPages();
-    document.querySelectorAll('.monitor-screen').forEach(screen => screen.style.display = 'none');
-
-    const main = document.getElementById('mainMenu');
-    if (main) main.style.display = 'none';
-    document.getElementById('tutorialsPage').style.display = 'block';
-
-    currentSensor = '';
-    currentView = 'table';
-    setActiveNav('navTutorials');
-}
-
-function showAbout() {
-    showSamplingControl(false);
-    hideAllInfoPages();
-    document.querySelectorAll('.monitor-screen').forEach(screen => screen.style.display = 'none');
-
-    const main = document.getElementById('mainMenu');
-    if (main) main.style.display = 'none';
-    document.getElementById('aboutPage').style.display = 'block';
-
-    currentSensor = '';
-    currentView = 'table';
-    setActiveNav('navAbout');
-}
-
-// ===== NAVEGAÇÃO / MODAL =====
-// Exibe o modal de escolha (tabela ou grafico) apos clicar em um card
 function showMonitor(type) {
     currentSensor = type;
     document.getElementById('mainMenu').style.display = 'none';
@@ -350,14 +303,13 @@ function showMonitor(type) {
     window._selectedSensorForModal = type;
 }
 
-// Escolhe visualizacao e exibe a tela do sensor correspondente
 function selectView(view) {
     currentView = view;
     document.getElementById('viewModal').style.display = 'none';
     const sensor = window._selectedSensorForModal || currentSensor;
     if (!sensor) return;
 
-    showSamplingControl(true);   // Mostra o seletor de intervalo de amostragem
+    showSamplingControl(true);
 
     document.querySelectorAll('.monitor-screen').forEach(s => s.style.display = 'none');
     const screenEl = document.getElementById(sensor + 'Screen');
@@ -374,7 +326,6 @@ function selectView(view) {
 }
 
 // ===== COMANDOS =====
-// Envia comando para o Arduino via HTTP e tambem trata localmente (inicio/pausa/limpeza)
 async function sendCommand(command) {
     try {
         handleLocalCommand(command);
@@ -384,7 +335,6 @@ async function sendCommand(command) {
     }
 }
 
-// Interpreta comandos como '1', '1p', '1r' e controla o grafico localmente
 function handleLocalCommand(command) {
     const m = command.match(/^([1-4])([pr]?)$/);
     if (!m) return;
@@ -399,7 +349,6 @@ function handleLocalCommand(command) {
 }
 
 // ===== GERENCIAMENTO DOS GRÁFICOS =====
-// Inicializa ou retorna o grafico de um sensor, aplicando tema atual e limite Y
 function initChart(sensor) {
     if (charts[sensor]) {
         const existing = charts[sensor];
@@ -492,7 +441,6 @@ function startChartForSensor(sensor) {
     chartStartTime[sensor] = Date.now();
     chartsActive[sensor] = true;
     
-    // Exibe o botao "Limpar" quando a coleta comeca
     const clearBtn = document.getElementById(`clearBtn-${sensor}`);
     if (clearBtn) clearBtn.style.display = 'block';
     
@@ -528,7 +476,6 @@ function restartChartForSensor(sensor) {
 }
 
 // ===== FORMATAÇÃO =====
-// Converte milissegundos em string MM:SS
 function formatElapsedMsToMMSS(ms) {
     const totalSec = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSec / 60);
@@ -538,7 +485,6 @@ function formatElapsedMsToMMSS(ms) {
     return `${mm}:${ss}`;
 }
 
-// Impede valores negativos para sensores que nao fazem sentido (exceto temperatura)
 function clampValueForSensor(sensor, raw) {
     const v = Number(raw);
     if (!Number.isFinite(v)) return raw;
@@ -546,8 +492,7 @@ function clampValueForSensor(sensor, raw) {
     return v < 0 ? 0 : v;
 }
 
-// ===== AMOSTRAGEM E ATUALIZAÇÃO PERIÓDICA =====
-// Processa um unico sensor: se ativo, atualiza o valor numerico e adiciona ponto no grafico
+// ===== AMOSTRAGEM =====
 function processSample(sensor) {
     const raw = lastReceivedValues[sensor];
     if (raw === undefined) return;
@@ -574,12 +519,10 @@ function processSample(sensor) {
     chart.update('none');
 }
 
-// Funcao chamada a cada intervalo de amostragem (ex: a cada 1s)
 function sampleTick() {
     Object.values(SENSOR_MAP).forEach(sensor => processSample(sensor));
 }
 
-// Atualiza os contadores de tempo na interface (MM:SS) a cada TIME_TICK_MS (200ms)
 function updateTimeDisplays() {
     Object.values(SENSOR_MAP).forEach(sensor => {
         const timeEl = document.getElementById(sensor + 'Time');
@@ -591,7 +534,6 @@ function updateTimeDisplays() {
     });
 }
 
-// Altera o intervalo de coleta (usado pelo seletor de amostragem)
 function setSamplingInterval(seconds) {
     samplingIntervalMs = Math.max(100, Math.round(seconds * 1000));
     if (samplingTimerId) clearInterval(samplingTimerId);
@@ -599,25 +541,21 @@ function setSamplingInterval(seconds) {
     console.log(`Sampling interval set to ${samplingIntervalMs} ms`);
 }
 
-// ===== EVENTOS DE JANELA =====
+// ===== EVENTOS =====
 window.addEventListener('resize', () => {
     Object.values(charts).forEach(chart => chart?.resize?.());
 });
 
-// ========================================================
-// ===== FUNÇÕES DE EXPORTAÇÃO (SALVAR IMAGEM E CSV) =====
-// ========================================================
+// ============================================================
+// ===== FUNÇÕES DE EXPORTAÇÃO =====
+// ============================================================
 
-/**
- * Salva a imagem do gráfico de um sensor em PNG (download via navegador)
- */
 function saveChartImage(sensor) {
     const chart = charts[sensor];
     if (!chart) {
         alert('Gráfico não encontrado para este sensor.');
         return;
     }
-    // Verifica se há dados
     if (chart.data.labels.length === 0) {
         alert('Não há dados no gráfico para salvar. Inicie a coleta primeiro.');
         return;
@@ -628,9 +566,6 @@ function saveChartImage(sensor) {
     link.click();
 }
 
-/**
- * Salva os dados (labels e valores) do gráfico de um sensor em CSV
- */
 function saveDataCSV(sensor) {
     const chart = charts[sensor];
     if (!chart) {
@@ -646,17 +581,106 @@ function saveDataCSV(sensor) {
         return;
     }
 
-    // Monta o CSV com cabeçalho
     let csv = 'Tempo (mm:ss),Valor\n';
     for (let i = 0; i < labels.length; i++) {
         csv += `${labels[i]},${values[i]}\n`;
     }
 
-    // Cria e faz o download
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.download = `dados_${sensor}.csv`;
     link.href = URL.createObjectURL(blob);
     link.click();
     URL.revokeObjectURL(link.href);
+}
+
+// ============================================================
+// ===== FUNÇÃO: ALTERAR TIPO DE GRÁFICO (SEM PIZZA) =====
+// ============================================================
+
+function changeChartType(sensor, type) {
+    const chart = charts[sensor];
+    if (!chart) {
+        alert('Gráfico não inicializado. Inicie a coleta primeiro.');
+        return;
+    }
+
+    // Salva os dados atuais
+    const currentLabels = chart.data.labels.slice();
+    const currentData = chart.data.datasets[0].data.slice();
+
+    // Restaura os dados completos
+    chart.data.labels = currentLabels;
+    chart.data.datasets[0].data = currentData;
+
+    // Configura conforme o tipo escolhido
+    if (type === 'scatter') {
+        // Dispersão: usamos 'line' com showLine=false e pontos maiores
+        chart.config.type = 'line';
+        chart.data.datasets[0].showLine = false;
+        chart.data.datasets[0].pointRadius = 5;
+        chart.data.datasets[0].fill = false;
+        chart.data.datasets[0].backgroundColor = '#6b5bbb';
+        chart.data.datasets[0].borderColor = '#6b5bbb';
+    } else if (type === 'line') {
+        chart.config.type = 'line';
+        chart.data.datasets[0].showLine = true;
+        chart.data.datasets[0].pointRadius = 2;
+        chart.data.datasets[0].fill = false;
+        chart.data.datasets[0].tension = 0.15;
+        chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.1)';
+    } else if (type === 'line-points') {
+        chart.config.type = 'line';
+        chart.data.datasets[0].showLine = true;
+        chart.data.datasets[0].pointRadius = 4;
+        chart.data.datasets[0].fill = false;
+        chart.data.datasets[0].tension = 0.15;
+        chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.1)';
+    } else if (type === 'bar') {
+        chart.config.type = 'bar';
+        chart.data.datasets[0].showLine = false;
+        chart.data.datasets[0].pointRadius = 0;
+        chart.data.datasets[0].fill = false;
+        chart.data.datasets[0].backgroundColor = '#6b5bbb';
+        chart.data.datasets[0].borderColor = '#6b5bbb';
+    } else if (type === 'area') {
+        chart.config.type = 'line';
+        chart.data.datasets[0].showLine = true;
+        chart.data.datasets[0].pointRadius = 2;
+        chart.data.datasets[0].fill = true;
+        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.3)';
+        chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].tension = 0.15;
+    }
+
+    // Garante que as escalas existam
+    ensureScales(chart, sensor);
+
+    chart.update();
+}
+
+// Função auxiliar para garantir que as escalas existam
+function ensureScales(chart, sensor) {
+    if (!chart.options.scales) {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+        const textColor = isDark ? '#e2e8f0' : '#666666';
+        chart.options.scales = {
+            x: {
+                type: 'category',
+                title: { display: true, text: 'Tempo decorrido', color: textColor },
+                ticks: { maxRotation: 0, autoSkip: true, autoSkipPadding: 30, color: textColor },
+                grid: { color: gridColor }
+            },
+            y: {
+                beginAtZero: true,
+                max: getYAxisMax(sensor),
+                title: { display: true, text: getYAxisLabel(sensor), color: textColor },
+                ticks: { color: textColor },
+                grid: { color: gridColor }
+            }
+        };
+    }
 }
