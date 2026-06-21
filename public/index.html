@@ -19,9 +19,9 @@
                 <!-- Navegação entre telas (usar dispositivos, tutoriais, sobre) -->
                 <nav>
                     <ul>
-                        <li><a href="#" class="active">USAR DISPOSITIVOS</a></li>
-                        <li><a href="#">TUTORIAIS</a></li>
-                        <li><a href="#">SOBRE NÓS</a></li>
+                        <li><a href="index.html" class="active">USAR DISPOSITIVOS</a></li>
+                        <li><a href="tutorial.html">TUTORIAIS</a></li>
+                        <li><a href="sobre.html">SOBRE</a></li>
                     </ul>
                 </nav>
                 <!-- Botão para alternar entre tema claro/escuro -->
@@ -38,9 +38,9 @@
                     </button>
                     <span class="sampling-label">Amostragem:</span>
                     <select id="samplingSelect" onchange="setSamplingInterval(Number(this.value))">
-                        <option value="0.1">0.1 s</option>
+                        <option value="0.1" selected>0.1 s</option>
                         <option value="0.5">0.5 s</option>
-                        <option value="1" selected>1 s</option>
+                        <option value="1">1 s</option>
                         <option value="5">5 s</option>
                         <option value="10">10 s</option>
                     </select>
@@ -104,10 +104,21 @@
                     <div class="sensor-title">
                         <h2>Temperatura</h2>
                     </div>
-                    <!-- Abas para alternar entre tabela e gráfico (substitui o modal) -->
+                    <!-- Abas para alternar entre tabela e gráfico -->
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                    <!-- BOTÕES DE EXPORTAÇÃO -->
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="saveChartImage('temperature')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                            Salvar Imagem
+                        </button>
+                        <button class="export-btn" onclick="saveDataCSV('temperature')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+                            Salvar CSV
+                        </button>
                     </div>
                 </div>
 
@@ -130,6 +141,7 @@
                     <div class="chart-controls">
                         <label for="temperatureScale">Escala Y:</label>
                         <select id="temperatureScale" onchange="setYAxisMax('temperature', this.value)">
+                            <option value="10">10 °C</option>
                             <option value="20">20 °C</option>
                             <option value="50">50 °C</option>
                             <option value="100" selected>100 °C</option>
@@ -166,6 +178,17 @@
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                    <!-- BOTÕES DE EXPORTAÇÃO -->
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="saveChartImage('distance')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                            Salvar Imagem
+                        </button>
+                        <button class="export-btn" onclick="saveDataCSV('distance')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+                            Salvar CSV
+                        </button>
                     </div>
                 </div>
 
@@ -212,6 +235,17 @@
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
                     </div>
+                    <!-- BOTÕES DE EXPORTAÇÃO -->
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="saveChartImage('period')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                            Salvar Imagem
+                        </button>
+                        <button class="export-btn" onclick="saveDataCSV('period')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+                            Salvar CSV
+                        </button>
+                    </div>
                 </div>
 
                 <div class="view-container table-view active">
@@ -256,6 +290,17 @@
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                    <!-- BOTÕES DE EXPORTAÇÃO -->
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="saveChartImage('light')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                            Salvar Imagem
+                        </button>
+                        <button class="export-btn" onclick="saveDataCSV('light')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+                            Salvar CSV
+                        </button>
                     </div>
                 </div>
 

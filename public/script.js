@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializacoes do app
     showMenu();
-    setSamplingInterval(1);   // Define amostragem padrao de 1 segundo
+    setSamplingInterval(0.1);   // Define amostragem padrao de 0.1 segundo
 
     // Inicia o ticker que atualiza os temporizadores na tela
     if (timeTickerId) clearInterval(timeTickerId);
@@ -286,8 +286,19 @@ function showSamplingControl(show) {
 }
 
 // Volta ao menu principal, resetando os sensores e escondendo o seletor de amostragem
+function hideAllInfoPages() {
+    document.querySelectorAll('.info-page').forEach(page => page.style.display = 'none');
+}
+
+function setActiveNav(activeId) {
+    document.querySelectorAll('nav a').forEach(link => {
+        link.classList.toggle('active', link.id === activeId);
+    });
+}
+
 function showMenu() {
     showSamplingControl(false);
+    hideAllInfoPages();
 
     if (currentSensor) resetSensor(currentSensor);
     else resetAllSensors();
@@ -299,6 +310,35 @@ function showMenu() {
     currentSensor = '';
     window._selectedSensorForModal = '';
     currentView = 'table';
+    setActiveNav('navDevices');
+}
+
+function showTutorials() {
+    showSamplingControl(false);
+    hideAllInfoPages();
+    document.querySelectorAll('.monitor-screen').forEach(screen => screen.style.display = 'none');
+
+    const main = document.getElementById('mainMenu');
+    if (main) main.style.display = 'none';
+    document.getElementById('tutorialsPage').style.display = 'block';
+
+    currentSensor = '';
+    currentView = 'table';
+    setActiveNav('navTutorials');
+}
+
+function showAbout() {
+    showSamplingControl(false);
+    hideAllInfoPages();
+    document.querySelectorAll('.monitor-screen').forEach(screen => screen.style.display = 'none');
+
+    const main = document.getElementById('mainMenu');
+    if (main) main.style.display = 'none';
+    document.getElementById('aboutPage').style.display = 'block';
+
+    currentSensor = '';
+    currentView = 'table';
+    setActiveNav('navAbout');
 }
 
 // ===== NAVEGAÇÃO / MODAL =====
@@ -563,3 +603,60 @@ function setSamplingInterval(seconds) {
 window.addEventListener('resize', () => {
     Object.values(charts).forEach(chart => chart?.resize?.());
 });
+
+// ========================================================
+// ===== FUNÇÕES DE EXPORTAÇÃO (SALVAR IMAGEM E CSV) =====
+// ========================================================
+
+/**
+ * Salva a imagem do gráfico de um sensor em PNG (download via navegador)
+ */
+function saveChartImage(sensor) {
+    const chart = charts[sensor];
+    if (!chart) {
+        alert('Gráfico não encontrado para este sensor.');
+        return;
+    }
+    // Verifica se há dados
+    if (chart.data.labels.length === 0) {
+        alert('Não há dados no gráfico para salvar. Inicie a coleta primeiro.');
+        return;
+    }
+    const link = document.createElement('a');
+    link.download = `grafico_${sensor}.png`;
+    link.href = chart.toBase64Image();
+    link.click();
+}
+
+/**
+ * Salva os dados (labels e valores) do gráfico de um sensor em CSV
+ */
+function saveDataCSV(sensor) {
+    const chart = charts[sensor];
+    if (!chart) {
+        alert('Dados não encontrados para este sensor.');
+        return;
+    }
+
+    const labels = chart.data.labels || [];
+    const values = chart.data.datasets[0].data || [];
+
+    if (labels.length === 0) {
+        alert('Não há dados para exportar. Inicie a coleta primeiro.');
+        return;
+    }
+
+    // Monta o CSV com cabeçalho
+    let csv = 'Tempo (mm:ss),Valor\n';
+    for (let i = 0; i < labels.length; i++) {
+        csv += `${labels[i]},${values[i]}\n`;
+    }
+
+    // Cria e faz o download
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.download = `dados_${sensor}.csv`;
+    link.href = URL.createObjectURL(blob);
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
