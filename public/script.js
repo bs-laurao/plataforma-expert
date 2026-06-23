@@ -1,4 +1,3 @@
-
 // CONFIGURAÇÕES E MAPEAMENTO
 
 // Mapeia os comandos numéricos para os IDs dos sensores
@@ -20,8 +19,8 @@ let chartsActive = {};
 let chartStartTime = {};
 // Acumulado de tempo em pausa (para continuar de onde parou)
 let chartElapsedOffset = {};
-// Limite máximo do eixo Y (personalizável para temperatura)
-let chartYAxisMax = {};
+// Maior valor observado para cada sensor (usado para escala dinâmica)
+let chartMaxValue = {};
 // Tipo de visualização atual: 'table' ou 'graph'
 let currentView = 'table';
 // Sensor atualmente selecionado (ex: 'temperature')
@@ -130,6 +129,7 @@ function closeView() {
         chartsActive[currentSensor] = false;
         chartStartTime[currentSensor] = null;
         chartElapsedOffset[currentSensor] = 0;
+        chartMaxValue[currentSensor] = 0; // reset para escala dinâmica
         lastReceivedValues[currentSensor] = undefined;
     }
     showMenu();
@@ -163,37 +163,41 @@ function selectViewType(viewType) {
 }
 
 
-// CONTROLE DO EIXO Y DOS GRÁFICOS
+// CONTROLE DO EIXO Y DOS GRÁFICOS 
 
-// Retorna o valor máximo padrão para cada sensor
+// Retorna o valor máximo inicial (padrão) para cada sensor
 function getDefaultYAxisMax(sensor) {
     switch (sensor) {
-        case 'temperature': return 100;
-        case 'distance': return 50;
-        case 'period': return 20;
-        case 'light': return 100;
-        default: return 100;
+        case 'temperature': return 10;  // inicial baixo, será ajustado dinamicamente
+        case 'distance': return 10;
+        case 'period': return 10;
+        case 'light': return 10;
+        default: return 10;
     }
 }
 
-// Obtém o máximo atual do eixo Y (ou o padrão)
+// Obtém o valor máximo atual para o eixo Y (considerando a margem de 10%)
+// Se ainda não houver dados, retorna o valor padrão
 function getYAxisMax(sensor) {
-    return (chartYAxisMax[sensor] !== undefined) ? chartYAxisMax[sensor] : getDefaultYAxisMax(sensor);
-}
-
-// Ajusta o limite superior do eixo Y (usado apenas para temperatura)
-function setYAxisMax(sensor, max) {
-    if (sensor !== 'temperature') return;
-    const m = Number(max) || getDefaultYAxisMax(sensor);
-    chartYAxisMax[sensor] = m;
-    const c = charts[sensor];
-    if (c && c.options && c.options.scales && c.options.scales.y) {
-        c.options.scales.y.max = m;
-        c.update();
+    const maxObserved = chartMaxValue[sensor] || 0;
+    if (maxObserved === 0) {
+        return getDefaultYAxisMax(sensor);
     }
-    console.log(`Y-axis max for ${sensor} set to ${m}`);
+    // Adiciona 10% do valor observado (arredondado para cima, com pelo menos 1)
+    const margin = Math.max(1, Math.ceil(maxObserved * 0.1));
+    return Math.ceil(maxObserved + margin);
 }
 
+// Atualiza o eixo Y do gráfico para refletir o valor máximo dinâmico
+function updateYAxis(sensor) {
+    const chart = charts[sensor];
+    if (!chart) return;
+    const newMax = getYAxisMax(sensor);
+    if (chart.options.scales && chart.options.scales.y) {
+        chart.options.scales.y.max = newMax;
+        chart.update('none');
+    }
+}
 
 // RESET / LIMPEZA DE DADOS
 
@@ -208,6 +212,7 @@ function resetSensor(sensor) {
     chartsActive[sensor] = false;
     chartStartTime[sensor] = null;
     chartElapsedOffset[sensor] = 0;
+    chartMaxValue[sensor] = 0; // zera o máximo observado
 
     lastReceivedValues[sensor] = undefined;
     lastReceivedAt[sensor] = undefined;
@@ -215,6 +220,10 @@ function resetSensor(sensor) {
     if (charts[sensor]) {
         charts[sensor].data.labels = [];
         charts[sensor].data.datasets[0].data = [];
+        // Restaura a escala inicial
+        if (charts[sensor].options.scales && charts[sensor].options.scales.y) {
+            charts[sensor].options.scales.y.max = getDefaultYAxisMax(sensor);
+        }
         charts[sensor].update();
     }
 }
@@ -230,6 +239,11 @@ function clearSensorData(sensor) {
     if (charts[sensor]) {
         charts[sensor].data.labels = [];
         charts[sensor].data.datasets[0].data = [];
+        // Reseta a escala para o valor padrão
+        chartMaxValue[sensor] = 0;
+        if (charts[sensor].options.scales && charts[sensor].options.scales.y) {
+            charts[sensor].options.scales.y.max = getDefaultYAxisMax(sensor);
+        }
         charts[sensor].update();
     }
 
@@ -413,14 +427,16 @@ function handleLocalCommand(command) {
 
 // GERENCIAMENTO DOS GRÁFICOS (CHART.JS)
 
-// Inicializa ou retorna o gráfico de um sensor, aplicando tema atual e limite Y
+// Inicializa ou retorna o gráfico de um sensor, aplicando tema atual e limite Y dinâmico
 function initChart(sensor) {
-    // Se o gráfico já existe, atualiza o eixo Y e retorna
+    // Se o gráfico já existe, apenas atualiza a escala e retorna
     if (charts[sensor]) {
         const existing = charts[sensor];
+        // Atualiza o máximo com base no valor atual (pode ser zero)
+        const newMax = getYAxisMax(sensor);
         if (existing.options && existing.options.scales && existing.options.scales.y) {
-            existing.options.scales.y.max = getYAxisMax(sensor);
-            existing.update();
+            existing.options.scales.y.max = newMax;
+            existing.update('none');
         }
         return charts[sensor];
     }
@@ -435,18 +451,18 @@ function initChart(sensor) {
     const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
     const textColor = isDark ? '#e2e8f0' : '#666666';
 
-    // Configuração do gráfico
+    // Configuração do gráfico - padrão ÁREA
     const cfg = {
-        type: 'line', // tipo inicial: linha
+        type: 'line', // tipo 'line' com fill:true simula área
         data: {
             labels: [], // rótulos do eixo X (tempo decorrido)
             datasets: [{
                 label: getChartLabel(sensor),
                 data: [], // valores do sensor
                 borderColor: '#6b5bbb',
-                backgroundColor: 'rgba(107, 91, 187, 0.1)',
+                backgroundColor: 'rgba(107, 91, 187, 0.3)',
                 tension: 0.15,
-                fill: true,
+                fill: true,   // ÁREA
                 pointRadius: 2
             }]
         },
@@ -463,7 +479,7 @@ function initChart(sensor) {
                 },
                 y: {
                     beginAtZero: true,
-                    max: getYAxisMax(sensor),
+                    max: getYAxisMax(sensor), // valor dinâmico inicial
                     title: { display: true, text: getYAxisLabel(sensor), color: textColor },
                     ticks: { color: textColor },
                     grid: { color: gridColor }
@@ -480,6 +496,7 @@ function initChart(sensor) {
     chartsActive[sensor] = false;
     chartStartTime[sensor] = null;
     chartElapsedOffset[sensor] = 0;
+    chartMaxValue[sensor] = 0; // inicia sem dados
     return charts[sensor];
 }
 
@@ -540,6 +557,11 @@ function restartChartForSensor(sensor) {
 
     chart.data.labels = [];
     chart.data.datasets[0].data = [];
+    chartMaxValue[sensor] = 0;
+    // Reseta a escala
+    if (chart.options.scales && chart.options.scales.y) {
+        chart.options.scales.y.max = getDefaultYAxisMax(sensor);
+    }
     chart.update();
 
     chartElapsedOffset[sensor] = 0;
@@ -577,7 +599,7 @@ function clampValueForSensor(sensor, raw) {
 
 // AMOSTRAGEM E ATUALIZAÇÃO PERIÓDICA
 
-// Processa um único sensor: se ativo, atualiza o valor numérico e adiciona ponto no gráfico
+// Processa um único sensor: se ativo, atualiza o valor numérico, adiciona ponto no gráfico e ajusta escala
 function processSample(sensor) {
     const raw = lastReceivedValues[sensor];
     if (raw === undefined) return;
@@ -604,7 +626,19 @@ function processSample(sensor) {
 
     // Adiciona o novo ponto ao gráfico
     chart.data.labels.push(label);
-    chart.data.datasets[0].data.push(typeof v === 'number' ? v : Number(v));
+    const numericValue = typeof v === 'number' ? v : Number(v);
+    chart.data.datasets[0].data.push(numericValue);
+
+    // === ESCALA DINÂMICA: atualiza o máximo observado ===
+    if (numericValue > (chartMaxValue[sensor] || 0)) {
+        chartMaxValue[sensor] = numericValue;
+        // Atualiza o eixo Y com a nova margem de 10%
+        const newMax = getYAxisMax(sensor);
+        if (chart.options.scales && chart.options.scales.y) {
+            chart.options.scales.y.max = newMax;
+        }
+    }
+
     chart.update('none'); // atualização silenciosa (sem animação)
 }
 
@@ -713,13 +747,27 @@ function changeChartType(sensor, type) {
     const currentLabels = chart.data.labels.slice();
     const currentData = chart.data.datasets[0].data.slice();
 
-    // Restaura os dados completos (para todos os tipos, exceto pizza que foi removido)
+    // Restaura os dados completos (para todos os tipos)
     chart.data.labels = currentLabels;
     chart.data.datasets[0].data = currentData;
 
     // Configura conforme o tipo escolhido
-    if (type === 'scatter') {
-        // Dispersão: usa 'line' com showLine=false e pontos maiores
+    if (type === 'area') {
+        chart.config.type = 'line';
+        chart.data.datasets[0].showLine = true;
+        chart.data.datasets[0].pointRadius = 2;
+        chart.data.datasets[0].fill = true;
+        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.3)';
+        chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].tension = 0.15;
+    } else if (type === 'bar') {
+        chart.config.type = 'bar';
+        chart.data.datasets[0].showLine = false;
+        chart.data.datasets[0].pointRadius = 0;
+        chart.data.datasets[0].fill = false;
+        chart.data.datasets[0].backgroundColor = '#6b5bbb';
+        chart.data.datasets[0].borderColor = '#6b5bbb';
+    } else if (type === 'scatter') {
         chart.config.type = 'line';
         chart.data.datasets[0].showLine = false;
         chart.data.datasets[0].pointRadius = 5;
@@ -742,25 +790,15 @@ function changeChartType(sensor, type) {
         chart.data.datasets[0].tension = 0.15;
         chart.data.datasets[0].borderColor = '#6b5bbb';
         chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.1)';
-    } else if (type === 'bar') {
-        chart.config.type = 'bar';
-        chart.data.datasets[0].showLine = false;
-        chart.data.datasets[0].pointRadius = 0;
-        chart.data.datasets[0].fill = false;
-        chart.data.datasets[0].backgroundColor = '#6b5bbb';
-        chart.data.datasets[0].borderColor = '#6b5bbb';
-    } else if (type === 'area') {
-        chart.config.type = 'line';
-        chart.data.datasets[0].showLine = true;
-        chart.data.datasets[0].pointRadius = 2;
-        chart.data.datasets[0].fill = true;
-        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.3)';
-        chart.data.datasets[0].borderColor = '#6b5bbb';
-        chart.data.datasets[0].tension = 0.15;
     }
 
     // Garante que as escalas existam (para gráficos que não sejam pizza)
     ensureScales(chart, sensor);
+
+    // Atualiza a escala Y com o valor dinâmico atual
+    if (chart.options.scales && chart.options.scales.y) {
+        chart.options.scales.y.max = getYAxisMax(sensor);
+    }
 
     chart.update();
 }

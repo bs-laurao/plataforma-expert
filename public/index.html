@@ -17,7 +17,6 @@
                 <!-- Logo -->
                 <div class="logo">
                     <img src="imagem/logo.png.png" alt="Logo ExpeRT" class="logo-image" />
-
                 </div>
                 <!-- Menu de navegação -->
                 <nav>
@@ -109,9 +108,7 @@
                 </div>
             </div>
 
-           
             <!-- ========== TELA DE TEMPERATURA ========== -->
-        
             <div class="monitor-screen" id="temperatureScreen">
                 <div class="screen-header">
                     <div class="sensor-title"><h2>Temperatura</h2></div>
@@ -144,24 +141,15 @@
 
                 <!-- ===== VISUALIZAÇÃO EM GRÁFICO ===== -->
                 <div class="view-container graph-view">
-                    <!-- Título removido para evitar duplicação -->
                     <div class="chart-controls">
-                        <!-- Controle de escala Y (apenas temperatura) -->
-                        <label for="temperatureScale">Escala Y:</label>
-                        <select id="temperatureScale" onchange="setYAxisMax('temperature', this.value)">
-                            <option value="10">10 °C</option>
-                            <option value="20">20 °C</option>
-                            <option value="50">50 °C</option>
-                            <option value="100" selected>100 °C</option>
-                        </select>
-                        <!-- Seletor de tipo de gráfico -->
+                        <!-- Seletor de tipo de gráfico (ordem: área, barras, dispersão, linha, linha com pontos) -->
                         <label for="temperatureChartType">Tipo:</label>
                         <select id="temperatureChartType" onchange="changeChartType('temperature', this.value)">
+                            <option value="area" selected>Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
                             <option value="line">Linha</option>
                             <option value="line-points">Linha com Pontos</option>
-                            <option value="bar">Barras</option>
-                            <option value="area">Área</option>
-                            <option value="scatter">Dispersão</option>
                         </select>
                     </div>
                     <!-- Onde o gráfico será renderizado -->
@@ -178,9 +166,7 @@
                 </div>
             </div>
 
-          
             <!-- ========== TELA DE DISTÂNCIA ========== -->
-           
             <div class="monitor-screen" id="distanceScreen">
                 <div class="screen-header">
                     <div class="sensor-title"><h2>Distância</h2></div>
@@ -209,15 +195,14 @@
                 </div>
 
                 <div class="view-container graph-view">
-                    <!-- Título removido para evitar duplicação -->
                     <div class="chart-controls">
                         <label for="distanceChartType">Tipo:</label>
                         <select id="distanceChartType" onchange="changeChartType('distance', this.value)">
+                            <option value="area" selected>Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
                             <option value="line">Linha</option>
                             <option value="line-points">Linha com Pontos</option>
-                            <option value="bar">Barras</option>
-                            <option value="area">Área</option>
-                            <option value="scatter">Dispersão</option>
                         </select>
                     </div>
                     <div class="chart-wrapper">
@@ -232,7 +217,6 @@
                 </div>
             </div>
 
-           
             <!-- ========== TELA DO OSCILADOR (PERÍODO) ========== -->
             <div class="monitor-screen" id="periodScreen">
                 <div class="screen-header">
@@ -262,15 +246,14 @@
                 </div>
 
                 <div class="view-container graph-view">
-                    <!-- Título removido para evitar duplicação -->
                     <div class="chart-controls">
                         <label for="periodChartType">Tipo:</label>
                         <select id="periodChartType" onchange="changeChartType('period', this.value)">
+                            <option value="area" selected>Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
                             <option value="line">Linha</option>
                             <option value="line-points">Linha com Pontos</option>
-                            <option value="bar">Barras</option>
-                            <option value="area">Área</option>
-                            <option value="scatter">Dispersão</option>
                         </select>
                     </div>
                     <div class="chart-wrapper">
@@ -285,9 +268,7 @@
                 </div>
             </div>
 
-         
             <!-- ========== TELA DE LUMINOSIDADE ========== -->
-         
             <div class="monitor-screen" id="lightScreen">
                 <div class="screen-header">
                     <div class="sensor-title"><h2>Luminosidade</h2></div>
@@ -316,15 +297,14 @@
                 </div>
 
                 <div class="view-container graph-view">
-                    <!-- Título removido para evitar duplicação -->
                     <div class="chart-controls">
                         <label for="lightChartType">Tipo:</label>
                         <select id="lightChartType" onchange="changeChartType('light', this.value)">
+                            <option value="area" selected>Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
                             <option value="line">Linha</option>
                             <option value="line-points">Linha com Pontos</option>
-                            <option value="bar">Barras</option>
-                            <option value="area">Área</option>
-                            <option value="scatter">Dispersão</option>
                         </select>
                     </div>
                     <div class="chart-wrapper">
