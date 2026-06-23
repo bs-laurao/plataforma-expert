@@ -4,105 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ExpeRT - Plataforma de Monitoramento</title>
+    <!-- Folha de estilos principal -->
     <link rel="stylesheet" href="style.css" />
+    <!-- Biblioteca Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Estilos temporários (depois mova para style.css) */
-        .export-buttons {
-            display: flex;
-            gap: 10px;
-            margin-left: auto;
-            align-items: center;
-        }
-        .export-btn {
-            background: #f0f0f0;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-            font-weight: 500;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .export-btn:hover {
-            background: #e0e0e0;
-        }
-        .export-icon {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-        [data-theme="dark"] .export-btn {
-            background: #2d3748;
-            color: #e2e8f0;
-        }
-        [data-theme="dark"] .export-btn:hover {
-            background: #4a5568;
-        }
-        .chart-controls {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-        .chart-controls label {
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-        .chart-controls select {
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            background: var(--bg-secondary, #f9f9f9);
-            font-size: 0.9rem;
-        }
-        .chart-controls select:focus {
-            outline: 2px solid #6b5bbb;
-        }
-        [data-theme="dark"] .chart-controls select {
-            background: #2d3748;
-            color: #e2e8f0;
-            border-color: #4a5568;
-        }
-        .change-device-btn {
-            background: rgba(255,255,255,0.15);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: background 0.2s;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .change-device-btn:hover {
-            background: rgba(255,255,255,0.25);
-        }
-        .sampling-compact {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
+        <!-- ===== CABEÇALHO ===== -->
         <header>
             <div class="header-content">
+                <!-- Logo -->
                 <div class="logo">
                     <h1>Expe<span>RT</span></h1>
                     <p>plataforma</p>
                 </div>
+                <!-- Menu de navegação -->
                 <nav>
                     <ul>
                         <li><a href="index.html" class="active">USAR DISPOSITIVOS</a></li>
@@ -110,16 +27,20 @@
                         <li><a href="sobre.html">SOBRE</a></li>
                     </ul>
                 </nav>
+                <!-- Botão tema claro/escuro -->
                 <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
                     ◑
                 </button>
             </div>
 
-            <div id="samplingWrapper" class="sampling-control" style="display:none;">
+            <!-- ===== CONTROLE DE AMOSTRAGEM E TROCA DE DISPOSITIVO ===== -->
+            <div id="samplingWrapper" class="sampling-control">
                 <div class="sampling-compact">
+                    <!-- Botão voltar (estilo bola) -->
                     <button class="back-ball-btn" onclick="closeView()" aria-label="Voltar">
                         &lt;
                     </button>
+                    <!-- Seletor de intervalo de amostragem -->
                     <span class="sampling-label">Amostragem:</span>
                     <select id="samplingSelect" onchange="setSamplingInterval(Number(this.value))">
                         <option value="0.1" selected>0.1 s</option>
@@ -128,6 +49,7 @@
                         <option value="5">5 s</option>
                         <option value="10">10 s</option>
                     </select>
+                    <!-- Botão para trocar de dispositivo (volta ao menu) -->
                     <button class="change-device-btn" onclick="closeView()">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16h16V4H4z M8 8h8v8H8z"/></svg>
                         Trocar Dispositivo
@@ -136,25 +58,31 @@
             </div>
         </header>
 
+        <!-- ===== CONTEÚDO PRINCIPAL ===== -->
         <main class="main-content">
+            <!-- MENU INICIAL COM CARDS DOS SENSORES -->
             <div class="main-menu" id="mainMenu">
                 <h2 class="page-title">Usar Dispositivos</h2>
                 <div class="devices-grid">
+                    <!-- Card Temperatura -->
                     <div class="device-card" onclick="showMonitor('temperature')">
                         <div class="device-icon temperature-icon"></div>
                         <h3>Temperatura</h3>
                         <p>Monitoramento de temperatura em tempo real</p>
                     </div>
+                    <!-- Card Distância -->
                     <div class="device-card" onclick="showMonitor('distance')">
                         <div class="device-icon distance-icon"></div>
                         <h3>Distância</h3>
                         <p>Medição de distância com sensores</p>
                     </div>
+                    <!-- Card Oscilador -->
                     <div class="device-card" onclick="showMonitor('period')">
                         <div class="device-icon oscillator-icon"></div>
                         <h3>Oscilador</h3>
                         <p>Análise de períodos oscilatórios</p>
                     </div>
+                    <!-- Card Luminosidade -->
                     <div class="device-card" onclick="showMonitor('light')">
                         <div class="device-icon light-icon"></div>
                         <h3>Luminosidade</h3>
@@ -163,7 +91,8 @@
                 </div>
             </div>
 
-            <div class="modal" id="viewModal" aria-hidden="true" style="display:none;">
+            <!-- MODAL PARA ESCOLHER TABELA OU GRÁFICO -->
+            <div class="modal" id="viewModal" aria-hidden="true">
                 <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
                     <button class="modal-close" aria-label="Fechar" onclick="closeModal()">×</button>
                     <h3 id="viewModalTitle">Escolha o tipo de visualização</h3>
@@ -180,14 +109,18 @@
                 </div>
             </div>
 
-            <!-- ===== TEMPERATURA ===== -->
-            <div class="monitor-screen" id="temperatureScreen" style="display:none;">
+           
+            <!-- ========== TELA DE TEMPERATURA ========== -->
+        
+            <div class="monitor-screen" id="temperatureScreen">
                 <div class="screen-header">
                     <div class="sensor-title"><h2>Temperatura</h2></div>
+                    <!-- Abas: Tabela e Gráfico -->
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
                     </div>
+                    <!-- Botões de exportação -->
                     <div class="export-buttons">
                         <button class="export-btn" onclick="saveChartImage('temperature')">
                             <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
@@ -200,6 +133,7 @@
                     </div>
                 </div>
 
+                <!-- ===== VISUALIZAÇÃO EM TABELA ===== -->
                 <div class="view-container table-view active">
                     <div class="big-value">
                         <span id="temperature">0.0</span>
@@ -208,9 +142,11 @@
                     </div>
                 </div>
 
+                <!-- ===== VISUALIZAÇÃO EM GRÁFICO ===== -->
                 <div class="view-container graph-view">
-                    <div class="chart-title-center">Temperatura</div>
+                    <!-- Título removido para evitar duplicação -->
                     <div class="chart-controls">
+                        <!-- Controle de escala Y (apenas temperatura) -->
                         <label for="temperatureScale">Escala Y:</label>
                         <select id="temperatureScale" onchange="setYAxisMax('temperature', this.value)">
                             <option value="10">10 °C</option>
@@ -218,6 +154,7 @@
                             <option value="50">50 °C</option>
                             <option value="100" selected>100 °C</option>
                         </select>
+                        <!-- Seletor de tipo de gráfico -->
                         <label for="temperatureChartType">Tipo:</label>
                         <select id="temperatureChartType" onchange="changeChartType('temperature', this.value)">
                             <option value="line">Linha</option>
@@ -227,20 +164,24 @@
                             <option value="scatter">Dispersão</option>
                         </select>
                     </div>
+                    <!-- Onde o gráfico será renderizado -->
                     <div class="chart-wrapper">
                         <canvas id="temperatureChart"></canvas>
                     </div>
                 </div>
 
+                <!-- Botões de controle (Iniciar, Pausar, Limpar) -->
                 <div class="compact-controls">
                     <button class="control-btn start" onclick="sendCommand('1')"><span class="btn-icon">▶</span> Iniciar</button>
                     <button class="control-btn pause" onclick="sendCommand('1p')"><span class="btn-icon">⏸</span> Pausar</button>
-                    <button class="control-btn clear" id="clearBtn-temperature" onclick="clearSensorData('temperature')" style="display:none;"><span class="btn-icon">✕</span> Limpar</button>
+                    <button class="control-btn clear" id="clearBtn-temperature" onclick="clearSensorData('temperature')"><span class="btn-icon">✕</span> Limpar</button>
                 </div>
             </div>
 
-            <!-- ===== DISTÂNCIA ===== -->
-            <div class="monitor-screen" id="distanceScreen" style="display:none;">
+          
+            <!-- ========== TELA DE DISTÂNCIA ========== -->
+           
+            <div class="monitor-screen" id="distanceScreen">
                 <div class="screen-header">
                     <div class="sensor-title"><h2>Distância</h2></div>
                     <div class="tabs">
@@ -268,7 +209,7 @@
                 </div>
 
                 <div class="view-container graph-view">
-                    <div class="chart-title-center">Distância</div>
+                    <!-- Título removido para evitar duplicação -->
                     <div class="chart-controls">
                         <label for="distanceChartType">Tipo:</label>
                         <select id="distanceChartType" onchange="changeChartType('distance', this.value)">
@@ -287,12 +228,13 @@
                 <div class="compact-controls">
                     <button class="control-btn start" onclick="sendCommand('2')"><span class="btn-icon">▶</span> Iniciar</button>
                     <button class="control-btn pause" onclick="sendCommand('2p')"><span class="btn-icon">⏸</span> Pausar</button>
-                    <button class="control-btn clear" id="clearBtn-distance" onclick="clearSensorData('distance')" style="display:none;"><span class="btn-icon">✕</span> Limpar</button>
+                    <button class="control-btn clear" id="clearBtn-distance" onclick="clearSensorData('distance')"><span class="btn-icon">✕</span> Limpar</button>
                 </div>
             </div>
 
-            <!-- ===== OSCILADOR ===== -->
-            <div class="monitor-screen" id="periodScreen" style="display:none;">
+           
+            <!-- ========== TELA DO OSCILADOR (PERÍODO) ========== -->
+            <div class="monitor-screen" id="periodScreen">
                 <div class="screen-header">
                     <div class="sensor-title"><h2>Oscilador</h2></div>
                     <div class="tabs">
@@ -320,7 +262,7 @@
                 </div>
 
                 <div class="view-container graph-view">
-                    <div class="chart-title-center">Oscilador</div>
+                    <!-- Título removido para evitar duplicação -->
                     <div class="chart-controls">
                         <label for="periodChartType">Tipo:</label>
                         <select id="periodChartType" onchange="changeChartType('period', this.value)">
@@ -339,12 +281,14 @@
                 <div class="compact-controls">
                     <button class="control-btn start" onclick="sendCommand('3')"><span class="btn-icon">▶</span> Iniciar</button>
                     <button class="control-btn pause" onclick="sendCommand('3p')"><span class="btn-icon">⏸</span> Pausar</button>
-                    <button class="control-btn clear" id="clearBtn-period" onclick="clearSensorData('period')" style="display:none;"><span class="btn-icon">✕</span> Limpar</button>
+                    <button class="control-btn clear" id="clearBtn-period" onclick="clearSensorData('period')"><span class="btn-icon">✕</span> Limpar</button>
                 </div>
             </div>
 
-            <!-- ===== LUMINOSIDADE ===== -->
-            <div class="monitor-screen" id="lightScreen" style="display:none;">
+         
+            <!-- ========== TELA DE LUMINOSIDADE ========== -->
+         
+            <div class="monitor-screen" id="lightScreen">
                 <div class="screen-header">
                     <div class="sensor-title"><h2>Luminosidade</h2></div>
                     <div class="tabs">
@@ -372,7 +316,7 @@
                 </div>
 
                 <div class="view-container graph-view">
-                    <div class="chart-title-center">Luminosidade</div>
+                    <!-- Título removido para evitar duplicação -->
                     <div class="chart-controls">
                         <label for="lightChartType">Tipo:</label>
                         <select id="lightChartType" onchange="changeChartType('light', this.value)">
@@ -391,11 +335,12 @@
                 <div class="compact-controls">
                     <button class="control-btn start" onclick="sendCommand('4')"><span class="btn-icon">▶</span> Iniciar</button>
                     <button class="control-btn pause" onclick="sendCommand('4p')"><span class="btn-icon">⏸</span> Pausar</button>
-                    <button class="control-btn clear" id="clearBtn-light" onclick="clearSensorData('light')" style="display:none;"><span class="btn-icon">✕</span> Limpar</button>
+                    <button class="control-btn clear" id="clearBtn-light" onclick="clearSensorData('light')"><span class="btn-icon">✕</span> Limpar</button>
                 </div>
             </div>
         </main>
 
+        <!-- ===== RODAPÉ ===== -->
         <footer>
             <div class="status">
                 <div id="connectionStatus" class="status-disconnected">
@@ -407,6 +352,7 @@
         </footer>
     </div>
 
+    <!-- Carrega o script principal -->
     <script src="script.js"></script>
 </body>
 </html>
