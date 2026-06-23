@@ -95,21 +95,11 @@ header {
     width: 100%;
 }
 
-.logo h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: white;
-    margin-right: 5px;
-}
-.logo span {
-    font-size: 1.8rem;
-    font-weight: 300;
-    color: #8a7cff;
-}
-.logo p {
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.8);
-    margin-left: 10px;
+
+.logo-image {
+    width: 160px;
+    height: auto;
+    object-fit: contain;
 }
 
 /* Menu de navegação */
