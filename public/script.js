@@ -701,7 +701,9 @@ function saveChartImage(sensor) {
 
 /**
  * Salva os dados (labels e valores) do gráfico de um sensor em CSV
- * Usa Blob para criar o arquivo e URL.createObjectURL para baixar
+ * O cabeçalho da segunda coluna é o nome do sensor (ex: Temperatura, Distância...)
+ * Usa ponto-e-vírgula como separador para melhor compatibilidade com Excel
+ * Adiciona BOM para UTF-8
  */
 function saveDataCSV(sensor) {
     const chart = charts[sensor];
@@ -718,21 +720,23 @@ function saveDataCSV(sensor) {
         return;
     }
 
-    // Monta o conteúdo CSV
-    let csv = 'Tempo (mm:ss),Valor\n';
+    // Obtém o nome do sensor
+    const sensorName = getChartLabel(sensor);
+
+    // Cabeçalho com o nome do sensor
+    let csv = `Tempo (mm:ss);${sensorName}\n`;
     for (let i = 0; i < labels.length; i++) {
-        csv += `${labels[i]},${values[i]}\n`;
+        csv += `${labels[i]};${values[i]}\n`;
     }
 
-    // Cria um Blob com o CSV e faz o download
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    // Adiciona BOM (Byte Order Mark) para UTF-8, garantindo acentos e separadores
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.download = `dados_${sensor}.csv`;
     link.href = URL.createObjectURL(blob);
     link.click();
-    URL.revokeObjectURL(link.href); // libera memória
+    URL.revokeObjectURL(link.href);
 }
-
 
 // FUNÇÃO PARA ALTERAR O TIPO DE GRÁFICO
 
