@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExpeRT - Sobre</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <img src="imagem/logo.png.png" alt="Logo ExpeRT" class="logo-image" />
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">USAR DISPOSITIVOS</a></li>
+                        <li><a href="tutorial.html">TUTORIAIS</a></li>
+                        <li><a href="sobre.html" class="active">SOBRE</a></li>
+                    </ul>
+                </nav>
+                <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+                    ◑
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="info-page">
+                <h2 class="page-title">Sobre a Plataforma ExpeRT</h2>
+                <div class="info-content">
+                    <p><strong>ExpeRT</strong> é uma plataforma de monitoramento de sensores desenvolvida para auxiliar em experimentos científicos e educacionais. Permite a coleta, visualização e exportação de dados em tempo real, com suporte a múltiplos sensores (temperatura, distância, período e luminosidade).</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="status">
+                <div id="connectionStatus" class="status-disconnected">
+                    <span class="status-indicator"></span>
+                    Desconectado
+                </div>
+            </div>
+            <p>&copy; 2026 ExpeRT Plataforma</p>
+        </footer>
+    </div>
+
+    <!-- Scripts para controle de tema -->
+    <script src="js/state.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
