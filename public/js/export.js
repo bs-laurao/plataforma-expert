@@ -24,7 +24,6 @@ function saveChartImage(sensor) {
  * Salva os dados (labels e valores) do gráfico de um sensor em CSV
  * O cabeçalho da segunda coluna é o nome do sensor (ex: Temperatura, Distância...)
  * Usa ponto-e-vírgula como separador para melhor compatibilidade com Excel
- * Adiciona BOM para UTF-8
  * Os números são formatados com vírgula decimal (padrão PT-BR)
  */
 function saveDataCSV(sensor) {
@@ -46,7 +45,7 @@ function saveDataCSV(sensor) {
     const sensorName = getChartLabel(sensor);
 
     // Cabeçalho com o nome do sensor
-    let csv = `Tempo (mm:ss);${sensorName}\n`;
+    let csv = `Tempo;${sensorName}\n`;
     for (let i = 0; i < labels.length; i++) {
         // Formata o valor numérico: substitui ponto por vírgula
         let valorFormatado = values[i];
@@ -56,8 +55,8 @@ function saveDataCSV(sensor) {
         csv += `${labels[i]};${valorFormatado}\n`;
     }
 
-    // Adiciona BOM (Byte Order Mark) para UTF-8
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    // UTF-8 puro
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.download = `dados_${sensor}.csv`;
     link.href = URL.createObjectURL(blob);
