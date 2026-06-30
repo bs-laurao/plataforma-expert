@@ -100,13 +100,54 @@ function showMonitor(type) {
     window._selectedSensorForModal = type;
 }
 
-// Escolhe a visualização e exibe a tela do sensor correspondente
+// Quando o usuário escolhe o tipo de visualização, fechamos o modal de escolha
+// e exibimos o aviso antes de abrir a tela do sensor.
 function selectView(view) {
     currentView = view;
     document.getElementById('viewModal').style.display = 'none';
     const sensor = window._selectedSensorForModal || currentSensor;
     if (!sensor) return;
 
+    // Salva a escolha pendente até o aviso ser confirmado.
+    window._pendingViewSelection = { sensor, view };
+    showWarningModal(sensor, view);
+}
+
+// Abre o modal de aviso com mensagem personalizada para sensor e tipo.
+function showWarningModal(sensor, view) {
+    const warnModal = document.getElementById('warnModal');
+    if (!warnModal) return;
+
+    const warnTitle = warnModal.querySelector('.warn-title');
+    const warnText = warnModal.querySelector('.warn-text');
+    if (warnTitle) {
+        warnTitle.textContent = `Aviso antes de iniciar ${view === 'graph' ? 'o gráfico' : 'a tabela'}`;
+    }
+    if (warnText) {
+        warnText.textContent = `Certifique-se de que o dispositivo conectado no Arduino corresponde ao sensor selecionado. Antes de iniciar a coleta de dados, lembre-se de reiniciar o Arduino.`;
+    }
+
+    warnModal.style.display = 'flex';
+}
+
+function confirmWarningSelection() {
+    // Usuário confirmou o aviso; prossegue para abrir a tela do sensor.
+    const pending = window._pendingViewSelection;
+    if (!pending) return;
+
+    window._pendingViewSelection = null;
+    document.getElementById('warnModal').style.display = 'none';
+    openSensorScreen(pending.sensor, pending.view);
+}
+
+function closeWarningModal() {
+    // Se o aviso for fechado, cancela a seleção pendente e volta ao menu.
+    document.getElementById('warnModal').style.display = 'none';
+    window._pendingViewSelection = null;
+    showMenu();
+}
+
+function openSensorScreen(sensor, view) {
     showSamplingControl(true); // Mostra o seletor de intervalo de amostragem
 
     // Oculta todas as telas de monitoramento e mostra apenas a do sensor escolhido
@@ -115,11 +156,6 @@ function selectView(view) {
     if (!screenEl) return;
     screenEl.style.display = 'block';
 
-    // Usa a função selectViewType para sincronizar abas e containers (corrige o bug das abas)
+    // Usa a função selectViewType para sincronizar abas e containers
     selectViewType(view);
-
-    // Se for gráfico, inicializa o Chart.js
-    if (view === 'graph') {
-        initChart(sensor);
-    }
 }

@@ -108,6 +108,20 @@
                 </div>
             </div>
 
+            <!-- MODAL DE AVISO ANTES DE INICIAR COLETA -->
+            <div class="modal" id="warnModal" aria-hidden="true">
+                <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="warnModalTitle">
+                    <button class="modal-close" aria-label="Fechar" onclick="closeWarningModal()">×</button>
+                    <h3 id="warnModalTitle" class="warn-title">Aviso antes de iniciar</h3>
+                    <p class="warn-text">Certifique-se de que o dispositivo conectado no Arduino corresponde ao sensor selecionado. Antes de iniciar a coleta de dados, lembre-se de reiniciar o Arduino.</p>
+
+                    <div class="modal-actions">
+                        <button class="view-btn" onclick="confirmWarningSelection()">OK</button>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- ========== TELA DE TEMPERATURA ========== -->
             <div class="monitor-screen" id="temperatureScreen">
                 <div class="screen-header">

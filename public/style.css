@@ -364,6 +364,20 @@ nav a:hover, nav a.active {
     align-items: center;
     gap: 8px;
 }
+#warnModal .modal-content {
+    max-width: 440px;
+}
+#warnModal .warn-text {
+    margin-top: 10px;
+    color: var(--text-color);
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+#warnModal .view-btn {
+    min-width: 120px;
+    flex-direction: row;
+    justify-content: center;
+}
 .view-btn:hover {
     border-color: var(--secondary-color);
     transform: translateY(-2px);
@@ -710,7 +724,7 @@ footer p {
 
 .video-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 */
+    padding-bottom: 56.25%; 
     height: 0;
     overflow: hidden;
     max-width: 100%;
