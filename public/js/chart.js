@@ -6,21 +6,24 @@ function getDefaultYAxisMax(sensor) {
         case 'temperature': return 10;  // inicial baixo, será ajustado dinamicamente
         case 'distance': return 10;
         case 'period': return 10;
-        case 'light': return 10;
+        case 'light': return 10; // inicia baixo e cresce dinamicamente até 100
         default: return 10;
     }
 }
 
-// Obtém o valor máximo atual para o eixo Y (considerando a margem de 10%)
-// Se ainda não houver dados, retorna o valor padrão
+// Obtém o valor máximo atual para o eixo Y.
+// Para luminosidade, adiciona 10% de margem sobre o maior valor observado,
+// mas considera valores acima de 100 como 100 para a escala dos dados.
 function getYAxisMax(sensor) {
     const maxObserved = chartMaxValue[sensor] || 0;
     if (maxObserved === 0) {
         return getDefaultYAxisMax(sensor);
     }
+
+    const observed = sensor === 'light' ? Math.min(100, maxObserved) : maxObserved;
     // Adiciona 10% do valor observado (arredondado para cima, com pelo menos 1)
-    const margin = Math.max(1, Math.ceil(maxObserved * 0.1));
-    return Math.ceil(maxObserved + margin);
+    const margin = Math.max(1, Math.ceil(observed * 0.1));
+    return Math.ceil(observed + margin);
 }
 
 // Atualiza o eixo Y do gráfico para refletir o valor máximo dinâmico

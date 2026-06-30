@@ -11,10 +11,14 @@ function formatElapsedMsToMMSS(ms) {
 }
 
 // Impede valores negativos para sensores que não fazem sentido (exceto temperatura)
+// Para luminosidade, também limita o valor em 100%.
 function clampValueForSensor(sensor, raw) {
     const v = Number(raw);
     if (!Number.isFinite(v)) return raw;
     if (sensor === 'temperature') return v;
+    if (sensor === 'light') {
+        return Math.min(100, Math.max(0, v));
+    }
     return v < 0 ? 0 : v;
 }
 

@@ -50,6 +50,9 @@ function saveDataCSV(sensor) {
         // Formata o valor numérico: substitui ponto por vírgula
         let valorFormatado = values[i];
         if (typeof valorFormatado === 'number') {
+            if (sensor === 'light' && valorFormatado > 100) {
+                valorFormatado = 100;
+            }
             valorFormatado = valorFormatado.toString().replace('.', ',');
         }
         csv += `${labels[i]};${valorFormatado}\n`;
