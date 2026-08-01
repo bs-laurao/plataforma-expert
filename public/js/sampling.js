@@ -13,11 +13,20 @@ function formatElapsedMsToMMSS(ms) {
 // Impede valores negativos para sensores que não fazem sentido (exceto temperatura)
 // Para luminosidade, também limita o valor em 100%.
 function clampValueForSensor(sensor, raw) {
+    // Para o Hall, mantém o texto
+    if (sensor === 'hall') return raw;
+    
     const v = Number(raw);
     if (!Number.isFinite(v)) return raw;
     if (sensor === 'temperature') return v;
-    if (sensor === 'light') {
+    if (sensor === 'light' || sensor === 'motor') {
         return Math.min(100, Math.max(0, v));
+    }
+    if (sensor === 'servo') {
+        return Math.min(180, Math.max(0, v));
+    }
+    if (sensor === 'buzzer') {
+        return Math.min(20000, Math.max(20, v));
     }
     return v < 0 ? 0 : v;
 }
@@ -34,7 +43,15 @@ function processSample(sensor) {
     // Atualiza o valor numérico na tela (tabela)
     if (chartsActive[sensor]) {
         const el = document.getElementById(sensor);
-        if (el) el.textContent = (typeof v === 'number') ? v.toFixed(1) : String(v);
+        if (el) {
+            if (sensor === 'hall') {
+                el.textContent = String(v);
+            } else if (typeof v === 'number') {
+                el.textContent = v.toFixed(1);
+            } else {
+                el.textContent = String(v);
+            }
+        }
     }
 
     // Se o gráfico não estiver ativo, não adiciona ponto
@@ -51,11 +68,22 @@ function processSample(sensor) {
 
     // Adiciona o novo ponto ao gráfico
     chart.data.labels.push(label);
-    const numericValue = typeof v === 'number' ? v : Number(v);
+    
+    // Para o Hall, converte texto para número (1 = Norte, -1 = Sul, 0 = neutro)
+    let numericValue;
+    if (sensor === 'hall') {
+        const text = String(v).toLowerCase();
+        if (text.includes('norte')) numericValue = 1;
+        else if (text.includes('sul')) numericValue = -1;
+        else numericValue = 0;
+    } else {
+        numericValue = typeof v === 'number' ? v : Number(v);
+    }
+    
     chart.data.datasets[0].data.push(numericValue);
 
-    // === ESCALA DINÂMICA: atualiza o máximo observado ===
-    if (numericValue > (chartMaxValue[sensor] || 0)) {
+    // ESCALA DINÂMICA: atualiza o máximo observado (exceto para Hall) 
+    if (sensor !== 'hall' && numericValue > (chartMaxValue[sensor] || 0)) {
         chartMaxValue[sensor] = numericValue;
         // Atualiza o eixo Y com a nova margem de 10%
         const newMax = getYAxisMax(sensor);

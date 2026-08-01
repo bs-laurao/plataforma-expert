@@ -10,21 +10,23 @@ document.addEventListener('DOMContentLoaded', function() {
     updateThemeIcon(currentTheme);
 
     // Listener para alternar tema ao clicar no botão
-    themeToggle.addEventListener('click', function() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
 
-        // Atualiza cores dos gráficos para se adaptarem ao novo tema
-        Object.keys(charts).forEach(sensor => {
-            if (charts[sensor]) {
-                updateChartTheme(sensor);
-            }
+            // Atualiza cores dos gráficos para se adaptarem ao novo tema
+            Object.keys(charts).forEach(sensor => {
+                if (charts[sensor]) {
+                    updateChartTheme(sensor);
+                }
+            });
         });
-    });
+    }
 
     // Inicializa o menu principal e o intervalo de amostragem
     showMenu();

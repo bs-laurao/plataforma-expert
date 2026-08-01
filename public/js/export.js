@@ -43,18 +43,25 @@ function saveDataCSV(sensor) {
 
     // Obtém o nome do sensor
     const sensorName = getChartLabel(sensor);
+    const isHall = sensor === 'hall';
 
     // Cabeçalho com o nome do sensor
     let csv = `Tempo;${sensorName}\n`;
     for (let i = 0; i < labels.length; i++) {
-        // Formata o valor numérico: substitui ponto por vírgula
         let valorFormatado = values[i];
-        if (typeof valorFormatado === 'number') {
+        
+        // Para o Hall, converte número de volta para texto
+        if (isHall) {
+            if (valorFormatado === 1) valorFormatado = 'Norte ↑';
+            else if (valorFormatado === -1) valorFormatado = 'Sul ↓';
+            else valorFormatado = '---';
+        } else if (typeof valorFormatado === 'number') {
             if (sensor === 'light' && valorFormatado > 100) {
                 valorFormatado = 100;
             }
             valorFormatado = valorFormatado.toString().replace('.', ',');
         }
+        
         csv += `${labels[i]};${valorFormatado}\n`;
     }
 

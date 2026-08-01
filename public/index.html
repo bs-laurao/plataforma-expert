@@ -87,6 +87,30 @@
                         <h3>Luminosidade</h3>
                         <p>Percentual de luz</p>
                     </div>
+                    <!-- Card Buzzer (NOVO) -->
+                    <div class="device-card" onclick="showMonitor('buzzer')">
+                        <div class="device-icon buzzer-icon"></div>
+                        <h3>Buzzer</h3>
+                        <p>Controle de frequência audível (20Hz - 20kHz)</p>
+                    </div>
+                    <!-- Card Hall (NOVO) -->
+                    <div class="device-card" onclick="showMonitor('hall')">
+                        <div class="device-icon hall-icon"></div>
+                        <h3>Sensor Hall</h3>
+                        <p>Detecção de polaridade magnética</p>
+                    </div>
+                    <!-- Card Motor (NOVO) -->
+                    <div class="device-card" onclick="showMonitor('motor')">
+                        <div class="device-icon motor-icon"></div>
+                        <h3>Motor CC</h3>
+                        <p>Controle de velocidade </p>
+                    </div>
+                    <!-- Card Servo Motor (NOVO) -->
+                    <div class="device-card" onclick="showMonitor('servo')">
+                        <div class="device-icon servo-icon"></div>
+                        <h3>Servo Motor</h3>
+                        <p>Ângulo do prisma </p>
+                    </div>
                 </div>
             </div>
 
@@ -332,6 +356,210 @@
                     <button class="control-btn clear" id="clearBtn-light" onclick="clearSensorData('light')"><span class="btn-icon">✕</span> Limpar</button>
                 </div>
             </div>
+
+            <!-- ========== TELA DO BUZZER ========== -->
+            <div class="monitor-screen" id="buzzerScreen">
+                <div class="screen-header">
+                    <div class="sensor-title"><h2>Buzzer</h2></div>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
+                        <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="saveChartImage('buzzer')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                            Salvar Imagem
+                        </button>
+                        <button class="export-btn" onclick="saveDataCSV('buzzer')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+                            Salvar CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="view-container table-view active">
+                    <div class="big-value">
+                        <span id="buzzer">0.0</span>
+                        <span class="unit">Hz</span>
+                        <div class="time-display">Tempo: <span id="buzzerTime">00:00</span></div>
+                    </div>
+                </div>
+
+                <div class="view-container graph-view">
+                    <div class="chart-controls">
+                        <label for="buzzerChartType">Tipo:</label>
+                        <select id="buzzerChartType" onchange="changeChartType('buzzer', this.value)">
+                            <option value="area" selected>Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
+                            <option value="line">Linha</option>
+                            <option value="line-points">Linha com Pontos</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="buzzerChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="compact-controls">
+                    <button class="control-btn start" onclick="sendCommand('5')"><span class="btn-icon">▶</span> Iniciar</button>
+                    <button class="control-btn pause" onclick="sendCommand('5p')"><span class="btn-icon">⏸</span> Pausar</button>
+                    <button class="control-btn clear" id="clearBtn-buzzer" onclick="clearSensorData('buzzer')"><span class="btn-icon">✕</span> Limpar</button>
+                </div>
+            </div>
+
+            <!-- ========== TELA DO SENSOR HALL ========== -->
+            <div class="monitor-screen" id="hallScreen">
+                <div class="screen-header">
+                    <div class="sensor-title"><h2>Sensor Hall</h2></div>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
+                        <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="saveChartImage('hall')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                            Salvar Imagem
+                        </button>
+                        <button class="export-btn" onclick="saveDataCSV('hall')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+                            Salvar CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="view-container table-view active">
+                    <div class="big-value">
+                        <span id="hall">---</span>
+                        <span class="unit"></span>
+                        <div class="time-display">Tempo: <span id="hallTime">00:00</span></div>
+                    </div>
+                </div>
+
+                <div class="view-container graph-view">
+                    <div class="chart-controls">
+                        <label for="hallChartType">Tipo:</label>
+                        <select id="hallChartType" onchange="changeChartType('hall', this.value)">
+                            <option value="area" selected>Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
+                            <option value="line">Linha</option>
+                            <option value="line-points">Linha com Pontos</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="hallChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="compact-controls">
+                    <button class="control-btn start" onclick="sendCommand('6')"><span class="btn-icon">▶</span> Iniciar</button>
+                    <button class="control-btn pause" onclick="sendCommand('6p')"><span class="btn-icon">⏸</span> Pausar</button>
+                    <button class="control-btn clear" id="clearBtn-hall" onclick="clearSensorData('hall')"><span class="btn-icon">✕</span> Limpar</button>
+                </div>
+            </div>
+
+            <!-- ========== TELA DO MOTOR CC ========== -->
+            <div class="monitor-screen" id="motorScreen">
+                <div class="screen-header">
+                    <div class="sensor-title"><h2>Motor CC</h2></div>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
+                        <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="saveChartImage('motor')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                            Salvar Imagem
+                        </button>
+                        <button class="export-btn" onclick="saveDataCSV('motor')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+                            Salvar CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="view-container table-view active">
+                    <div class="big-value">
+                        <span id="motor">0.0</span>
+                        <span class="unit">%</span>
+                        <div class="time-display">Tempo: <span id="motorTime">00:00</span></div>
+                    </div>
+                </div>
+
+                <div class="view-container graph-view">
+                    <div class="chart-controls">
+                        <label for="motorChartType">Tipo:</label>
+                        <select id="motorChartType" onchange="changeChartType('motor', this.value)">
+                            <option value="area" selected>Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
+                            <option value="line">Linha</option>
+                            <option value="line-points">Linha com Pontos</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="motorChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="compact-controls">
+                    <button class="control-btn start" onclick="sendCommand('7')"><span class="btn-icon">▶</span> Iniciar</button>
+                    <button class="control-btn pause" onclick="sendCommand('7p')"><span class="btn-icon">⏸</span> Pausar</button>
+                    <button class="control-btn clear" id="clearBtn-motor" onclick="clearSensorData('motor')"><span class="btn-icon">✕</span> Limpar</button>
+                </div>
+            </div>
+
+            <!-- ========== TELA DO SERVO MOTOR ========== -->
+            <div class="monitor-screen" id="servoScreen">
+                <div class="screen-header">
+                    <div class="sensor-title"><h2>Servo Motor</h2></div>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
+                        <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="saveChartImage('servo')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                            Salvar Imagem
+                        </button>
+                        <button class="export-btn" onclick="saveDataCSV('servo')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+                            Salvar CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="view-container table-view active">
+                    <div class="big-value">
+                        <span id="servo">0.0</span>
+                        <span class="unit">°</span>
+                        <div class="time-display">Tempo: <span id="servoTime">00:00</span></div>
+                    </div>
+                </div>
+
+                <div class="view-container graph-view">
+                    <div class="chart-controls">
+                        <label for="servoChartType">Tipo:</label>
+                        <select id="servoChartType" onchange="changeChartType('servo', this.value)">
+                            <option value="area" selected>Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
+                            <option value="line">Linha</option>
+                            <option value="line-points">Linha com Pontos</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="servoChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="compact-controls">
+                    <button class="control-btn start" onclick="sendCommand('8')"><span class="btn-icon">▶</span> Iniciar</button>
+                    <button class="control-btn pause" onclick="sendCommand('8p')"><span class="btn-icon">⏸</span> Pausar</button>
+                    <button class="control-btn clear" id="clearBtn-servo" onclick="clearSensorData('servo')"><span class="btn-icon">✕</span> Limpar</button>
+                </div>
+            </div>
         </main>
 
         <!-- ===== RODAPÉ ===== -->
@@ -346,7 +574,7 @@
         </footer>
     </div>
 
-    <!-- Carrega o script -->
+    <!-- Carrega os scripts -->
     <script src="js/state.js"></script>
     <script src="js/config.js"></script>
     <script src="js/theme.js"></script>

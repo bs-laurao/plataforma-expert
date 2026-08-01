@@ -12,7 +12,7 @@ function closeView() {
     if (currentSensor) {
         pauseChartForSensor(currentSensor);
         const el = document.getElementById(currentSensor);
-        if (el) el.textContent = '0.0';
+        if (el) el.textContent = currentSensor === 'hall' ? '---' : '0.0';
         const timeEl = document.getElementById(currentSensor + 'Time');
         if (timeEl) timeEl.textContent = '00:00';
 

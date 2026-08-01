@@ -16,6 +16,7 @@ function initWebSocket() {
             connectionStatus.textContent = 'Conectado';
             connectionStatus.className = 'status-connected';
         }
+        console.log('Conectado');
     };
 
     ws.onclose = function() {
@@ -23,7 +24,8 @@ function initWebSocket() {
             connectionStatus.textContent = 'Desconectado';
             connectionStatus.className = 'status-disconnected';
         }
-        setTimeout(initWebSocket, 2000); // tenta reconectar a cada 2s
+        console.log('Desconectado');
+        setTimeout(initWebSocket, 2000);
     };
 
     // Ao receber dados, apenas guarda os valores e timestamps (não atualiza a interface diretamente)
@@ -35,6 +37,8 @@ function initWebSocket() {
             console.error('WS: JSON inválido', err);
             return;
         }
+        
+        // Mapeamento dos dados recebidos do Arduino
         if (typeof data.temperatura === 'number') {
             lastReceivedValues.temperature = data.temperatura;
             lastReceivedAt.temperature = Date.now();
@@ -51,6 +55,29 @@ function initWebSocket() {
             lastReceivedValues.light = data.luminosidade;
             lastReceivedAt.light = Date.now();
         }
+    
+        if (typeof data.buzzer === 'number') {
+            lastReceivedValues.buzzer = data.buzzer;
+            lastReceivedAt.buzzer = Date.now();
+        }
+        if (typeof data.hall === 'string') {
+            lastReceivedValues.hall = data.hall;
+            lastReceivedAt.hall = Date.now();
+        }
+        if (typeof data.motor === 'number') {
+            lastReceivedValues.motor = data.motor;
+            lastReceivedAt.motor = Date.now();
+        }
+        if (typeof data.servo === 'number') {
+            lastReceivedValues.servo = data.servo;
+            lastReceivedAt.servo = Date.now();
+        }
     };
 }
-initWebSocket(); // inicia a conexão
+
+// Inicia a conexão após o DOM carregar
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWebSocket);
+} else {
+    initWebSocket();
+}

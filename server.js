@@ -22,15 +22,19 @@ const port = new SerialPort({
 // Parser para ler os dados enviados pelo Arduino linha por linha (delimitado por \r\n)
 const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
 
-// Objeto que armazena os valores mais recentes de cada sensor
+// Objeto que armazena os valores mais recentes de cada sensor (incluindo os novos)
 let latestData = {
   temperatura: 0,
   distancia: 0,
   periodo: 0,
-  luminosidade: 0
+  luminosidade: 0,
+  buzzer: 0,
+  hall: '---',
+  motor: 0,
+  servo: 0
 };
 
-// Variavel que guarda o ultimo comando enviado (1=temp, 2=dist, 3=periodo, 4=luz)
+// Variavel que guarda o ultimo comando enviado (1=temp, 2=dist, 3=periodo, 4=luz, 5=buzzer, 6=hall, 7=motor, 8=servo)
 let comando = 0;
 
 // Envia um comando (string) para o Arduino via porta serial
@@ -46,6 +50,19 @@ function sendCommandToArduino(command) {
 parser.on('data', (data) => {
   console.log('Dados recebidos:', data);
   
+  // Para o sensor Hall (comando 6), o dado é textual
+  if (comando == 6) {
+    latestData.hall = data.trim();
+    // Envia os dados mais recentes para todos os clientes WebSocket conectados
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(latestData));
+      }
+    });
+    return;
+  }
+  
+  // Para os demais sensores, o dado é numérico
   const numericValue = parseFloat(data);
   if (!isNaN(numericValue)) {
     // Armazena o valor no sensor correspondente ao ultimo comando enviado
@@ -60,6 +77,15 @@ parser.on('data', (data) => {
     }
     if (comando == 4) {
       latestData.luminosidade = numericValue;
+    }
+    if (comando == 5) {
+      latestData.buzzer = numericValue;
+    }
+    if (comando == 7) {
+      latestData.motor = numericValue;
+    }
+    if (comando == 8) {
+      latestData.servo = numericValue;
     }
     
     // Envia os dados mais recentes para todos os clientes WebSocket conectados

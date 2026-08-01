@@ -2,11 +2,17 @@
 
 // Retorna o valor máximo inicial (padrão) para cada sensor
 function getDefaultYAxisMax(sensor) {
+    // Para o Hall, o gráfico vai de -2 a 2
+    if (sensor === 'hall') return 2;
+    
     switch (sensor) {
         case 'temperature': return 10;  // inicial baixo, será ajustado dinamicamente
         case 'distance': return 10;
         case 'period': return 10;
         case 'light': return 10; // inicia baixo e cresce dinamicamente até 100
+        case 'buzzer': return 20000; 
+        case 'motor': return 100; 
+        case 'servo': return 180; 
         default: return 10;
     }
 }
@@ -15,6 +21,9 @@ function getDefaultYAxisMax(sensor) {
 // Para luminosidade, adiciona 10% de margem sobre o maior valor observado,
 // mas considera valores acima de 100 como 100 para a escala dos dados.
 function getYAxisMax(sensor) {
+    // Para o Hall, escala fixa
+    if (sensor === 'hall') return 2;
+    
     const maxObserved = chartMaxValue[sensor] || 0;
     if (maxObserved === 0) {
         return getDefaultYAxisMax(sensor);
@@ -63,6 +72,9 @@ function initChart(sensor) {
     const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
     const textColor = isDark ? '#e2e8f0' : '#666666';
 
+    // Para o Hall, usamos valores -1 (Sul) e 1 (Norte)
+    const isHall = sensor === 'hall';
+
     // Configuração do gráfico - padrão ÁREA
     const cfg = {
         type: 'line', // tipo 'line' com fill:true simula área
@@ -72,10 +84,11 @@ function initChart(sensor) {
                 label: getChartLabel(sensor),
                 data: [], // valores do sensor
                 borderColor: '#6b5bbb',
-                backgroundColor: 'rgba(107, 91, 187, 0.3)',
+                backgroundColor: isHall ? 'rgba(107, 91, 187, 0.2)' : 'rgba(107, 91, 187, 0.3)',
                 tension: 0.15,
-                fill: true,   // ÁREA
-                pointRadius: 2
+                fill: !isHall,   // ÁREA 
+                pointRadius: isHall ? 5 : 2,
+                pointBackgroundColor: isHall ? '#6b5bbb' : undefined
             }]
         },
         options: {
@@ -90,10 +103,22 @@ function initChart(sensor) {
                     grid: { color: gridColor }
                 },
                 y: {
-                    beginAtZero: true,
+                    beginAtZero: isHall ? false : true,
+                    min: isHall ? -2 : 0,
                     max: getYAxisMax(sensor), // valor dinâmico inicial
                     title: { display: true, text: getYAxisLabel(sensor), color: textColor },
-                    ticks: { color: textColor },
+                    ticks: { 
+                        color: textColor,
+                        callback: function(value) {
+                            if (isHall) {
+                                if (value === 1) return 'Norte ↑';
+                                if (value === -1) return 'Sul ↓';
+                                if (value === 0) return '---';
+                                return '';
+                            }
+                            return value;
+                        }
+                    },
                     grid: { color: gridColor }
                 }
             },
@@ -112,13 +137,17 @@ function initChart(sensor) {
     return charts[sensor];
 }
 
-// Retorna o rótulo amigável do sensor para exibir na legenda
+// Retorna o nome do sensor para exibir na legenda
 function getChartLabel(sensor) {
     switch (sensor) {
         case 'temperature': return 'Temperatura';
         case 'distance': return 'Distância';
         case 'period': return 'Período';
         case 'light': return 'Luminosidade';
+        case 'buzzer': return 'Buzzer';
+        case 'hall': return 'Sensor Hall';
+        case 'motor': return 'Motor CC';
+        case 'servo': return 'Servo Motor';
         default: return sensor;
     }
 }
@@ -130,6 +159,10 @@ function getYAxisLabel(sensor) {
         case 'distance': return 'Distância (cm)';
         case 'period': return 'Período (ms)';
         case 'light': return 'Luminosidade (%)';
+        case 'buzzer': return 'Frequência (Hz)';
+        case 'hall': return 'Polaridade';
+        case 'motor': return 'Velocidade (%)';
+        case 'servo': return 'Ângulo (°)';
         default: return '';
     }
 }
@@ -150,13 +183,15 @@ function changeChartType(sensor, type) {
     chart.data.labels = currentLabels;
     chart.data.datasets[0].data = currentData;
 
+    const isHall = sensor === 'hall';
+
     // Configura conforme o tipo escolhido
     if (type === 'area') {
         chart.config.type = 'line';
         chart.data.datasets[0].showLine = true;
-        chart.data.datasets[0].pointRadius = 2;
-        chart.data.datasets[0].fill = true;
-        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.3)';
+        chart.data.datasets[0].pointRadius = isHall ? 5 : 2;
+        chart.data.datasets[0].fill = !isHall;
+        chart.data.datasets[0].backgroundColor = isHall ? 'rgba(107, 91, 187, 0.2)' : 'rgba(107, 91, 187, 0.3)';
         chart.data.datasets[0].borderColor = '#6b5bbb';
         chart.data.datasets[0].tension = 0.15;
     } else if (type === 'bar') {
@@ -176,7 +211,7 @@ function changeChartType(sensor, type) {
     } else if (type === 'line') {
         chart.config.type = 'line';
         chart.data.datasets[0].showLine = true;
-        chart.data.datasets[0].pointRadius = 2;
+        chart.data.datasets[0].pointRadius = isHall ? 5 : 2;
         chart.data.datasets[0].fill = false;
         chart.data.datasets[0].tension = 0.15;
         chart.data.datasets[0].borderColor = '#6b5bbb';
@@ -191,12 +226,16 @@ function changeChartType(sensor, type) {
         chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.1)';
     }
 
-    // Garante que as escalas existam (para gráficos que não sejam pizza)
+    // Garante que as escalas existam 
     ensureScales(chart, sensor);
 
     // Atualiza a escala Y com o valor dinâmico atual
     if (chart.options.scales && chart.options.scales.y) {
         chart.options.scales.y.max = getYAxisMax(sensor);
+        if (sensor === 'hall') {
+            chart.options.scales.y.min = -2;
+            chart.options.scales.y.beginAtZero = false;
+        }
     }
 
     chart.update();
@@ -208,6 +247,8 @@ function ensureScales(chart, sensor) {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
         const textColor = isDark ? '#e2e8f0' : '#666666';
+        const isHall = sensor === 'hall';
+        
         chart.options.scales = {
             x: {
                 type: 'category',
@@ -216,10 +257,22 @@ function ensureScales(chart, sensor) {
                 grid: { color: gridColor }
             },
             y: {
-                beginAtZero: true,
+                beginAtZero: isHall ? false : true,
+                min: isHall ? -2 : 0,
                 max: getYAxisMax(sensor),
                 title: { display: true, text: getYAxisLabel(sensor), color: textColor },
-                ticks: { color: textColor },
+                ticks: { 
+                    color: textColor,
+                    callback: function(value) {
+                        if (isHall) {
+                            if (value === 1) return 'Norte ↑';
+                            if (value === -1) return 'Sul ↓';
+                            if (value === 0) return '---';
+                            return '';
+                        }
+                        return value;
+                    }
+                },
                 grid: { color: gridColor }
             }
         };
