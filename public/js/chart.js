@@ -10,9 +10,9 @@ function getDefaultYAxisMax(sensor) {
         case 'distance': return 10;
         case 'period': return 10;
         case 'light': return 10; // inicia baixo e cresce dinamicamente até 100
-        case 'buzzer': return 20000; 
-        case 'motor': return 100; 
-        case 'servo': return 180; 
+        case 'buzzer': return 10; 
+        case 'motor': return 10; 
+        case 'servo': return 10; 
         default: return 10;
     }
 }
@@ -75,7 +75,7 @@ function initChart(sensor) {
     // Para o Hall, usamos valores -1 (Sul) e 1 (Norte)
     const isHall = sensor === 'hall';
 
-    // Configuração do gráfico - padrão ÁREA
+    // Configuração do gráfico - padrão ÁREA (sem pontos)
     const cfg = {
         type: 'line', // tipo 'line' com fill:true simula área
         data: {
@@ -84,11 +84,12 @@ function initChart(sensor) {
                 label: getChartLabel(sensor),
                 data: [], // valores do sensor
                 borderColor: '#6b5bbb',
-                backgroundColor: isHall ? 'rgba(107, 91, 187, 0.2)' : 'rgba(107, 91, 187, 0.3)',
+                backgroundColor: isHall ? 'rgba(107, 91, 187, 0.25)' : 'rgba(107, 91, 187, 0.3)',
                 tension: 0.15,
-                fill: !isHall,   // ÁREA 
-                pointRadius: isHall ? 5 : 2,
-                pointBackgroundColor: isHall ? '#6b5bbb' : undefined
+                fill: true, // ÁREA preenchida
+                pointRadius: 0, // SEM PONTOS no padrão área
+                pointHoverRadius: 5, // Ponto só aparece no hover
+                showLine: true
             }]
         },
         options: {
@@ -111,8 +112,8 @@ function initChart(sensor) {
                         color: textColor,
                         callback: function(value) {
                             if (isHall) {
-                                if (value === 1) return 'Norte ↑';
-                                if (value === -1) return 'Sul ↓';
+                                if (value === 1) return 'Norte';
+                                if (value === -1) return 'Sul';
                                 if (value === 0) return '---';
                                 return '';
                             }
@@ -167,7 +168,7 @@ function getYAxisLabel(sensor) {
     }
 }
 
-// FUNÇÃO PARA ALTERAR O TIPO DE GRÁFICO
+// FUNÇÃO PARA ALTERAR O TIPO DE GRÁFICO - CORRIGIDA (tipos puros)
 function changeChartType(sensor, type) {
     const chart = charts[sensor];
     if (!chart) {
@@ -185,45 +186,61 @@ function changeChartType(sensor, type) {
 
     const isHall = sensor === 'hall';
 
-    // Configura conforme o tipo escolhido
+    // Configura conforme o tipo escolhido - TIPOS PUROS
     if (type === 'area') {
+        // ÁREA: só área preenchida, SEM pontos
         chart.config.type = 'line';
         chart.data.datasets[0].showLine = true;
-        chart.data.datasets[0].pointRadius = isHall ? 5 : 2;
-        chart.data.datasets[0].fill = !isHall;
-        chart.data.datasets[0].backgroundColor = isHall ? 'rgba(107, 91, 187, 0.2)' : 'rgba(107, 91, 187, 0.3)';
+        chart.data.datasets[0].pointRadius = 0; // SEM pontos
+        chart.data.datasets[0].pointHoverRadius = 5;
+        chart.data.datasets[0].fill = true;
+        chart.data.datasets[0].backgroundColor = isHall ? 'rgba(107, 91, 187, 0.25)' : 'rgba(107, 91, 187, 0.3)';
         chart.data.datasets[0].borderColor = '#6b5bbb';
         chart.data.datasets[0].tension = 0.15;
+        chart.data.datasets[0].pointBackgroundColor = undefined;
+        chart.data.datasets[0].pointBorderColor = undefined;
     } else if (type === 'bar') {
+        // BARRAS: só barras
         chart.config.type = 'bar';
         chart.data.datasets[0].showLine = false;
         chart.data.datasets[0].pointRadius = 0;
         chart.data.datasets[0].fill = false;
         chart.data.datasets[0].backgroundColor = '#6b5bbb';
         chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].tension = undefined;
     } else if (type === 'scatter') {
+        // DISPERSÃO: só pontos, SEM linha
         chart.config.type = 'line';
-        chart.data.datasets[0].showLine = false;
-        chart.data.datasets[0].pointRadius = 5;
+        chart.data.datasets[0].showLine = false; // SEM linha
+        chart.data.datasets[0].pointRadius = 6;
         chart.data.datasets[0].fill = false;
         chart.data.datasets[0].backgroundColor = '#6b5bbb';
         chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].tension = undefined;
     } else if (type === 'line') {
+        // LINHA: só a linha, SEM área e SEM pontos
         chart.config.type = 'line';
         chart.data.datasets[0].showLine = true;
-        chart.data.datasets[0].pointRadius = isHall ? 5 : 2;
-        chart.data.datasets[0].fill = false;
-        chart.data.datasets[0].tension = 0.15;
+        chart.data.datasets[0].pointRadius = 0; // SEM pontos
+        chart.data.datasets[0].pointHoverRadius = 5;
+        chart.data.datasets[0].fill = false; // SEM área
+        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.05)';
         chart.data.datasets[0].borderColor = '#6b5bbb';
-        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.1)';
+        chart.data.datasets[0].tension = 0.15;
+        chart.data.datasets[0].pointBackgroundColor = undefined;
+        chart.data.datasets[0].pointBorderColor = undefined;
     } else if (type === 'line-points') {
+        // LINHA COM PONTOS: linha com pontos, SEM área
         chart.config.type = 'line';
         chart.data.datasets[0].showLine = true;
-        chart.data.datasets[0].pointRadius = 4;
-        chart.data.datasets[0].fill = false;
-        chart.data.datasets[0].tension = 0.15;
+        chart.data.datasets[0].pointRadius = 5; // COM pontos
+        chart.data.datasets[0].pointHoverRadius = 7;
+        chart.data.datasets[0].fill = false; // SEM área
+        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.05)';
         chart.data.datasets[0].borderColor = '#6b5bbb';
-        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.1)';
+        chart.data.datasets[0].tension = 0.15;
+        chart.data.datasets[0].pointBackgroundColor = '#6b5bbb';
+        chart.data.datasets[0].pointBorderColor = '#6b5bbb';
     }
 
     // Garante que as escalas existam 
@@ -265,8 +282,8 @@ function ensureScales(chart, sensor) {
                     color: textColor,
                     callback: function(value) {
                         if (isHall) {
-                            if (value === 1) return 'Norte ↑';
-                            if (value === -1) return 'Sul ↓';
+                            if (value === 1) return 'Norte';
+                            if (value === -1) return 'Sul';
                             if (value === 0) return '---';
                             return '';
                         }

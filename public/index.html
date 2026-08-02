@@ -26,6 +26,12 @@
                         <li><a href="sobre.html">SOBRE</a></li>
                     </ul>
                 </nav>
+                <div class="status">
+                <div id="connectionStatus" class="status-disconnected">
+                    <span class="status-indicator"></span>
+                    Desconectado
+                </div>
+            </div>
                 <!-- Botão tema claro/escuro -->
                 <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
                     ◑
@@ -87,25 +93,25 @@
                         <h3>Luminosidade</h3>
                         <p>Percentual de luz</p>
                     </div>
-                    <!-- Card Buzzer (NOVO) -->
+                    <!-- Card Buzzer -->
                     <div class="device-card" onclick="showMonitor('buzzer')">
                         <div class="device-icon buzzer-icon"></div>
                         <h3>Buzzer</h3>
                         <p>Controle de frequência audível (20Hz - 20kHz)</p>
                     </div>
-                    <!-- Card Hall (NOVO) -->
+                    <!-- Card Hall -->
                     <div class="device-card" onclick="showMonitor('hall')">
                         <div class="device-icon hall-icon"></div>
                         <h3>Sensor Hall</h3>
                         <p>Detecção de polaridade magnética</p>
                     </div>
-                    <!-- Card Motor (NOVO) -->
+                    <!-- Card Motor -->
                     <div class="device-card" onclick="showMonitor('motor')">
                         <div class="device-icon motor-icon"></div>
                         <h3>Motor CC</h3>
                         <p>Controle de velocidade </p>
                     </div>
-                    <!-- Card Servo Motor (NOVO) -->
+                    <!-- Card Servo Motor -->
                     <div class="device-card" onclick="showMonitor('servo')">
                         <div class="device-icon servo-icon"></div>
                         <h3>Servo Motor</h3>
@@ -564,12 +570,6 @@
 
         <!-- ===== RODAPÉ ===== -->
         <footer>
-            <div class="status">
-                <div id="connectionStatus" class="status-disconnected">
-                    <span class="status-indicator"></span>
-                    Desconectado
-                </div>
-            </div>
             <p>&copy; 2026 ExpeRT Plataforma</p>
         </footer>
     </div>

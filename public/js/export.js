@@ -52,8 +52,8 @@ function saveDataCSV(sensor) {
         
         // Para o Hall, converte número de volta para texto
         if (isHall) {
-            if (valorFormatado === 1) valorFormatado = 'Norte ↑';
-            else if (valorFormatado === -1) valorFormatado = 'Sul ↓';
+            if (valorFormatado === 1) valorFormatado = 'Polo Norte';
+            else if (valorFormatado === -1) valorFormatado = 'Polo Sul';
             else valorFormatado = '---';
         } else if (typeof valorFormatado === 'number') {
             if (sensor === 'light' && valorFormatado > 100) {
