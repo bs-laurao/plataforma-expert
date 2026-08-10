@@ -1,5 +1,27 @@
 // FUNÇÕES DE EXPORTAÇÃO (SALVAR IMAGEM E CSV)
 
+function getExportSensorName(sensor) {
+    switch (sensor) {
+        case 'distance': return 'Distancia';
+        case 'period': return 'Periodo';
+        case 'temperature': return 'Temperatura';
+        case 'light': return 'Luminosidade';
+        case 'buzzer': return 'Buzzer';
+        case 'hall': return 'Sensor Hall';
+        case 'motor': return 'Motor CC';
+        case 'servo': return 'Servo Motor';
+        default: return sensor;
+    }
+}
+
+function getExportFileName(sensor) {
+    return `dados_${getExportSensorName(sensor)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '_')
+        .toLowerCase()}.csv`;
+}
+
  //Salva a imagem do gráfico de um sensor em PNG (download via navegador)
  //Usa o método toBase64Image() do Chart.js para gerar a imagem
  
@@ -41,8 +63,8 @@ function saveDataCSV(sensor) {
         return;
     }
 
-    // Obtém o nome do sensor
-    const sensorName = getChartLabel(sensor);
+    // Obtém o nome do sensor para o CSV
+    const sensorName = getExportSensorName(sensor);
     const isHall = sensor === 'hall';
 
     // Cabeçalho com o nome do sensor
@@ -68,7 +90,7 @@ function saveDataCSV(sensor) {
     // UTF-8 puro
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
-    link.download = `dados_${sensor}.csv`;
+    link.download = getExportFileName(sensor);
     link.href = URL.createObjectURL(blob);
     link.click();
     URL.revokeObjectURL(link.href);
