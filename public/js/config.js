@@ -10,5 +10,6 @@ const SENSOR_MAP = {
     '5': 'buzzer',
     '6': 'hall',
     '7': 'motor',
-    '8': 'servo'
+    '8': 'servo',
+    '9': 'piezo'
 };

@@ -31,10 +31,11 @@ let latestData = {
   buzzer: 0,
   hall: '---',
   motor: 0,
-  servo: 0
+  servo: 0,
+  piezo: 0
 };
 
-// Variavel que guarda o ultimo comando enviado (1=temp, 2=dist, 3=periodo, 4=luz, 5=buzzer, 6=hall, 7=motor, 8=servo)
+// Variavel que guarda o ultimo comando enviado (1=temp, 2=dist, 3=periodo, 4=luz, 5=buzzer, 6=hall, 7=motor, 8=servo, 9=piezo)
 let comando = 0;
 
 // Envia um comando (string) para o Arduino via porta serial
@@ -86,6 +87,9 @@ parser.on('data', (data) => {
     }
     if (comando == 8) {
       latestData.servo = numericValue;
+    }
+    if (comando == 9) {
+      latestData.piezo = numericValue;
     }
     
     // Envia os dados mais recentes para todos os clientes WebSocket conectados

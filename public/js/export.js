@@ -10,6 +10,7 @@ function getExportSensorName(sensor) {
         case 'hall': return 'Sensor Hall';
         case 'motor': return 'Motor CC';
         case 'servo': return 'Servo Motor';
+        case 'piezo': return 'Piezoelétrico';
         default: return sensor;
     }
 }
@@ -66,6 +67,7 @@ function saveDataCSV(sensor) {
     // Obtém o nome do sensor para o CSV
     const sensorName = getExportSensorName(sensor);
     const isHall = sensor === 'hall';
+    const isPiezo = sensor === 'piezo';
 
     // Cabeçalho com o nome do sensor
     let csv = `Tempo;${sensorName}\n`;
@@ -77,6 +79,8 @@ function saveDataCSV(sensor) {
             if (valorFormatado === 1) valorFormatado = 'Polo Norte';
             else if (valorFormatado === -1) valorFormatado = 'Polo Sul';
             else valorFormatado = '---';
+        } else if (isPiezo && typeof valorFormatado === 'number') {
+            valorFormatado = Math.round(valorFormatado).toString();
         } else if (typeof valorFormatado === 'number') {
             if (sensor === 'light' && valorFormatado > 100) {
                 valorFormatado = 100;

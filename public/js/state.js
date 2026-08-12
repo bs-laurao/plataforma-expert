@@ -16,9 +16,29 @@ let currentView = 'table';
 let currentSensor = '';
 
 // Últimos valores recebidos via WebSocket para cada sensor
-let lastReceivedValues = {};
+let lastReceivedValues = {
+    temperature: 0,
+    distance: 0,
+    period: 0,
+    light: 0,
+    buzzer: 0,
+    hall: '---',
+    motor: 0,
+    servo: 0,
+    piezo: 0
+};
 // Timestamp da última recepção de dado
-let lastReceivedAt = {};
+let lastReceivedAt = {
+    temperature: 0,
+    distance: 0,
+    period: 0,
+    light: 0,
+    buzzer: 0,
+    hall: 0,
+    motor: 0,
+    servo: 0,
+    piezo: 0
+};
 // Intervalo de amostragem em milissegundos (padrão 1000ms = 1s)
 let samplingIntervalMs = 1000;
 // ID do timer que executa a coleta periódica

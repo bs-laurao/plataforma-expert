@@ -12,7 +12,7 @@ async function sendCommand(command) {
 
 // Interpreta comandos como '1', '1p', '1r' e controla o gráfico localmente
 function handleLocalCommand(command) {
-    const m = command.match(/^([1-8])([pr]?)$/);
+    const m = command.match(/^([1-9])([pr]?)$/);
     if (!m) return;
     const digit = m[1];
     const action = m[2];
@@ -74,7 +74,15 @@ function restartChartForSensor(sensor) {
 
     lastReceivedValues[sensor] = undefined;
     const el = document.getElementById(sensor);
-    if (el) el.textContent = sensor === 'hall' ? '---' : '0.0';
+    if (el) {
+        if (sensor === 'hall') {
+            el.textContent = '---';
+        } else if (sensor === 'piezo') {
+            el.textContent = '0';
+        } else {
+            el.textContent = '0.0';
+        }
+    }
 
     console.log(`Restart chart ${sensor} (fresh start)`);
 }
@@ -84,7 +92,15 @@ function restartChartForSensor(sensor) {
 // Reseta os valores e gráficos de um sensor (usado ao voltar ao menu)
 function resetSensor(sensor) {
     const el = document.getElementById(sensor);
-    if (el) el.textContent = sensor === 'hall' ? '---' : '0.0';
+    if (el) {
+        if (sensor === 'hall') {
+            el.textContent = '---';
+        } else if (sensor === 'piezo') {
+            el.textContent = '0';
+        } else {
+            el.textContent = '0.0';
+        }
+    }
 
     const timeEl = document.getElementById(sensor + 'Time');
     if (timeEl) timeEl.textContent = '00:00';
@@ -114,7 +130,15 @@ function resetSensor(sensor) {
 // Botão "Limpar" – zera os dados e para o sensor, sem sair da tela
 function clearSensorData(sensor) {
     const el = document.getElementById(sensor);
-    if (el) el.textContent = sensor === 'hall' ? '---' : '0.0';
+    if (el) {
+        if (sensor === 'hall') {
+            el.textContent = '---';
+        } else if (sensor === 'piezo') {
+            el.textContent = '0';
+        } else {
+            el.textContent = '0.0';
+        }
+    }
 
     const timeEl = document.getElementById(sensor + 'Time');
     if (timeEl) timeEl.textContent = '00:00';

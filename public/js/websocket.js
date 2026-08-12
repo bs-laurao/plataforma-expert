@@ -55,7 +55,6 @@ function initWebSocket() {
             lastReceivedValues.light = data.luminosidade;
             lastReceivedAt.light = Date.now();
         }
-    
         if (typeof data.buzzer === 'number') {
             lastReceivedValues.buzzer = data.buzzer;
             lastReceivedAt.buzzer = Date.now();
@@ -71,6 +70,10 @@ function initWebSocket() {
         if (typeof data.servo === 'number') {
             lastReceivedValues.servo = data.servo;
             lastReceivedAt.servo = Date.now();
+        }
+        if (typeof data.piezo === 'number') {
+            lastReceivedValues.piezo = data.piezo;
+            lastReceivedAt.piezo = Date.now();
         }
     };
 }

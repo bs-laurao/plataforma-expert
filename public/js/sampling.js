@@ -28,6 +28,9 @@ function clampValueForSensor(sensor, raw) {
     if (sensor === 'buzzer') {
         return Math.min(20000, Math.max(20, v));
     }
+    if (sensor === 'piezo') {
+        return Math.min(1023, Math.max(0, v));
+    }
     return v < 0 ? 0 : v;
 }
 
@@ -46,6 +49,8 @@ function processSample(sensor) {
         if (el) {
             if (sensor === 'hall') {
                 el.textContent = String(v);
+            } else if (sensor === 'piezo') {
+                el.textContent = Math.round(v);
             } else if (typeof v === 'number') {
                 el.textContent = v.toFixed(1);
             } else {
@@ -97,12 +102,14 @@ function processSample(sensor) {
 
 // Função chamada a cada intervalo de amostragem (ex: a cada 100ms)
 function sampleTick() {
-    Object.values(SENSOR_MAP).forEach(sensor => processSample(sensor));
+    const sensores = ['temperature', 'distance', 'period', 'light', 'buzzer', 'hall', 'motor', 'servo', 'piezo'];
+    sensores.forEach(sensor => processSample(sensor));
 }
 
 // Atualiza os contadores de tempo na interface (MM:SS) a cada TIME_TICK_MS (200ms)
 function updateTimeDisplays() {
-    Object.values(SENSOR_MAP).forEach(sensor => {
+    const sensores = ['temperature', 'distance', 'period', 'light', 'buzzer', 'hall', 'motor', 'servo', 'piezo'];
+    sensores.forEach(sensor => {
         const timeEl = document.getElementById(sensor + 'Time');
         if (!timeEl) return;
         const base = chartElapsedOffset[sensor] || 0;

@@ -71,51 +71,84 @@
                 <div class="devices-grid">
                     <!-- Card Temperatura -->
                     <div class="device-card" onclick="showMonitor('temperature')">
-                        <div class="device-icon temperature-icon"></div>
-                        <h3>Temperatura</h3>
-                        <p>Monitoramento de temperatura em tempo real</p>
+                        <div class="device-icon"><img src="imagem/Temperatura.png" alt="Temperatura" /></div>
+                        <div class="device-card-content">
+                            <h3>Temperatura</h3>
+                            <p>Monitoramento de temperatura</p>
+                        </div>
+                        <span class="device-tag temperature-tag" aria-label="Temperatura"></span>
                     </div>
                     <!-- Card Distância -->
                     <div class="device-card" onclick="showMonitor('distance')">
-                        <div class="device-icon distance-icon"></div>
-                        <h3>Distância</h3>
-                        <p>Medição de distância com sensores</p>
+                        <div class="device-icon"><img src="imagem/Distancia.png" alt="Distância" /></div>
+                        <div class="device-card-content">
+                            <h3>Distância</h3>
+                            <p>Medição de distância com sensores</p>
+                        </div>
+                        <span class="device-tag distance-tag" aria-label="Distância"></span>
                     </div>
                     <!-- Card Oscilador -->
                     <div class="device-card" onclick="showMonitor('period')">
-                        <div class="device-icon oscillator-icon"></div>
-                        <h3>Oscilador</h3>
-                        <p>Análise de períodos oscilatórios</p>
+                        <div class="device-icon"><img src="imagem/Oscilador.png" alt="Oscilador" /></div>
+                        <div class="device-card-content">
+                            <h3>Oscilador</h3>
+                            <p>Análise de períodos oscilatórios </p>
+                        </div>
+                        <span class="device-tag oscillator-tag" aria-label="Oscilador"></span>
                     </div>
                     <!-- Card Luminosidade -->
                     <div class="device-card" onclick="showMonitor('light')">
-                        <div class="device-icon light-icon"></div>
-                        <h3>Luminosidade</h3>
-                        <p>Percentual de luz</p>
+                        <div class="device-icon"><img src="imagem/Luminosidade.png" alt="Luminosidade" /></div>
+                        <div class="device-card-content">
+                            <h3>Luminosidade</h3>
+                            <p>Percentual de luz no sensor</p>
+                        </div>
+                        <span class="device-tag light-tag" aria-label="Luminosidade"></span>
                     </div>
                     <!-- Card Buzzer -->
                     <div class="device-card" onclick="showMonitor('buzzer')">
-                        <div class="device-icon buzzer-icon"></div>
-                        <h3>Buzzer</h3>
-                        <p>Controle de frequência audível (20Hz - 20kHz)</p>
+                        <div class="device-icon"><img src="imagem/Buzzer.png" alt="Buzzer" /></div>
+                        <div class="device-card-content">
+                            <h3>Buzzer</h3>
+                            <p>Controle de frequência audível (20Hz - 20kHz)</p>
+                        </div>
+                        <span class="device-tag buzzer-tag" aria-label="Buzzer"></span>
                     </div>
                     <!-- Card Hall -->
                     <div class="device-card" onclick="showMonitor('hall')">
-                        <div class="device-icon hall-icon"></div>
-                        <h3>Sensor Hall</h3>
-                        <p>Detecção de polaridade magnética</p>
+                        <div class="device-icon"><img src="imagem/SensorHall.png" alt="Sensor Hall" /></div>
+                        <div class="device-card-content">
+                            <h3>Sensor Hall</h3>
+                            <p>Detecção de polaridade magnética</p>
+                        </div>
+                        <span class="device-tag hall-tag" aria-label="Sensor Hall"></span>
                     </div>
                     <!-- Card Motor -->
                     <div class="device-card" onclick="showMonitor('motor')">
-                        <div class="device-icon motor-icon"></div>
-                        <h3>Motor CC</h3>
-                        <p>Controle de velocidade </p>
+                        <div class="device-icon"><img src="imagem/MotorCC.png" alt="Motor CC" /></div>
+                        <div class="device-card-content">
+                            <h3>Motor CC</h3>
+                            <p>Controle em percentual da velocidade</p>
+                        </div>
+                        <span class="device-tag motor-tag" aria-label="Motor CC"></span>
                     </div>
                     <!-- Card Servo Motor -->
                     <div class="device-card" onclick="showMonitor('servo')">
-                        <div class="device-icon servo-icon"></div>
-                        <h3>Servo Motor</h3>
-                        <p>Ângulo do prisma </p>
+                        <div class="device-icon"><img src="imagem/MotorServo.png" alt="Servo Motor" /></div>
+                        <div class="device-card-content">
+                            <h3>Servo Motor</h3>
+                            <p>Ângulo do prisma</p>
+                        </div>
+                        <span class="device-tag servo-tag" aria-label="Servo Motor"></span>
+                    </div>
+                    <!-- Card Piezoelétrico -->
+                    <div class="device-card" onclick="showMonitor('piezo')">
+                        <div class="device-icon"><img src="imagem/Piezoeletrico.png" alt="Piezoelétrico" /></div>
+                        <div class="device-card-content">
+                            <h3>Piezoelétrico</h3>
+                            <p>Detecção de vibrações</p>
+                        </div>
+                        <span class="device-tag piezo-tag" aria-label="Piezoelétrico"></span>
                     </div>
                 </div>
             </div>
@@ -155,7 +188,10 @@
             <!-- ========== TELA DE TEMPERATURA ========== -->
             <div class="monitor-screen" id="temperatureScreen">
                 <div class="screen-header">
-                    <div class="sensor-title"><h2>Temperatura</h2></div>
+                    <div class="sensor-header-left">
+                        <div class="sensor-badge temperature-tag" aria-label="Temperatura" title="Temperatura"></div>
+                        <div class="sensor-title"><h2>Temperatura</h2></div>
+                    </div>
                     <!-- Abas: Tabela e Gráfico -->
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
@@ -213,7 +249,10 @@
             <!-- ========== TELA DE DISTÂNCIA ========== -->
             <div class="monitor-screen" id="distanceScreen">
                 <div class="screen-header">
-                    <div class="sensor-title"><h2>Distância</h2></div>
+                    <div class="sensor-header-left">
+                        <div class="sensor-badge distance-tag" aria-label="Distância" title="Distância"></div>
+                        <div class="sensor-title"><h2>Distância</h2></div>
+                    </div>
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
@@ -264,7 +303,10 @@
             <!-- ========== TELA DO OSCILADOR (PERÍODO) ========== -->
             <div class="monitor-screen" id="periodScreen">
                 <div class="screen-header">
-                    <div class="sensor-title"><h2>Oscilador</h2></div>
+                    <div class="sensor-header-left">
+                        <div class="sensor-badge oscillator-tag" aria-label="Oscilador" title="Oscilador"></div>
+                        <div class="sensor-title"><h2>Oscilador</h2></div>
+                    </div>
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
@@ -315,7 +357,10 @@
             <!-- ========== TELA DE LUMINOSIDADE ========== -->
             <div class="monitor-screen" id="lightScreen">
                 <div class="screen-header">
-                    <div class="sensor-title"><h2>Luminosidade</h2></div>
+                    <div class="sensor-header-left">
+                        <div class="sensor-badge light-tag" aria-label="Luminosidade" title="Luminosidade"></div>
+                        <div class="sensor-title"><h2>Luminosidade</h2></div>
+                    </div>
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
@@ -366,7 +411,10 @@
             <!-- ========== TELA DO BUZZER ========== -->
             <div class="monitor-screen" id="buzzerScreen">
                 <div class="screen-header">
-                    <div class="sensor-title"><h2>Buzzer</h2></div>
+                    <div class="sensor-header-left">
+                        <div class="sensor-badge buzzer-tag" aria-label="Buzzer" title="Buzzer"></div>
+                        <div class="sensor-title"><h2>Buzzer</h2></div>
+                    </div>
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
@@ -417,7 +465,10 @@
             <!-- ========== TELA DO SENSOR HALL ========== -->
             <div class="monitor-screen" id="hallScreen">
                 <div class="screen-header">
-                    <div class="sensor-title"><h2>Sensor Hall</h2></div>
+                    <div class="sensor-header-left">
+                        <div class="sensor-badge hall-tag" aria-label="Sensor Hall" title="Sensor Hall"></div>
+                        <div class="sensor-title"><h2>Sensor Hall</h2></div>
+                    </div>
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
@@ -468,7 +519,10 @@
             <!-- ========== TELA DO MOTOR CC ========== -->
             <div class="monitor-screen" id="motorScreen">
                 <div class="screen-header">
-                    <div class="sensor-title"><h2>Motor CC</h2></div>
+                    <div class="sensor-header-left">
+                        <div class="sensor-badge motor-tag" aria-label="Motor CC" title="Motor CC"></div>
+                        <div class="sensor-title"><h2>Motor CC</h2></div>
+                    </div>
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
@@ -519,7 +573,10 @@
             <!-- ========== TELA DO SERVO MOTOR ========== -->
             <div class="monitor-screen" id="servoScreen">
                 <div class="screen-header">
-                    <div class="sensor-title"><h2>Servo Motor</h2></div>
+                    <div class="sensor-header-left">
+                        <div class="sensor-badge servo-tag" aria-label="Servo Motor" title="Servo Motor"></div>
+                        <div class="sensor-title"><h2>Servo Motor</h2></div>
+                    </div>
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
                         <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
@@ -564,6 +621,60 @@
                     <button class="control-btn start" onclick="sendCommand('8')"><span class="btn-icon">▶</span> Iniciar</button>
                     <button class="control-btn pause" onclick="sendCommand('8p')"><span class="btn-icon">⏸</span> Pausar</button>
                     <button class="control-btn clear" id="clearBtn-servo" onclick="clearSensorData('servo')"><span class="btn-icon">✕</span> Limpar</button>
+                </div>
+            </div>
+
+            <!-- ========== TELA DO PIEZOELÉTRICO ========== -->
+            <div class="monitor-screen" id="piezoScreen">
+                <div class="screen-header">
+                    <div class="sensor-header-left">
+                        <div class="sensor-badge piezo-tag" aria-label="Piezoelétrico" title="Piezoelétrico"></div>
+                        <div class="sensor-title"><h2>Piezoelétrico</h2></div>
+                    </div>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
+                        <button class="tab-btn" onclick="selectViewType('graph')">Gráfico</button>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="saveChartImage('piezo')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                            Salvar Imagem
+                        </button>
+                        <button class="export-btn" onclick="saveDataCSV('piezo')">
+                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+                            Salvar CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="view-container table-view active">
+                    <div class="big-value">
+                        <span id="piezo">0</span>
+                        <span class="unit">ADC</span>
+                        <div class="time-display">Tempo: <span id="piezoTime">00:00</span></div>
+                    </div>
+                </div>
+
+                <div class="view-container graph-view">
+                    <div class="chart-controls">
+                        <label for="piezoChartType">Tipo:</label>
+                        <select id="piezoChartType" onchange="changeChartType('piezo', this.value)">
+                            <option value="area" selected>Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
+                            <option value="line">Linha</option>
+                            <option value="line-points">Linha com Pontos</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="piezoChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="compact-controls">
+                    <button class="control-btn start" onclick="sendCommand('9')"><span class="btn-icon">▶</span> Iniciar</button>
+                    <button class="control-btn pause" onclick="sendCommand('9p')"><span class="btn-icon">⏸</span> Pausar</button>
+                    <button class="control-btn clear" id="clearBtn-piezo" onclick="clearSensorData('piezo')"><span class="btn-icon">✕</span> Limpar</button>
                 </div>
             </div>
         </main>

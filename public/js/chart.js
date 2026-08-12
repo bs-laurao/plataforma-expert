@@ -13,6 +13,7 @@ function getDefaultYAxisMax(sensor) {
         case 'buzzer': return 10; 
         case 'motor': return 10; 
         case 'servo': return 10; 
+        case 'piezo': return 1023; 
         default: return 10;
     }
 }
@@ -149,6 +150,7 @@ function getChartLabel(sensor) {
         case 'hall': return 'Sensor Hall';
         case 'motor': return 'Motor CC';
         case 'servo': return 'Servo Motor';
+        case 'piezo': return 'Piezoelétrico';
         default: return sensor;
     }
 }
@@ -161,9 +163,10 @@ function getYAxisLabel(sensor) {
         case 'period': return 'Período (ms)';
         case 'light': return 'Luminosidade (%)';
         case 'buzzer': return 'Frequência (Hz)';
-        case 'hall': return 'Polaridade (Norte/Sul)';
+        case 'hall': return 'Polaridade';
         case 'motor': return 'Velocidade (%)';
         case 'servo': return 'Ângulo (°)';
+        case 'piezo': return 'Valor ADC';
         default: return '';
     }
 }
