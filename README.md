@@ -28,4 +28,4 @@ node server.js
 sudo node server.js
 
 # 4. Acesse no navegador
-# http://localhost:3000
+http://localhost:3000
