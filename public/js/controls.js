@@ -77,8 +77,6 @@ function restartChartForSensor(sensor) {
     if (el) {
         if (sensor === 'hall') {
             el.textContent = '---';
-        } else if (sensor === 'piezo') {
-            el.textContent = '0';
         } else {
             el.textContent = '0.0';
         }
@@ -133,8 +131,6 @@ function clearSensorData(sensor) {
     if (el) {
         if (sensor === 'hall') {
             el.textContent = '---';
-        } else if (sensor === 'piezo') {
-            el.textContent = '0';
         } else {
             el.textContent = '0.0';
         }

@@ -13,7 +13,7 @@ function getDefaultYAxisMax(sensor) {
         case 'buzzer': return 10; 
         case 'motor': return 10; 
         case 'servo': return 10; 
-        case 'piezo': return 1023; 
+        case 'piezo': return 10; 
         default: return 10;
     }
 }
@@ -84,8 +84,8 @@ function initChart(sensor) {
             datasets: [{
                 label: getChartLabel(sensor),
                 data: [], // valores do sensor
-                borderColor: '#6b5bbb',
-                backgroundColor: isHall ? 'rgba(107, 91, 187, 0.25)' : 'rgba(107, 91, 187, 0.3)',
+                borderColor: '#7db1ff',
+                backgroundColor: isHall ? 'rgba(125, 177, 255, 0.25)' : 'rgba(125, 177, 255, 0.3)',
                 tension: 0.15,
                 fill: true, 
                 pointRadius: 0, 
@@ -144,7 +144,7 @@ function getChartLabel(sensor) {
     switch (sensor) {
         case 'temperature': return 'Temperatura';
         case 'distance': return 'Distância';
-        case 'period': return 'Período';
+        case 'period': return 'Pisca Led';
         case 'light': return 'Luminosidade';
         case 'buzzer': return 'Buzzer';
         case 'hall': return 'Sensor Hall';
@@ -196,8 +196,8 @@ function changeChartType(sensor, type) {
         chart.data.datasets[0].pointRadius = 0; 
         chart.data.datasets[0].pointHoverRadius = 5;
         chart.data.datasets[0].fill = true;
-        chart.data.datasets[0].backgroundColor = isHall ? 'rgba(107, 91, 187, 0.25)' : 'rgba(107, 91, 187, 0.3)';
-        chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].backgroundColor = isHall ? 'rgba(125, 177, 255, 0.25)' : 'rgba(125, 177, 255, 0.3)';
+        chart.data.datasets[0].borderColor = '#7db1ff';
         chart.data.datasets[0].tension = 0.15;
         chart.data.datasets[0].pointBackgroundColor = undefined;
         chart.data.datasets[0].pointBorderColor = undefined;
@@ -206,16 +206,16 @@ function changeChartType(sensor, type) {
         chart.data.datasets[0].showLine = false;
         chart.data.datasets[0].pointRadius = 0;
         chart.data.datasets[0].fill = false;
-        chart.data.datasets[0].backgroundColor = '#6b5bbb';
-        chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].backgroundColor = '#7db1ff';
+        chart.data.datasets[0].borderColor = '#7db1ff';
         chart.data.datasets[0].tension = undefined;
     } else if (type === 'scatter') {
         chart.config.type = 'line';
         chart.data.datasets[0].showLine = false;
         chart.data.datasets[0].pointRadius = 6;
         chart.data.datasets[0].fill = false;
-        chart.data.datasets[0].backgroundColor = '#6b5bbb';
-        chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].backgroundColor = '#7db1ff';
+        chart.data.datasets[0].borderColor = '#7db1ff';
         chart.data.datasets[0].tension = undefined;
     } else if (type === 'line') {
         chart.config.type = 'line';
@@ -223,8 +223,8 @@ function changeChartType(sensor, type) {
         chart.data.datasets[0].pointRadius = 0; 
         chart.data.datasets[0].pointHoverRadius = 5;
         chart.data.datasets[0].fill = false;
-        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.05)';
-        chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].backgroundColor = 'rgba(125, 177, 255, 0.05)';
+        chart.data.datasets[0].borderColor = '#7db1ff';
         chart.data.datasets[0].tension = 0.15;
         chart.data.datasets[0].pointBackgroundColor = undefined;
         chart.data.datasets[0].pointBorderColor = undefined;
@@ -234,11 +234,11 @@ function changeChartType(sensor, type) {
         chart.data.datasets[0].pointRadius = 5; 
         chart.data.datasets[0].pointHoverRadius = 7;
         chart.data.datasets[0].fill = false; 
-        chart.data.datasets[0].backgroundColor = 'rgba(107, 91, 187, 0.05)';
-        chart.data.datasets[0].borderColor = '#6b5bbb';
+        chart.data.datasets[0].backgroundColor = 'rgba(125, 177, 255, 0.05)';
+        chart.data.datasets[0].borderColor = '#7db1ff';
         chart.data.datasets[0].tension = 0.15;
-        chart.data.datasets[0].pointBackgroundColor = '#6b5bbb';
-        chart.data.datasets[0].pointBorderColor = '#6b5bbb';
+        chart.data.datasets[0].pointBackgroundColor = '#7db1ff';
+        chart.data.datasets[0].pointBorderColor = '#7db1ff';
     }
 
     // Garante que as escalas existam 

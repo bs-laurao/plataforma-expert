@@ -3,14 +3,14 @@
 function getExportSensorName(sensor) {
     switch (sensor) {
         case 'distance': return 'Distancia';
-        case 'period': return 'Periodo';
+        case 'period': return 'Pisca Led';
         case 'temperature': return 'Temperatura';
         case 'light': return 'Luminosidade';
         case 'buzzer': return 'Buzzer';
         case 'hall': return 'Sensor Hall';
         case 'motor': return 'Motor CC';
         case 'servo': return 'Servo Motor';
-        case 'piezo': return 'Piezoelétrico';
+        case 'piezo': return 'Piezoeletrico';
         default: return sensor;
     }
 }
@@ -80,7 +80,8 @@ function saveDataCSV(sensor) {
             else if (valorFormatado === -1) valorFormatado = 'Polo Sul';
             else valorFormatado = '---';
         } else if (isPiezo && typeof valorFormatado === 'number') {
-            valorFormatado = Math.round(valorFormatado).toString();
+            // Mantém o mesmo formato numérico dos outros sensores (vírgula decimal), sem arredondar
+            valorFormatado = valorFormatado.toString().replace('.', ',');
         } else if (typeof valorFormatado === 'number') {
             if (sensor === 'light' && valorFormatado > 100) {
                 valorFormatado = 100;
@@ -91,11 +92,17 @@ function saveDataCSV(sensor) {
         csv += `${labels[i]};${valorFormatado}\n`;
     }
 
-    // UTF-8 puro
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    // Pré-pende BOM para melhor compatibilidade com Excel e cria Blob
+    const bomCsv = '\uFEFF' + csv;
+    const blob = new Blob([bomCsv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.download = getExportFileName(sensor);
-    link.href = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    // Anexa temporariamente ao DOM para garantir compatibilidade com alguns navegadores
+    document.body.appendChild(link);
     link.click();
-    URL.revokeObjectURL(link.href);
+    document.body.removeChild(link);
+    // Revoga a URL após um pequeno atraso para garantir que o download seja iniciado
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

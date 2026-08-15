@@ -87,14 +87,14 @@
                         </div>
                         <span class="device-tag distance-tag" aria-label="Distância"></span>
                     </div>
-                    <!-- Card Oscilador -->
+                    <!-- Card Pisca Led -->
                     <div class="device-card" onclick="showMonitor('period')">
-                        <div class="device-icon"><img src="imagem/Oscilador.png" alt="Oscilador" /></div>
+                        <div class="device-icon"><img src="imagem/PiscaLed.png" alt="Pisca Led" /></div>
                         <div class="device-card-content">
-                            <h3>Oscilador</h3>
+                            <h3>Pisca Led</h3>
                             <p>Análise de períodos oscilatórios </p>
                         </div>
-                        <span class="device-tag oscillator-tag" aria-label="Oscilador"></span>
+                        <span class="device-tag pisca-led-tag" aria-label="Pisca Led"></span>
                     </div>
                     <!-- Card Luminosidade -->
                     <div class="device-card" onclick="showMonitor('light')">
@@ -141,7 +141,7 @@
                         </div>
                         <span class="device-tag servo-tag" aria-label="Servo Motor"></span>
                     </div>
-                    <!-- Card Piezoelétrico -->
+                    <!-- Card Piezoeletrico -->
                     <div class="device-card" onclick="showMonitor('piezo')">
                         <div class="device-icon"><img src="imagem/Piezoeletrico.png" alt="Piezoelétrico" /></div>
                         <div class="device-card-content">
@@ -300,12 +300,12 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DO OSCILADOR (PERÍODO) ========== -->
+            <!-- ========== TELA DO PISCA LED ========== -->
             <div class="monitor-screen" id="periodScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
-                        <div class="sensor-badge oscillator-tag" aria-label="Oscilador" title="Oscilador"></div>
-                        <div class="sensor-title"><h2>Oscilador</h2></div>
+                        <div class="sensor-badge pisca-led-tag" aria-label="Pisca Led" title="Pisca Led"></div>
+                        <div class="sensor-title"><h2>Pisca Led</h2></div>
                     </div>
                     <div class="tabs">
                         <button class="tab-btn active" onclick="selectViewType('table')">Tabela</button>
@@ -624,11 +624,11 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DO PIEZOELÉTRICO ========== -->
+            <!-- ========== TELA DO PIEZOELETRICO ========== -->
             <div class="monitor-screen" id="piezoScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
-                        <div class="sensor-badge piezo-tag" aria-label="Piezoelétrico" title="Piezoelétrico"></div>
+                        <div class="sensor-badge piezo-tag" aria-label="Piezoeletrico" title="Piezoeletrico"></div>
                         <div class="sensor-title"><h2>Piezoelétrico</h2></div>
                     </div>
                     <div class="tabs">

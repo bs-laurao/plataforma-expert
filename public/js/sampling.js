@@ -19,17 +19,8 @@ function clampValueForSensor(sensor, raw) {
     const v = Number(raw);
     if (!Number.isFinite(v)) return raw;
     if (sensor === 'temperature') return v;
-    if (sensor === 'light' || sensor === 'motor') {
+    if (sensor === 'light') {
         return Math.min(100, Math.max(0, v));
-    }
-    if (sensor === 'servo') {
-        return Math.min(180, Math.max(0, v));
-    }
-    if (sensor === 'buzzer') {
-        return Math.min(20000, Math.max(20, v));
-    }
-    if (sensor === 'piezo') {
-        return Math.min(1023, Math.max(0, v));
     }
     return v < 0 ? 0 : v;
 }
@@ -49,8 +40,6 @@ function processSample(sensor) {
         if (el) {
             if (sensor === 'hall') {
                 el.textContent = String(v);
-            } else if (sensor === 'piezo') {
-                el.textContent = Math.round(v);
             } else if (typeof v === 'number') {
                 el.textContent = v.toFixed(1);
             } else {
