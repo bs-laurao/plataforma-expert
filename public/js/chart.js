@@ -36,18 +36,291 @@ function getYAxisMax(sensor) {
     return Math.ceil(observed + margin);
 }
 
-// Atualiza o eixo Y do gráfico para refletir o valor máximo dinâmico
-function updateYAxis(sensor) {
+// ============================================
+// NOVA FUNÇÃO: Obtém o min/max dos dados VISÍVEIS
+// ============================================
+
+function getVisibleDataRange(sensor, chart) {
+    if (!chart || chart.data.labels.length === 0) {
+        return { min: 0, max: getDefaultYAxisMax(sensor) };
+    }
+    
+    const xScale = chart.scales.x;
+    if (!xScale) {
+        return { min: 0, max: getDefaultYAxisMax(sensor) };
+    }
+    
+    // Obtém os índices visíveis no eixo X
+    const minIndex = Math.floor(xScale.min || 0);
+    const maxIndex = Math.ceil(xScale.max || chart.data.labels.length - 1);
+    
+    // Pega os dados visíveis
+    const data = chart.data.datasets[0].data;
+    const visibleData = data.slice(minIndex, maxIndex + 1);
+    
+    if (visibleData.length === 0) {
+        return { min: 0, max: getDefaultYAxisMax(sensor) };
+    }
+    
+    // Para o Hall, mantém escala fixa
+    if (sensor === 'hall') {
+        return { min: -2, max: 2 };
+    }
+    
+    // Filtra valores válidos (não undefined, null, NaN)
+    const validData = visibleData.filter(v => 
+        v !== undefined && v !== null && !isNaN(v)
+    );
+    
+    if (validData.length === 0) {
+        return { min: 0, max: getDefaultYAxisMax(sensor) };
+    }
+    
+    // Calcula min e max dos dados visíveis
+    let min = Math.min(...validData);
+    let max = Math.max(...validData);
+    
+    // Para luminosidade, limita entre 0 e 100
+    if (sensor === 'light') {
+        min = Math.max(0, min);
+        max = Math.min(100, max);
+    }
+    
+    // Para sensores que não podem ser negativos
+    if (sensor !== 'temperature' && sensor !== 'hall') {
+        min = Math.max(0, min);
+    }
+    
+    // Adiciona margem de 10% (mínimo 1)
+    const range = max - min;
+    const margin = Math.max(1, range * 0.1);
+    
+    // Para valores muito pequenos (ex: 0.1), garante uma margem mínima
+    const finalMin = min - margin;
+    const finalMax = max + margin;
+    
+    // Se todos os valores forem iguais, cria uma escala artificial
+    if (finalMax - finalMin < 1) {
+        const center = (min + max) / 2;
+        return {
+            min: center - 5,
+            max: center + 5
+        };
+    }
+    
+    return {
+        min: Math.max(0, finalMin),
+        max: finalMax
+    };
+}
+
+// ============================================
+// ATUALIZA O EIXO Y BASEADO NOS DADOS VISÍVEIS
+// ============================================
+
+function updateYAxisFromVisibleData(sensor) {
     const chart = charts[sensor];
     if (!chart) return;
-    const newMax = getYAxisMax(sensor);
+    
+    // Para o Hall, mantém escala fixa
+    if (sensor === 'hall') {
+        if (chart.options.scales && chart.options.scales.y) {
+            chart.options.scales.y.min = -2;
+            chart.options.scales.y.max = 2;
+            chart.update('none');
+        }
+        return;
+    }
+    
+    const range = getVisibleDataRange(sensor, chart);
+    
     if (chart.options.scales && chart.options.scales.y) {
-        chart.options.scales.y.max = newMax;
+        chart.options.scales.y.min = range.min;
+        chart.options.scales.y.max = range.max;
         chart.update('none');
     }
 }
 
+// ============================================
+// ZOOM E PAN - CONFIGURAÇÃO
+// ============================================
+
+// Configuração padrão de zoom para todos os gráficos
+const ZOOM_CONFIG = {
+    zoom: {
+        wheel: {
+            enabled: true,
+            speed: 0.05,
+            modifierKey: 'ctrl', // Segurar Ctrl + scroll para zoom
+        },
+        pinch: {
+            enabled: true // Suporte a touch (mobile)
+        },
+        mode: 'x', // Zoom apenas no eixo X (tempo)
+        onZoomComplete: function({ chart }) {
+            const sensor = getSensorFromChart(chart);
+            if (sensor) {
+                // Atualiza o estado do zoom
+                updateZoomState(chart, 'zoom');
+                // ATUALIZA O EIXO Y PARA OS DADOS VISÍVEIS
+                updateYAxisFromVisibleData(sensor);
+            }
+        }
+    },
+    pan: {
+        enabled: true,
+        mode: 'x',
+        modifierKey: 'shift', // Segurar Shift + arrastar para pan
+        onPanComplete: function({ chart }) {
+            const sensor = getSensorFromChart(chart);
+            if (sensor) {
+                updateZoomState(chart, 'pan');
+                // ATUALIZA O EIXO Y PARA OS DADOS VISÍVEIS
+                updateYAxisFromVisibleData(sensor);
+            }
+        }
+    },
+    limits: {
+        x: {
+            minRange: 5 // Mínimo de 5 pontos visíveis
+        }
+    }
+};
+
+// Estado do zoom para cada sensor
+let zoomState = {};
+
+function updateZoomState(chart, action) {
+    const sensor = getSensorFromChart(chart);
+    if (!sensor) return;
+    
+    if (!zoomState[sensor]) {
+        zoomState[sensor] = {
+            isZoomed: false,
+            minIndex: 0,
+            maxIndex: chart.data.labels.length - 1
+        };
+    }
+    
+    const xScale = chart.scales.x;
+    if (xScale) {
+        const min = xScale.min;
+        const max = xScale.max;
+        const total = chart.data.labels.length;
+        
+        // Verifica se está com zoom aplicado
+        zoomState[sensor].isZoomed = !(min === undefined || (min === 0 && max === total - 1));
+        zoomState[sensor].minIndex = Math.floor(min || 0);
+        zoomState[sensor].maxIndex = Math.ceil(max || total - 1);
+        
+        // Atualiza o indicador visual
+        updateZoomIndicator(sensor, zoomState[sensor].isZoomed);
+    }
+}
+
+function getSensorFromChart(chart) {
+    for (const [sensor, c] of Object.entries(charts)) {
+        if (c === chart) return sensor;
+    }
+    return null;
+}
+
+// ============================================
+// INDICADOR VISUAL DE ZOOM
+// ============================================
+
+function updateZoomIndicator(sensor, isZoomed) {
+    // Procura o container do gráfico
+    const chartWrapper = document.querySelector(`#${sensor}Screen .chart-wrapper`);
+    if (!chartWrapper) return;
+    
+    // Remove indicador existente
+    const existingIndicator = chartWrapper.querySelector('.zoom-indicator');
+    if (existingIndicator) existingIndicator.remove();
+    
+    if (isZoomed) {
+        // Cria indicador de zoom ativo com ícone de lupa SVG
+        const indicator = document.createElement('div');
+        indicator.className = 'zoom-indicator';
+        indicator.innerHTML = `
+            <span class="zoom-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </span>
+            <span class="zoom-text">Zoom ativo</span>
+            <button class="zoom-reset-btn" onclick="resetZoom('${sensor}')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        `;
+        chartWrapper.style.position = 'relative';
+        chartWrapper.appendChild(indicator);
+    } else {
+        chartWrapper.style.position = '';
+    }
+}
+
+// ============================================
+// FUNÇÕES DE CONTROLE DE ZOOM
+// ============================================
+
+// Reset do zoom para um sensor específico
+function resetZoom(sensor) {
+    const chart = charts[sensor];
+    if (!chart) return;
+    
+    chart.resetZoom();
+    zoomState[sensor] = {
+        isZoomed: false,
+        minIndex: 0,
+        maxIndex: chart.data.labels.length - 1
+    };
+    updateZoomIndicator(sensor, false);
+    
+    // Restaura o eixo Y para a escala global
+    if (sensor !== 'hall') {
+        const newMax = getYAxisMax(sensor);
+        if (chart.options.scales && chart.options.scales.y) {
+            chart.options.scales.y.min = 0;
+            chart.options.scales.y.max = newMax;
+            chart.update('none');
+        }
+    }
+}
+
+// Reset do zoom para todos os sensores
+function resetAllZoom() {
+    Object.keys(charts).forEach(sensor => {
+        resetZoom(sensor);
+    });
+}
+
+// ============================================
+// FUNÇÕES DE NAVEGAÇÃO RÁPIDA (PRESETS)
+// ============================================
+
+// Zoom para os últimos N pontos
+function zoomToLastPoints(sensor, points = 50) {
+    const chart = charts[sensor];
+    if (!chart || chart.data.labels.length === 0) return;
+    
+    const total = chart.data.labels.length;
+    const start = Math.max(0, total - points);
+    const end = total - 1;
+    
+    chart.zoomScale('x', { min: start, max: end });
+    updateZoomState(chart, 'zoom');
+    // Atualiza o eixo Y para os dados visíveis
+    updateYAxisFromVisibleData(sensor);
+}
+
+// ============================================
 // GERENCIAMENTO DOS GRÁFICOS (CHART.JS)
+// ============================================
 
 // Inicializa ou retorna o gráfico de um sensor, aplicando tema atual e limite Y dinâmico
 function initChart(sensor) {
@@ -126,7 +399,8 @@ function initChart(sensor) {
             },
             plugins: {
                 legend: { display: true, labels: { color: textColor } },
-                decimation: { enabled: true, algorithm: 'min-max' } // reduz pontos para performance
+                decimation: { enabled: true, algorithm: 'min-max' }, // reduz pontos para performance
+                zoom: ZOOM_CONFIG // Adiciona o plugin de zoom
             }
         }
     };
@@ -136,6 +410,14 @@ function initChart(sensor) {
     chartStartTime[sensor] = null;
     chartElapsedOffset[sensor] = 0;
     chartMaxValue[sensor] = 0; // inicia sem dados
+    
+    // Inicializa o estado do zoom
+    zoomState[sensor] = {
+        isZoomed: false,
+        minIndex: 0,
+        maxIndex: 0
+    };
+    
     return charts[sensor];
 }
 
@@ -291,5 +573,11 @@ function ensureScales(chart, sensor) {
                 grid: { color: gridColor }
             }
         };
+        
+        // Re-adiciona o plugin de zoom se foi removido
+        if (!chart.options.plugins) {
+            chart.options.plugins = {};
+        }
+        chart.options.plugins.zoom = ZOOM_CONFIG;
     }
 }

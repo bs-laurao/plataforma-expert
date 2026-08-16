@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="style.css" />
     <!-- Biblioteca Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin de Zoom para Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -222,7 +224,7 @@
                 <!-- ===== VISUALIZAÇÃO EM GRÁFICO ===== -->
                 <div class="view-container graph-view">
                     <div class="chart-controls">
-                        <!-- Seletor de tipo de gráfico (ordem: área, barras, dispersão, linha, linha com pontos) -->
+                        <!-- Seletor de tipo de gráfico ( área, barras, dispersão, linha, linha com pontos) -->
                         <label for="temperatureChartType">Tipo:</label>
                         <select id="temperatureChartType" onchange="changeChartType('temperature', this.value)">
                             <option value="area" selected>Área</option>
@@ -235,6 +237,11 @@
                     <!-- Onde o gráfico será renderizado -->
                     <div class="chart-wrapper">
                         <canvas id="temperatureChart"></canvas>
+                    </div>
+                    <!-- Dicas de uso do zoom -->
+                    <div class="zoom-hint">
+                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span class="zoom-hint-reset" onclick="resetZoom('temperature')">Resetar Zoom</span>
                     </div>
                 </div>
 
@@ -291,6 +298,10 @@
                     <div class="chart-wrapper">
                         <canvas id="distanceChart"></canvas>
                     </div>
+                    <div class="zoom-hint">
+                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span class="zoom-hint-reset" onclick="resetZoom('distance')">Resetar Zoom</span>
+                    </div>
                 </div>
 
                 <div class="compact-controls">
@@ -344,6 +355,10 @@
                     </div>
                     <div class="chart-wrapper">
                         <canvas id="periodChart"></canvas>
+                    </div>
+                    <div class="zoom-hint">
+                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span class="zoom-hint-reset" onclick="resetZoom('period')">Resetar Zoom</span>
                     </div>
                 </div>
 
@@ -399,6 +414,10 @@
                     <div class="chart-wrapper">
                         <canvas id="lightChart"></canvas>
                     </div>
+                    <div class="zoom-hint">
+                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span class="zoom-hint-reset" onclick="resetZoom('light')">Resetar Zoom</span>
+                    </div>
                 </div>
 
                 <div class="compact-controls">
@@ -452,6 +471,10 @@
                     </div>
                     <div class="chart-wrapper">
                         <canvas id="buzzerChart"></canvas>
+                    </div>
+                    <div class="zoom-hint">
+                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span class="zoom-hint-reset" onclick="resetZoom('buzzer')">Resetar Zoom</span>
                     </div>
                 </div>
 
@@ -507,6 +530,10 @@
                     <div class="chart-wrapper">
                         <canvas id="hallChart"></canvas>
                     </div>
+                    <div class="zoom-hint">
+                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span class="zoom-hint-reset" onclick="resetZoom('hall')">Resetar Zoom</span>
+                    </div>
                 </div>
 
                 <div class="compact-controls">
@@ -560,6 +587,10 @@
                     </div>
                     <div class="chart-wrapper">
                         <canvas id="motorChart"></canvas>
+                    </div>
+                    <div class="zoom-hint">
+                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span class="zoom-hint-reset" onclick="resetZoom('motor')">Resetar Zoom</span>
                     </div>
                 </div>
 
@@ -615,6 +646,10 @@
                     <div class="chart-wrapper">
                         <canvas id="servoChart"></canvas>
                     </div>
+                    <div class="zoom-hint">
+                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span class="zoom-hint-reset" onclick="resetZoom('servo')">Resetar Zoom</span>
+                    </div>
                 </div>
 
                 <div class="compact-controls">
@@ -668,6 +703,10 @@
                     </div>
                     <div class="chart-wrapper">
                         <canvas id="piezoChart"></canvas>
+                    </div>
+                    <div class="zoom-hint">
+                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span class="zoom-hint-reset" onclick="resetZoom('piezo')">Resetar Zoom</span>
                     </div>
                 </div>
 
