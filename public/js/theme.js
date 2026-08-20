@@ -1,10 +1,12 @@
 // TEMA CLARO / ESCURO
 
-// Atualiza o ícone do botão de tema (◑ para claro, ◐ para escuro)
+// Atualiza o ícone do botão de tema conforme o modo ativo.
 function updateThemeIcon(theme) {
     const themeToggle = document.getElementById('themeToggle');
     if (!themeToggle) return;
-    themeToggle.textContent = theme === 'light' ? '◑' : '◐';
+    const isLightTheme = theme === 'light';
+    themeToggle.innerHTML = `<i class="bi ${isLightTheme ? 'bi-sun-fill' : 'bi-moon-stars-fill'}" aria-hidden="true"></i>`;
+    themeToggle.setAttribute('aria-label', isLightTheme ? 'Ativar modo escuro' : 'Ativar modo claro');
 }
 
 // Reconfigura as cores do gráfico conforme o tema atual (escuro ou claro)

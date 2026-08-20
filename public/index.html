@@ -4,7 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ExpeRT - Plataforma de Monitoramento</title>
-    <!-- Folha de estilos principal -->
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Estilos principal -->
     <link rel="stylesheet" href="style.css" />
     <!-- Biblioteca Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -29,14 +34,14 @@
                     </ul>
                 </nav>
                 <div class="status">
-                <div id="connectionStatus" class="status-disconnected">
-                    <span class="status-indicator"></span>
-                    Desconectado
+                    <div id="connectionStatus" class="status-disconnected">
+                        <span class="status-indicator"></span>
+                        Desconectado
+                    </div>
                 </div>
-            </div>
                 <!-- Botão tema claro/escuro -->
-                <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
-                    ◑
+                <button class="theme-toggle" id="themeToggle" aria-label="Ativar modo escuro">
+                    <i class="bi bi-sun-fill" aria-hidden="true"></i>
                 </button>
             </div>
 
@@ -58,7 +63,7 @@
                     </select>
                     <!-- Botão para trocar de dispositivo (volta ao menu) -->
                     <button class="change-device-btn" onclick="closeView()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16h16V4H4z M8 8h8v8H8z"/></svg>
+                        <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
                         Trocar Dispositivo
                     </button>
                 </div>
@@ -94,7 +99,7 @@
                         <div class="device-icon"><img src="imagem/PiscaLed.png" alt="Pisca Led" /></div>
                         <div class="device-card-content">
                             <h3>Pisca Led</h3>
-                            <p>Análise de períodos oscilatórios </p>
+                            <p>Análise de períodos oscilatórios</p>
                         </div>
                         <span class="device-tag pisca-led-tag" aria-label="Pisca Led"></span>
                     </div>
@@ -162,11 +167,11 @@
                     <h3 id="viewModalTitle">Escolha o tipo de visualização</h3>
                     <div class="modal-actions">
                         <button class="view-btn" onclick="selectView('table')">
-                            <div class="view-icon table-icon"></div>
+                            <i class="view-icon bi bi-table" aria-hidden="true"></i>
                             Tabela
                         </button>
                         <button class="view-btn" onclick="selectView('graph')">
-                            <div class="view-icon graph-icon"></div>
+                            <i class="view-icon bi bi-bar-chart-line" aria-hidden="true"></i>
                             Gráfico
                         </button>
                     </div>
@@ -179,15 +184,15 @@
                     <button class="modal-close" aria-label="Fechar" onclick="closeWarningModal()">×</button>
                     <h3 id="warnModalTitle" class="warn-title">Aviso antes de iniciar</h3>
                     <p class="warn-text">Certifique-se de que o dispositivo conectado no Arduino corresponde ao sensor selecionado. Antes de iniciar a coleta de dados, lembre-se de reiniciar o Arduino.</p>
-
                     <div class="modal-actions">
                         <button class="view-btn" onclick="confirmWarningSelection()">OK</button>
                     </div>
                 </div>
             </div>
 
-
-            <!-- ========== TELA DE TEMPERATURA ========== -->
+            <!-- ========================================== -->
+            <!-- TELA DE TEMPERATURA -->
+            <!-- ========================================== -->
             <div class="monitor-screen" id="temperatureScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
@@ -224,7 +229,6 @@
                 <!-- ===== VISUALIZAÇÃO EM GRÁFICO ===== -->
                 <div class="view-container graph-view">
                     <div class="chart-controls">
-                        <!-- Seletor de tipo de gráfico ( área, barras, dispersão, linha, linha com pontos) -->
                         <label for="temperatureChartType">Tipo:</label>
                         <select id="temperatureChartType" onchange="changeChartType('temperature', this.value)">
                             <option value="area" selected>Área</option>
@@ -253,7 +257,9 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DE DISTÂNCIA ========== -->
+            <!-- ========================================== -->
+            <!-- TELA DE DISTÂNCIA -->
+            <!-- ========================================== -->
             <div class="monitor-screen" id="distanceScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
@@ -311,7 +317,9 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DO PISCA LED ========== -->
+            <!-- ========================================== -->
+            <!-- TELA DO PISCA LED -->
+            <!-- ========================================== -->
             <div class="monitor-screen" id="periodScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
@@ -369,7 +377,9 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DE LUMINOSIDADE ========== -->
+            <!-- ========================================== -->
+            <!-- TELA DE LUMINOSIDADE -->
+            <!-- ========================================== -->
             <div class="monitor-screen" id="lightScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
@@ -427,7 +437,9 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DO BUZZER ========== -->
+            <!-- ========================================== -->
+            <!-- TELA DO BUZZER -->
+            <!-- ========================================== -->
             <div class="monitor-screen" id="buzzerScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
@@ -485,7 +497,9 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DO SENSOR HALL ========== -->
+            <!-- ========================================== -->
+            <!-- TELA DO SENSOR HALL -->
+            <!-- ========================================== -->
             <div class="monitor-screen" id="hallScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
@@ -543,7 +557,9 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DO MOTOR CC ========== -->
+            <!-- ========================================== -->
+            <!-- TELA DO MOTOR CC -->
+            <!-- ========================================== -->
             <div class="monitor-screen" id="motorScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
@@ -601,7 +617,9 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DO SERVO MOTOR ========== -->
+            <!-- ========================================== -->
+            <!-- TELA DO SERVO MOTOR -->
+            <!-- ========================================== -->
             <div class="monitor-screen" id="servoScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
@@ -659,7 +677,9 @@
                 </div>
             </div>
 
-            <!-- ========== TELA DO PIEZOELETRICO ========== -->
+            <!-- ========================================== -->
+            <!-- TELA DO PIEZOELETRICO -->
+            <!-- ========================================== -->
             <div class="monitor-screen" id="piezoScreen">
                 <div class="screen-header">
                     <div class="sensor-header-left">
