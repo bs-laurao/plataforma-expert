@@ -13,7 +13,7 @@ function getDefaultYAxisMax(sensor) {
         case 'buzzer': return 10; 
         case 'motor': return 10; 
         case 'servo': return 10; 
-        case 'piezo': return 10; 
+        case 'piezo': return 3; 
         default: return 10;
     }
 }
@@ -36,9 +36,7 @@ function getYAxisMax(sensor) {
     return Math.ceil(observed + margin);
 }
 
-// ============================================
-// NOVA FUNÇÃO: Obtém o min/max dos dados VISÍVEIS
-// ============================================
+//  Obtém o min/max dos dados VISÍVEIS
 
 function getVisibleDataRange(sensor, chart) {
     if (!chart || chart.data.labels.length === 0) {
@@ -225,9 +223,8 @@ function getSensorFromChart(chart) {
     return null;
 }
 
-// ============================================
+
 // INDICADOR VISUAL DE ZOOM
-// ============================================
 
 function updateZoomIndicator(sensor, isZoomed) {
     // Procura o container do gráfico
@@ -264,9 +261,7 @@ function updateZoomIndicator(sensor, isZoomed) {
     }
 }
 
-// ============================================
 // FUNÇÕES DE CONTROLE DE ZOOM
-// ============================================
 
 // Reset do zoom para um sensor específico
 function resetZoom(sensor) {
@@ -299,9 +294,7 @@ function resetAllZoom() {
     });
 }
 
-// ============================================
 // FUNÇÕES DE NAVEGAÇÃO RÁPIDA (PRESETS)
-// ============================================
 
 // Zoom para os últimos N pontos
 function zoomToLastPoints(sensor, points = 50) {
@@ -318,9 +311,7 @@ function zoomToLastPoints(sensor, points = 50) {
     updateYAxisFromVisibleData(sensor);
 }
 
-// ============================================
 // GERENCIAMENTO DOS GRÁFICOS (CHART.JS)
-// ============================================
 
 // Inicializa ou retorna o gráfico de um sensor, aplicando tema atual e limite Y dinâmico
 function initChart(sensor) {

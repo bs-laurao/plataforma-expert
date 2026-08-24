@@ -48,6 +48,7 @@ function saveChartImage(sensor) {
  * O cabeçalho da segunda coluna é o nome do sensor (ex: Temperatura, Distância...)
  * Usa ponto-e-vírgula como separador para melhor compatibilidade com Excel
  * Os números são formatados com vírgula decimal (padrão PT-BR)
+ * O arquivo é gerado em UTF-8 puro (sem BOM) para máxima portabilidade
  */
 function saveDataCSV(sensor) {
     const chart = charts[sensor];
@@ -92,9 +93,8 @@ function saveDataCSV(sensor) {
         csv += `${labels[i]};${valorFormatado}\n`;
     }
 
-    // Pré-pende BOM para melhor compatibilidade com Excel e cria Blob
-    const bomCsv = '\uFEFF' + csv;
-    const blob = new Blob([bomCsv], { type: 'text/csv;charset=utf-8;' });
+    // Cria Blob em UTF-8 puro para máxima portabilidade entre sistemas
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
     const link = document.createElement('a');
     link.download = getExportFileName(sensor);
     const url = URL.createObjectURL(blob);
