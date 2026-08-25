@@ -38,6 +38,8 @@ function selectViewType(viewType) {
     const screenEl = document.getElementById(currentSensor + 'Screen');
     if (!screenEl) return;
 
+    screenEl.classList.toggle('graph-mode', viewType === 'graph');
+
     // Remove a classe 'active' de todos os containers e abas
     screenEl.querySelectorAll('.view-container').forEach(c => c.classList.remove('active'));
     screenEl.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));

@@ -83,30 +83,23 @@ function generateSensorScreens() {
                 </div>
 
                 <div class="view-container graph-view">
-                    <div class="chart-controls">
-                        <label for="${sensor.id}ChartType">Tipo:</label>
-                        <select id="${sensor.id}ChartType" data-sensor="${sensor.id}">
-                            <option value="area" selected>Área</option>
-                            <option value="bar">Barras</option>
-                            <option value="scatter">Dispersão</option>
-                            <option value="line">Linha</option>
-                            <option value="line-points">Linha com Pontos</option>
-                        </select>
-                    </div>
                     <div class="chart-wrapper">
                         <canvas id="${sensor.id}Chart"></canvas>
                     </div>
+                </div>
+
+                <div class="monitor-footer">
                     <div class="zoom-hint">
-                        <span>🖱 Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
+                        <span> Ctrl+Scroll: Zoom | Shift+Arrastar: Pan | </span>
                         <span class="zoom-hint-reset" data-sensor="${sensor.id}">Resetar Zoom</span>
+                    </div>
+                    <div class="compact-controls">
+                        <button class="control-btn start" data-sensor="${sensor.id}" data-action="start"><span class="btn-icon">▶</span> Iniciar</button>
+                        <button class="control-btn pause" data-sensor="${sensor.id}" data-action="pause"><span class="btn-icon">⏸</span> Pausar</button>
+                        <button class="control-btn clear" id="clearBtn-${sensor.id}" data-sensor="${sensor.id}" data-action="clear"><span class="btn-icon">✕</span> Limpar</button>
                     </div>
                 </div>
 
-                <div class="compact-controls">
-                    <button class="control-btn start" data-sensor="${sensor.id}" data-action="start"><span class="btn-icon">▶</span> Iniciar</button>
-                    <button class="control-btn pause" data-sensor="${sensor.id}" data-action="pause"><span class="btn-icon">⏸</span> Pausar</button>
-                    <button class="control-btn clear" id="clearBtn-${sensor.id}" data-sensor="${sensor.id}" data-action="clear"><span class="btn-icon">✕</span> Limpar</button>
-                </div>
             </div>
         `;
     }).join('');
@@ -159,15 +152,15 @@ function setupEventListeners() {
         });
     });
 
-    // 4. Seletor de tipo de gráfico
-    document.querySelectorAll('.chart-controls select').forEach(select => {
-        select.addEventListener('change', function() {
-            const sensor = this.dataset.sensor;
-            if (sensor && typeof changeChartType === 'function') {
-                changeChartType(sensor, this.value);
+    // 4. Seletor de tipo de gráfico no cabeçalho
+    const chartTypeSelect = document.getElementById('chartTypeSelect');
+    if (chartTypeSelect) {
+        chartTypeSelect.addEventListener('change', function() {
+            if (currentSensor && typeof changeChartType === 'function') {
+                changeChartType(currentSensor, this.value);
             }
         });
-    });
+    }
 
     // 5. Resetar Zoom
     document.querySelectorAll('.zoom-hint-reset').forEach(el => {

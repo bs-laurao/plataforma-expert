@@ -439,7 +439,7 @@ function getYAxisLabel(sensor) {
         case 'hall': return 'Polaridade';
         case 'motor': return 'Velocidade (%)';
         case 'servo': return 'Ângulo (°)';
-        case 'piezo': return 'Valor ADC';
+        case 'piezo': return 'd.d.p (V)';
         default: return '';
     }
 }
