@@ -6,7 +6,8 @@ Repositório para versionamento da Plataforma Expert – sistema de monitorament
 
 ## Pré-requisitos
 
-- Node.js (versão 14 ou superior)
+- Node.js
+- Git
 - NPM
 - Arduino conectado via USB
 
