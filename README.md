@@ -15,7 +15,7 @@ Repositório para versionamento da Plataforma Expert – sistema de monitorament
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/plataforma-expert.git
+git clone https://github.com/bs-laurao/plataforma-expert.git
 cd plataforma-expert
 
 # 2. Instale as dependências
