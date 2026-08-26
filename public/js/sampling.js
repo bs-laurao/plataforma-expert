@@ -10,8 +10,21 @@ function formatElapsedMsToMMSS(ms) {
     return `${mm}:${ss}`;
 }
 
+// Converte milissegundos em string MM:SS:CC (usado APENAS na exportação CSV)
+function formatElapsedMsToMMSSCC(ms) {
+    if (ms < 0) ms = 0;
+    const totalSec = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSec / 60);
+    const seconds = totalSec % 60;
+    const centiseconds = Math.floor((ms % 1000) / 10);
+    const mm = String(minutes).padStart(2, '0');
+    const ss = String(seconds).padStart(2, '0');
+    const cc = String(centiseconds).padStart(2, '0');
+    return `${mm}:${ss}:${cc}`;
+}
+
 // Impede valores negativos para sensores que não fazem sentido (exceto temperatura)
-// Para luminosidade, também limita o valor em 100%.
+// Para luminosidade  limita o valor em 100%.
 function clampValueForSensor(sensor, raw) {
     // Para o Hall, mantém o texto
     if (sensor === 'hall') return raw;
@@ -62,7 +75,11 @@ function processSample(sensor) {
 
     // Adiciona o novo ponto ao gráfico
     chart.data.labels.push(label);
-    
+
+    // Armazena o tempo bruto em milissegundos para exportação com centésimos
+    if (!chart._rawTimes) chart._rawTimes = [];
+    chart._rawTimes.push(elapsedMs);
+
     // Para o Hall, converte texto para número (1 = Norte, -1 = Sul, 0 = neutro)
     let numericValue;
     if (sensor === 'hall') {
@@ -76,7 +93,7 @@ function processSample(sensor) {
     
     chart.data.datasets[0].data.push(numericValue);
 
-    // ESCALA DINÂMICA: atualiza o máximo observado (exceto para Hall) 
+    // ESCALA DINÂMICA: atualiza o máximo observado 
     if (sensor !== 'hall' && numericValue > (chartMaxValue[sensor] || 0)) {
         chartMaxValue[sensor] = numericValue;
         // Atualiza o eixo Y com a nova margem de 10%
@@ -110,7 +127,7 @@ function updateTimeDisplays() {
 
 // Altera o intervalo de coleta (usado pelo seletor de amostragem)
 function setSamplingInterval(seconds) {
-    samplingIntervalMs = Math.max(100, Math.round(seconds * 1000));
+    samplingIntervalMs = Math.max(10, Math.round(seconds * 1000)); // mínimo 10ms (0.01s)
     if (samplingTimerId) clearInterval(samplingTimerId);
     samplingTimerId = setInterval(sampleTick, samplingIntervalMs);
     console.log(`Sampling interval set to ${samplingIntervalMs} ms`);

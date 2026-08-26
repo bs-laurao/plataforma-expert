@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -42,6 +43,7 @@
                     <button class="back-ball-btn" id="backBtn" aria-label="Voltar">&lt;</button>
                     <span class="sampling-label">Amostragem:</span>
                     <select id="samplingSelect">
+                        <option value="0.01">0.01 s</option>
                         <option value="0.1" selected>0.1 s</option>
                         <option value="0.5">0.5 s</option>
                         <option value="1">1 s</option>

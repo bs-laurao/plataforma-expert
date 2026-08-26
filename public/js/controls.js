@@ -56,8 +56,12 @@ function restartChartForSensor(sensor) {
     const chart = initChart(sensor);
     if (!chart) return;
 
+    // Resetar zoom antes de limpar
+    if (typeof resetZoom === 'function') resetZoom(sensor);
+
     chart.data.labels = [];
     chart.data.datasets[0].data = [];
+    chart._rawTimes = []; // limpa tempos brutos
     chartMaxValue[sensor] = 0;
     // Reseta a escala
     if (chart.options.scales && chart.options.scales.y) {
@@ -89,6 +93,9 @@ function restartChartForSensor(sensor) {
 
 // Reseta os valores e gráficos de um sensor (usado ao voltar ao menu)
 function resetSensor(sensor) {
+    // Resetar zoom antes de limpar
+    if (typeof resetZoom === 'function') resetZoom(sensor);
+
     const el = document.getElementById(sensor);
     if (el) {
         if (sensor === 'hall') {
@@ -114,6 +121,7 @@ function resetSensor(sensor) {
     if (charts[sensor]) {
         charts[sensor].data.labels = [];
         charts[sensor].data.datasets[0].data = [];
+        charts[sensor]._rawTimes = []; // limpa tempos brutos
         // Restaura a escala inicial
         if (charts[sensor].options.scales && charts[sensor].options.scales.y) {
             charts[sensor].options.scales.y.max = getDefaultYAxisMax(sensor);
@@ -127,6 +135,9 @@ function resetSensor(sensor) {
 
 // Botão "Limpar" – zera os dados e para o sensor, sem sair da tela
 function clearSensorData(sensor) {
+    // Resetar zoom antes de limpar
+    if (typeof resetZoom === 'function') resetZoom(sensor);
+
     const el = document.getElementById(sensor);
     if (el) {
         if (sensor === 'hall') {
@@ -142,6 +153,7 @@ function clearSensorData(sensor) {
     if (charts[sensor]) {
         charts[sensor].data.labels = [];
         charts[sensor].data.datasets[0].data = [];
+        charts[sensor]._rawTimes = []; // limpa tempos brutos
         // Reseta a escala para o valor padrão
         chartMaxValue[sensor] = 0;
         if (charts[sensor].options.scales && charts[sensor].options.scales.y) {
@@ -157,6 +169,7 @@ function clearSensorData(sensor) {
     chartStartTime[sensor] = null;
     chartElapsedOffset[sensor] = 0;
     lastReceivedValues[sensor] = undefined;
+    lastReceivedAt[sensor] = 0; // adicionado para consistência
 
     const clearBtn = document.getElementById(`clearBtn-${sensor}`);
     if (clearBtn) clearBtn.style.display = 'none';

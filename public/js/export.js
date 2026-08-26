@@ -1,5 +1,7 @@
-// FUNÇÕES DE EXPORTAÇÃO (SALVAR IMAGEM E CSV)
 
+// EXPORTAÇÃO
+
+//NOME DO SENSOR PARA EXPORTAÇÃO
 function getExportSensorName(sensor) {
     switch (sensor) {
         case 'distance': return 'Distancia';
@@ -15,17 +17,7 @@ function getExportSensorName(sensor) {
     }
 }
 
-function getExportFileName(sensor) {
-    return `dados_${getExportSensorName(sensor)
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/\s+/g, '_')
-        .toLowerCase()}.csv`;
-}
-
- //Salva a imagem do gráfico de um sensor em PNG (download via navegador)
- //Usa o método toBase64Image() do Chart.js para gerar a imagem
- 
+//  SALVAR IMAGEM (PNG)
 function saveChartImage(sensor) {
     const chart = charts[sensor];
     if (!chart) {
@@ -36,73 +28,87 @@ function saveChartImage(sensor) {
         alert('Não há dados no gráfico para salvar. Inicie a coleta primeiro.');
         return;
     }
-    // Cria um link <a> e simula um clique para baixar o arquivo
     const link = document.createElement('a');
     link.download = `grafico_${sensor}.png`;
     link.href = chart.toBase64Image();
     link.click();
 }
 
-/**
- * Salva os dados (labels e valores) do gráfico de um sensor em CSV
- * O cabeçalho da segunda coluna é o nome do sensor (ex: Temperatura, Distância...)
- * Usa ponto-e-vírgula como separador para melhor compatibilidade com Excel
- * Os números são formatados com vírgula decimal (padrão PT-BR)
- * O arquivo é gerado em UTF-8 puro (sem BOM) para máxima portabilidade
- */
-function saveDataCSV(sensor) {
+
+// SALVAR EXCEL (XLSX)
+function saveDataExcel(sensor) {
     const chart = charts[sensor];
     if (!chart) {
         alert('Dados não encontrados para este sensor.');
         return;
     }
 
-    const labels = chart.data.labels || [];
     const values = chart.data.datasets[0].data || [];
-
-    if (labels.length === 0) {
+    if (values.length === 0) {
         alert('Não há dados para exportar. Inicie a coleta primeiro.');
         return;
     }
 
-    // Obtém o nome do sensor para o CSV
     const sensorName = getExportSensorName(sensor);
     const isHall = sensor === 'hall';
     const isPiezo = sensor === 'piezo';
 
-    // Cabeçalho com o nome do sensor
-    let csv = `Tempo;${sensorName}\n`;
-    for (let i = 0; i < labels.length; i++) {
-        let valorFormatado = values[i];
-        
-        // Para o Hall, converte número de volta para texto
+    const interval = (typeof samplingIntervalMs !== 'undefined' && samplingIntervalMs > 0) 
+        ? samplingIntervalMs 
+        : 100;
+
+    const data = [];
+    
+    // Cabeçalho 
+    data.push(['Tempo', sensorName]);
+
+    // Linhas de dados
+    for (let i = 0; i < values.length; i++) {
+        const ms = i * interval;
+        const tempoFormatado = formatElapsedMsToMMSSCC(ms);
+
+        let valor = values[i];
         if (isHall) {
-            if (valorFormatado === 1) valorFormatado = 'Polo Norte';
-            else if (valorFormatado === -1) valorFormatado = 'Polo Sul';
-            else valorFormatado = '---';
-        } else if (isPiezo && typeof valorFormatado === 'number') {
-            // Mantém o mesmo formato numérico dos outros sensores (vírgula decimal), sem arredondar
-            valorFormatado = valorFormatado.toString().replace('.', ',');
-        } else if (typeof valorFormatado === 'number') {
-            if (sensor === 'light' && valorFormatado > 100) {
-                valorFormatado = 100;
+            if (valor === 1) valor = 'Polo Norte';
+            else if (valor === -1) valor = 'Polo Sul';
+            else valor = '---';
+        } else if (isPiezo && typeof valor === 'number') {
+            valor = valor;
+        } else if (typeof valor === 'number') {
+            if (sensor === 'light' && valor > 100) {
+                valor = 100;
             }
-            valorFormatado = valorFormatado.toString().replace('.', ',');
+            valor = valor;
         }
-        
-        csv += `${labels[i]};${valorFormatado}\n`;
+
+        data.push([tempoFormatado, valor]);
     }
 
-    // Cria Blob em UTF-8 puro para máxima portabilidade entre sistemas
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const link = document.createElement('a');
-    link.download = getExportFileName(sensor);
-    const url = URL.createObjectURL(blob);
-    link.href = url;
-    // Anexa temporariamente ao DOM para garantir compatibilidade com alguns navegadores
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    // Revoga a URL após um pequeno atraso para garantir que o download seja iniciado
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    //CRIA A PLANILHA A PARTIR DO ARRAY DE ARRAYS
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(data);
+
+    //FORÇA A COLUNA "Tempo"  COMO TEXTO
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for (let row = range.s.r; row <= range.e.r; row++) {
+        const cellAddress = XLSX.utils.encode_cell({ r: row, c: 0 });
+        if (!ws[cellAddress]) continue;
+        ws[cellAddress].t = 's';
+        ws[cellAddress].v = String(ws[cellAddress].v);
+    }
+
+    //AJUSTA A LARGURA DAS COLUNAS
+    ws['!cols'] = [
+        { wch: 20 },
+        { wch: 15 }
+    ];
+
+    //FAZ O DOWNLOAD
+    XLSX.utils.book_append_sheet(wb, ws, 'Dados');
+    const baseName = getExportSensorName(sensor)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '_')
+        .toLowerCase();
+    XLSX.writeFile(wb, `dados_${baseName}.xlsx`);
 }

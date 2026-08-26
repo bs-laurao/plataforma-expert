@@ -122,7 +122,7 @@ function setupSerialPort(portPath) {
             servo: 0,
             piezo: 0
         };
-        
+
         // Variavel que guarda o ultimo comando enviado (1=temp, 2=dist, 3=periodo, 4=luz, 5=buzzer, 6=hall, 7=motor, 8=servo, 9=piezo)
         let comando = 0;
         

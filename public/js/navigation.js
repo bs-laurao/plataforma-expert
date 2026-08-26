@@ -9,22 +9,7 @@ function closeModal() {
 
 // Botão "Voltar" – para a coleta, reseta o sensor e retorna ao menu
 function closeView() {
-    if (currentSensor) {
-        pauseChartForSensor(currentSensor);
-        const el = document.getElementById(currentSensor);
-        if (el) el.textContent = currentSensor === 'hall' ? '---' : '0.0';
-        const timeEl = document.getElementById(currentSensor + 'Time');
-        if (timeEl) timeEl.textContent = '00:00';
-
-        const clearBtn = document.getElementById(`clearBtn-${currentSensor}`);
-        if (clearBtn) clearBtn.style.display = 'none';
-
-        chartsActive[currentSensor] = false;
-        chartStartTime[currentSensor] = null;
-        chartElapsedOffset[currentSensor] = 0;
-        chartMaxValue[currentSensor] = 0; // reset para escala dinâmica
-        lastReceivedValues[currentSensor] = undefined;
-    }
+    if (currentSensor) resetSensor(currentSensor);
     showMenu();
     currentSensor = '';
     currentView = 'table';

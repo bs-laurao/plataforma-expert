@@ -1,4 +1,3 @@
-
 // MAIN.JS - INICIALIZAÇÃO PRINCIPAL
 
 // CONFIGURAÇÃO DOS SENSORES
@@ -14,7 +13,7 @@ const SENSORS_CONFIG = [
     { id: 'piezo', label: 'Piezoelétrico', icon: 'Piezoeletrico.png', desc: 'Detecção de vibrações', unit: 'ADC', tagClass: 'piezo-tag', cmd: '9', isPiezo: true }
 ];
 
-// FUNÇÃO: GERAR CARDS DO MENU
+// GERAR CARDS DO MENU
 function generateDeviceCards() {
     console.log('Gerando cards...');
     const grid = document.getElementById('devicesGrid');
@@ -38,7 +37,7 @@ function generateDeviceCards() {
 }
 
 
-// FUNÇÃO: GERAR TELAS DOS SENSORES
+//GERAR TELAS DOS SENSORES
 function generateSensorScreens() {
     console.log('Gerando telas dos sensores...');
     const container = document.getElementById('sensorScreensContainer');
@@ -63,15 +62,15 @@ function generateSensorScreens() {
                         <button class="tab-btn" data-sensor="${sensor.id}" data-view="graph">Gráfico</button>
                     </div>
                     <div class="export-buttons">
-                        <button class="export-btn" data-sensor="${sensor.id}" data-action="image">
-                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
-                            Salvar Imagem
-                        </button>
-                        <button class="export-btn" data-sensor="${sensor.id}" data-action="csv">
-                            <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
-                            Salvar CSV
-                        </button>
-                    </div>
+    <button class="export-btn" data-sensor="${sensor.id}" data-action="image">
+        <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 5h-3.2l-1.6-2H7.8L6.2 5H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm-9 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 9.5A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>
+        Salvar Imagem
+    </button>
+    <button class="export-btn" data-sensor="${sensor.id}" data-action="excel">
+        <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
+        Salvar Excel
+    </button>
+</div>
                 </div>
 
                 <div class="view-container table-view active">
@@ -108,11 +107,11 @@ function generateSensorScreens() {
 }
 
 
-// FUNÇÃO: CONFIGURAR EVENT LISTENERS
+//CONFIGURAR EVENT LISTENERS
 function setupEventListeners() {
     console.log('Configurando event listeners...');
     
-    // 1. Cards do menu
+    //Cards do menu
     document.querySelectorAll('.device-card').forEach(card => {
         card.addEventListener('click', function() {
             const sensor = this.dataset.sensor;
@@ -125,7 +124,7 @@ function setupEventListeners() {
         });
     });
 
-    // 2. Botões das abas
+    //Botões das abas
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const sensor = this.dataset.sensor;
@@ -137,22 +136,22 @@ function setupEventListeners() {
         });
     });
 
-    // 3. Botões de exportação
-    document.querySelectorAll('.export-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const sensor = this.dataset.sensor;
-            const action = this.dataset.action;
-            if (sensor) {
-                if (action === 'image' && typeof saveChartImage === 'function') {
-                    saveChartImage(sensor);
-                } else if (action === 'csv' && typeof saveDataCSV === 'function') {
-                    saveDataCSV(sensor);
-                }
+    // Botões de exportação (Imagem e Excel)
+document.querySelectorAll('.export-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const sensor = this.dataset.sensor;
+        const action = this.dataset.action;
+        if (sensor) {
+            if (action === 'image' && typeof saveChartImage === 'function') {
+                saveChartImage(sensor);
+            } else if (action === 'excel' && typeof saveDataExcel === 'function') {
+                saveDataExcel(sensor);
             }
-        });
+        }
     });
+});
 
-    // 4. Seletor de tipo de gráfico no cabeçalho
+    //Seletor de tipo de gráfico no cabeçalho
     const chartTypeSelect = document.getElementById('chartTypeSelect');
     if (chartTypeSelect) {
         chartTypeSelect.addEventListener('change', function() {
@@ -162,7 +161,7 @@ function setupEventListeners() {
         });
     }
 
-    // 5. Resetar Zoom
+    //Resetar Zoom
     document.querySelectorAll('.zoom-hint-reset').forEach(el => {
         el.addEventListener('click', function() {
             const sensor = this.dataset.sensor;
@@ -172,7 +171,7 @@ function setupEventListeners() {
         });
     });
 
-    // 6. Botões de controle
+    //Botões de controle
     document.querySelectorAll('.control-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const sensor = this.dataset.sensor;
@@ -204,14 +203,10 @@ document.addEventListener('DOMContentLoaded', function() {
     generateDeviceCards();
     generateSensorScreens();
     
-
     //  CONFIGURA OS EVENT LISTENERS
-   
     setupEventListeners();
 
-    
     // TEMA (CLARO/ESCURO)
-    
     const themeToggle = document.getElementById('themeToggle');
     const currentTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', currentTheme);
@@ -231,7 +226,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    
     // BOTÕES DO HEADER
 
     const backBtn = document.getElementById('backBtn');
@@ -282,4 +276,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.addEventListener('resize', () => {
     Object.values(charts).forEach(chart => chart?.resize?.());
-});ss
+});
