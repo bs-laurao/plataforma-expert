@@ -1,16 +1,99 @@
-// MAIN.JS - INICIALIZAÇÃO PRINCIPAL
+// MAIN.JS
 
 // CONFIGURAÇÃO DOS SENSORES
 const SENSORS_CONFIG = [
-    { id: 'temperature', label: 'Temperatura', icon: 'Temperatura.png', desc: 'Monitoramento de temperatura', unit: '°C', tagClass: 'temperature-tag', cmd: '1' },
-    { id: 'distance', label: 'Distância', icon: 'Distancia.png', desc: 'Medição de distância com sensores', unit: 'cm', tagClass: 'distance-tag', cmd: '2' },
-    { id: 'period', label: 'Pisca Led', icon: 'PiscaLed.png', desc: 'Análise de períodos oscilatórios', unit: 'ms', tagClass: 'pisca-led-tag', cmd: '3' },
-    { id: 'light', label: 'Luminosidade', icon: 'Luminosidade.png', desc: 'Percentual de luz no sensor', unit: '%', tagClass: 'light-tag', cmd: '4' },
-    { id: 'buzzer', label: 'Buzzer', icon: 'Buzzer.png', desc: 'Controle de frequência audível (20Hz - 20kHz)', unit: 'Hz', tagClass: 'buzzer-tag', cmd: '5' },
-    { id: 'hall', label: 'Sensor Hall', icon: 'SensorHall.png', desc: 'Detecção de polaridade magnética', unit: '', tagClass: 'hall-tag', cmd: '6', isHall: true },
-    { id: 'motor', label: 'Motor CC', icon: 'MotorCC.png', desc: 'Controle em percentual da velocidade', unit: '%', tagClass: 'motor-tag', cmd: '7' },
-    { id: 'servo', label: 'Servo Motor', icon: 'MotorServo.png', desc: 'Ângulo do prisma', unit: '°', tagClass: 'servo-tag', cmd: '8' },
-    { id: 'piezo', label: 'Piezoelétrico', icon: 'Piezoeletrico.png', desc: 'Detecção de vibrações', unit: 'ADC', tagClass: 'piezo-tag', cmd: '9', isPiezo: true }
+    { 
+        id: 'temperature', 
+        label: 'Temperatura', 
+        icon: 'Temperatura.png', 
+        desc: 'Monitoramento de temperatura', 
+        detailedDesc: 'Sensor de temperatura (LM35/DHT) que mede a temperatura ambiente em graus Celsius (°C). Ideal para monitorar variações térmicas em experimentos e ambientes controlados.',
+        unit: '°C', 
+        tagClass: 'temperature-tag', 
+        cmd: '1' 
+    },
+    { 
+        id: 'distance', 
+        label: 'Distância', 
+        icon: 'Distancia.png', 
+        desc: 'Medição de distância com sensores', 
+        detailedDesc: 'Sensor ultrassônico (HC-SR04) que mede a distância até um objeto em centímetros (cm). Utiliza ondas sonoras para calcular o tempo de ida e volta do pulso.',
+        unit: 'cm', 
+        tagClass: 'distance-tag', 
+        cmd: '2' 
+    },
+    { 
+        id: 'period', 
+        label: 'Pisca Led', 
+        icon: 'PiscaLed.png', 
+        desc: 'Análise de períodos oscilatórios', 
+        detailedDesc: 'Mede o período de oscilação de um LED piscante em milissegundos (ms). Útil para estudos de temporização e frequência de sinais digitais.',
+        unit: 'ms', 
+        tagClass: 'pisca-led-tag', 
+        cmd: '3' 
+    },
+    { 
+        id: 'light', 
+        label: 'Luminosidade', 
+        icon: 'Luminosidade.png', 
+        desc: 'Percentual de luz no sensor', 
+        detailedDesc: 'Sensor LDR (fotorresistor) que detecta a intensidade luminosa ambiente em percentual (%). Quanto maior o valor, mais clara está a região. Varia de 0% (escuro total) a 100% (luz máxima).',
+        unit: '%', 
+        tagClass: 'light-tag', 
+        cmd: '4' 
+    },
+    { 
+        id: 'buzzer', 
+        label: 'Buzzer', 
+        icon: 'Buzzer.png', 
+        desc: 'Controle de frequência audível (20Hz - 20kHz)', 
+        detailedDesc: 'Buzzer piezoelétrico que emite sons em frequências variadas (Hz). Permite gerar alertas sonoros, toques e até melodias simples variando a frequência.',
+        unit: 'Hz', 
+        tagClass: 'buzzer-tag', 
+        cmd: '5' 
+    },
+    { 
+        id: 'hall', 
+        label: 'Sensor Hall', 
+        icon: 'SensorHall.png', 
+        desc: 'Detecção de polaridade magnética', 
+        detailedDesc: 'Sensor de efeito Hall que detecta a presença e polaridade de campos magnéticos. Retorna "Norte" (polo norte), "Sul" (polo sul) ou "---" (nenhum campo detectado).',
+        unit: '', 
+        tagClass: 'hall-tag', 
+        cmd: '6', 
+        isHall: true 
+    },
+    { 
+        id: 'motor', 
+        label: 'Motor CC', 
+        icon: 'MotorCC.png', 
+        desc: 'Controle em percentual da velocidade', 
+        detailedDesc: 'Motor de corrente contínua (DC) com controle de velocidade via PWM. A velocidade é ajustada em percentual (%), variando de 0% (parado) a 100% (rotação máxima).',
+        unit: '%', 
+        tagClass: 'motor-tag', 
+        cmd: '7' 
+    },
+    { 
+        id: 'servo', 
+        label: 'Servo Motor', 
+        icon: 'MotorServo.png', 
+        desc: 'Ângulo do prisma', 
+        detailedDesc: 'Servo motor que permite posicionamento preciso de eixos em ângulos de 0° a 180°. Muito utilizado em robótica para controle de articulações e mecanismos.',
+        unit: '°', 
+        tagClass: 'servo-tag', 
+        cmd: '8' 
+    },
+    { 
+        id: 'piezo', 
+        label: 'Piezoelétrico', 
+        icon: 'Piezoeletrico.png', 
+        desc: 'Detecção de vibrações', 
+        detailedDesc: 'Sensor piezoelétrico que converte vibrações mecânicas em sinais elétricos (diferença de potencial em volts – V). Utilizado para detectar batidas, toques ou choques em superfícies.',
+        unit: 'V', 
+        tagClass: 'piezo-tag', 
+        cmd: '9', 
+        isPiezo: true 
+    }
 ];
 
 // GERAR CARDS DO MENU
@@ -28,6 +111,9 @@ function generateDeviceCards() {
             <div class="device-card-content">
                 <h3>${sensor.label}</h3>
                 <p>${sensor.desc}</p>
+                <button class="view-detail-btn" data-sensor="${sensor.id}" onclick="event.stopPropagation(); openDetailModal('${sensor.id}')">
+                    Ver mais <i class="bi bi-chevron-right"></i>
+                </button>
             </div>
             <span class="device-tag ${sensor.tagClass}" aria-label="${sensor.label}"></span>
         </div>
@@ -191,7 +277,52 @@ document.querySelectorAll('.export-btn').forEach(btn => {
         });
     });
 
+    // ========== NOVOS EVENT LISTENERS PARA O MODAL "VER MAIS" ==========
+    const closeDetailModalBtn = document.getElementById('closeDetailModalBtn');
+    if (closeDetailModalBtn) closeDetailModalBtn.addEventListener('click', closeDetailModal);
+
+    const closeDetailBtn = document.getElementById('closeDetailBtn');
+    if (closeDetailBtn) closeDetailBtn.addEventListener('click', closeDetailModal);
+
+    // Fechar ao clicar fora do modal (fundo escuro)
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('detailModal');
+        if (event.target === modal) {
+            closeDetailModal();
+        }
+    });
+    // Opções Tabela e Gráfico
+    document.querySelectorAll('.view-option').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const view = this.dataset.view;
+            if (view) {
+                selectViewOption(view);
+                confirmViewSelection();
+            }
+        });
+    });
     console.log('Event listeners configurados!');
+}
+
+// Abre o modal de detalhes com as informações do sensor
+function openDetailModal(sensorId) {
+    const sensor = SENSORS_CONFIG.find(s => s.id === sensorId);
+    if (!sensor) return;
+
+    const modal = document.getElementById('detailModal');
+    const title = document.getElementById('detailModalTitle');
+    const desc = document.getElementById('detailModalDesc');
+
+    if (title) title.textContent = sensor.label;
+    if (desc) desc.textContent = sensor.detailedDesc || 'Descrição não disponível.';
+
+    if (modal) modal.style.display = 'flex';
+}
+
+// Fecha o modal de detalhes
+function closeDetailModal() {
+    const modal = document.getElementById('detailModal');
+    if (modal) modal.style.display = 'none';
 }
 
 // INICIALIZAÇÃO PRINCIPAL
@@ -243,7 +374,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
    
     // MODAIS
-   
     const closeModalBtn = document.getElementById('closeModalBtn');
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
 
@@ -253,6 +383,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmWarnBtn = document.getElementById('confirmWarnBtn');
     if (confirmWarnBtn) confirmWarnBtn.addEventListener('click', confirmWarningSelection);
 
+    // Os eventos dos botões de visualização (viewTableBtn e viewGraphBtn) foram substituídos
+    // pelas novas opções do modal, então não precisamos mais deles.
+    // Mantenho apenas para compatibilidade, mas podem ser removidos.
     const viewTableBtn = document.getElementById('viewTableBtn');
     if (viewTableBtn) viewTableBtn.addEventListener('click', function() { selectView('table'); });
 
@@ -261,7 +394,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     // INICIALIZAÇÃO FINAL
-  
     showMenu();
     setSamplingInterval(0.1);
     
@@ -273,7 +405,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // REDIMENSIONAMENTO DA JANELA
-
 window.addEventListener('resize', () => {
     Object.values(charts).forEach(chart => chart?.resize?.());
 });

@@ -14,7 +14,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- ===== CABEÇALHO ===== -->
+        <!--CABEÇALHO  -->
         <header>
             <div class="header-content">
                 <div class="logo">
@@ -23,7 +23,6 @@
                 <nav>
                     <ul>
                         <li><a href="index.html" class="active">USAR DISPOSITIVOS</a></li>
-                        <li><a href="tutorial.html">TUTORIAIS</a></li>
                         <li><a href="sobre.html">SOBRE</a></li>
                     </ul>
                 </nav>
@@ -38,11 +37,13 @@
                 </button>
             </div>
 
+            <!-- BARRA DE CONTROLES  AMOSTRAGEM E TIPO -->
             <div id="samplingWrapper" class="sampling-control">
                 <div class="sampling-compact">
-                    <button class="back-ball-btn" id="backBtn" aria-label="Voltar">&lt;</button>
-                    <span class="sampling-label">Amostragem:</span>
-                    <select id="samplingSelect">
+                    <button class="back-ball-btn" id="backBtn" aria-label="Voltar">
+                    </button>
+                    <span class="sampling-label"><i class="bi bi-clock-history"></i> Amostragem:</span>
+                    <select id="samplingSelect" class="form-select-sm">
                         <option value="0.01">0.01 s</option>
                         <option value="0.1" selected>0.1 s</option>
                         <option value="0.5">0.5 s</option>
@@ -50,23 +51,22 @@
                         <option value="5">5 s</option>
                         <option value="10">10 s</option>
                     </select>
-                    <span class="sampling-label chart-type-label">Tipo de gráfico:</span>
-                    <select id="chartTypeSelect">
+                    <span class="sampling-label chart-type-label"><i class="bi bi-bar-chart-line"></i> Tipo:</span>
+                    <select id="chartTypeSelect" class="form-select-sm">
                         <option value="area">Área</option>
                         <option value="bar">Barras</option>
                         <option value="scatter">Dispersão</option>
                         <option value="line" selected>Linha</option>
-                        <option value="line-points">Linha com Pontos</option>
+                        <option value="line-points">Linha c/ Pontos</option>
                     </select>
                     <button class="change-device-btn" id="changeDeviceBtn">
-                        <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
-                        Trocar Dispositivo
+                        <i class="bi bi-arrow-left-right"></i> Trocar Dispositivo
                     </button>
                 </div>
             </div>
         </header>
 
-        <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+        <!--CONTEÚDO PRINCIPAL-->
         <main class="main-content">
             <!-- MENU INICIAL COM CARDS DOS SENSORES -->
             <div class="main-menu" id="mainMenu">
@@ -76,22 +76,24 @@
                 </div>
             </div>
 
-            <!-- MODAIS -->
+            <!--  MODAIS -->
+            <!-- Modal de escolha (Tabela / Gráfico) -->
             <div class="modal" id="viewModal" aria-hidden="true">
                 <div class="modal-content">
                     <button class="modal-close" id="closeModalBtn">×</button>
                     <h3 id="viewModalTitle">Escolha o tipo de visualização</h3>
-                    <div class="modal-actions">
-                        <button class="view-btn" id="viewTableBtn">
+                    <div class="modal-options">
+                        <button class="view-option" id="optionTable" data-view="table">
                             <i class="view-icon bi bi-table"></i> Tabela
                         </button>
-                        <button class="view-btn" id="viewGraphBtn">
+                        <button class="view-option" id="optionGraph" data-view="graph">
                             <i class="view-icon bi bi-bar-chart-line"></i> Gráfico
                         </button>
                     </div>
                 </div>
             </div>
 
+            <!-- Modal de aviso -->
             <div class="modal" id="warnModal" aria-hidden="true">
                 <div class="modal-content">
                     <button class="modal-close" id="closeWarnModalBtn">×</button>
@@ -103,7 +105,19 @@
                 </div>
             </div>
 
-            <!-- ===== CONTAINER PARA AS TELAS DOS SENSORES ===== -->
+            <!-- Modal de detalhes do sensor ("Ver mais") -->
+            <div class="modal" id="detailModal" aria-hidden="true">
+                <div class="modal-content">
+                    <button class="modal-close" id="closeDetailModalBtn">×</button>
+                    <h3 id="detailModalTitle">Título</h3>
+                    <p id="detailModalDesc" style="text-align: left; line-height: 1.6; margin-top: 15px;">Descrição detalhada...</p>
+                    <div class="modal-actions">
+                        <button class="view-btn" id="closeDetailBtn" style="flex: 0 1 auto; padding: 12px 30px;">Fechar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTAINER PARA AS TELAS DOS SENSORES -->
             <div id="sensorScreensContainer"></div>
         </main>
 

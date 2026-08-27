@@ -1,6 +1,6 @@
 // CONTROLE DO EIXO Y DOS GRÁFICOS 
 
-// Retorna o valor máximo inicial (padrão) para cada sensor
+// Retorna o valor máximo inicial para cada sensor
 function getDefaultYAxisMax(sensor) {
     // Para o Hall, o gráfico vai de -2 a 2
     if (sensor === 'hall') return 2;
@@ -65,7 +65,7 @@ function getVisibleDataRange(sensor, chart) {
         return { min: -2, max: 2 };
     }
     
-    // Filtra valores válidos (não undefined, null, NaN)
+    // Filtra valores válidos 
     const validData = visibleData.filter(v => 
         v !== undefined && v !== null && !isNaN(v)
     );
@@ -112,10 +112,7 @@ function getVisibleDataRange(sensor, chart) {
     };
 }
 
-// ============================================
 // ATUALIZA O EIXO Y BASEADO NOS DADOS VISÍVEIS
-// ============================================
-
 function updateYAxisFromVisibleData(sensor) {
     const chart = charts[sensor];
     if (!chart) return;
@@ -139,10 +136,7 @@ function updateYAxisFromVisibleData(sensor) {
     }
 }
 
-// ============================================
-// ZOOM E PAN - CONFIGURAÇÃO
-// ============================================
-
+// ZOOM E PAN 
 // Configuração padrão de zoom para todos os gráficos
 const ZOOM_CONFIG = {
     zoom: {
@@ -154,27 +148,31 @@ const ZOOM_CONFIG = {
         pinch: {
             enabled: true // Suporte a touch (mobile)
         },
-        mode: 'x', // Zoom apenas no eixo X (tempo)
+        drag: {
+            enabled: true,          // Ativa o arrasto para selecionar área
+            threshold: 10,          // Mínimo de pixels arrastados para ativar
+            mode: 'xy',             // Zoom nos eixos X e Y
+            backgroundColor: 'rgba(37, 99, 235, 0.2)',
+            borderColor: '#2563eb',
+            borderWidth: 2,
+        },
+        mode: 'xy', // Zoom nos eixos X e Y
         onZoomComplete: function({ chart }) {
             const sensor = getSensorFromChart(chart);
             if (sensor) {
                 // Atualiza o estado do zoom
                 updateZoomState(chart, 'zoom');
-                // ATUALIZA O EIXO Y PARA OS DADOS VISÍVEIS
-                updateYAxisFromVisibleData(sensor);
             }
         }
     },
     pan: {
         enabled: true,
-        mode: 'x',
+        mode: 'xy',
         modifierKey: 'shift', // Segurar Shift + arrastar para pan
         onPanComplete: function({ chart }) {
             const sensor = getSensorFromChart(chart);
             if (sensor) {
                 updateZoomState(chart, 'pan');
-                // ATUALIZA O EIXO Y PARA OS DADOS VISÍVEIS
-                updateYAxisFromVisibleData(sensor);
             }
         }
     },
@@ -225,7 +223,6 @@ function getSensorFromChart(chart) {
 
 
 // INDICADOR VISUAL DE ZOOM
-
 function updateZoomIndicator(sensor, isZoomed) {
     // Procura o container do gráfico
     const chartWrapper = document.querySelector(`#${sensor}Screen .chart-wrapper`);
@@ -262,7 +259,6 @@ function updateZoomIndicator(sensor, isZoomed) {
 }
 
 // FUNÇÕES DE CONTROLE DE ZOOM
-
 // Reset do zoom para um sensor específico
 function resetZoom(sensor) {
     const chart = charts[sensor];
@@ -294,8 +290,6 @@ function resetAllZoom() {
     });
 }
 
-// FUNÇÕES DE NAVEGAÇÃO RÁPIDA (PRESETS)
-
 // Zoom para os últimos N pontos
 function zoomToLastPoints(sensor, points = 50) {
     const chart = charts[sensor];
@@ -312,7 +306,6 @@ function zoomToLastPoints(sensor, points = 50) {
 }
 
 // GERENCIAMENTO DOS GRÁFICOS (CHART.JS)
-
 // Inicializa ou retorna o gráfico de um sensor, aplicando tema atual e limite Y dinâmico
 function initChart(sensor) {
     // Se o gráfico já existe, apenas atualiza a escala e retorna
@@ -340,7 +333,7 @@ function initChart(sensor) {
     // Para o Hall, usamos valores -1 (Sul) e 1 (Norte)
     const isHall = sensor === 'hall';
 
-    // Configuração do gráfico - padrão ÁREA 
+    // Configuração do gráfico 
     const cfg = {
         type: 'line', // tipo 'line' com fill:true simula área
         data: {
@@ -349,9 +342,9 @@ function initChart(sensor) {
                 label: getChartLabel(sensor),
                 data: [], // valores do sensor
                 borderColor: '#7db1ff',
-                backgroundColor: isHall ? 'rgba(125, 177, 255, 0.25)' : 'rgba(125, 177, 255, 0.3)',
+                backgroundColor: isHall ? 'rgba(125, 177, 255, 0.25)' : 'rgba(125, 177, 255, 0.05)', // fundo quase transparente para linha
                 tension: 0.15,
-                fill: true, 
+                fill: false, // INICIA COMO LINHA (SEM ÁREA)
                 pointRadius: 0, 
                 pointHoverRadius: 5, 
                 showLine: true

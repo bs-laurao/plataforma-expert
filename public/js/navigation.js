@@ -4,16 +4,20 @@
 function closeModal() {
     document.getElementById('viewModal').style.display = 'none';
     window._selectedSensorForModal = '';
+    window._selectedView = null; // limpa a seleção
+    // Remove a classe 'active' das opções
+    document.querySelectorAll('.view-option').forEach(el => el.classList.remove('active'));
     showMenu();
 }
 
-// Botão "Voltar" – para a coleta, reseta o sensor e retorna ao menu
+// Botão Voltar para a coleta, reseta o sensor e retorna ao menu
 function closeView() {
     if (currentSensor) resetSensor(currentSensor);
     showMenu();
     currentSensor = '';
     currentView = 'table';
     window._selectedSensorForModal = '';
+    window._selectedView = null;
 }
 
 // Alterna entre visualização em tabela ou gráfico (usando as abas dentro da tela do sensor)
@@ -75,6 +79,7 @@ function showMenu() {
 
     currentSensor = '';
     window._selectedSensorForModal = '';
+    window._selectedView = null;
     currentView = 'table';
     setActiveNav('navDevices');
 }
@@ -85,16 +90,28 @@ function showMonitor(type) {
     document.getElementById('mainMenu').style.display = 'none';
     document.getElementById('viewModal').style.display = 'flex';
     window._selectedSensorForModal = type;
+    window._selectedView = null; // reseta a seleção
+    // Remove a classe 'active' de ambas as opções
+    document.querySelectorAll('.view-option').forEach(el => el.classList.remove('active'));
 }
 
-// Quando o usuário escolhe o tipo de visualização, fechamos o modal de escolha
-// e exibimos o aviso antes de abrir a tela do sensor.
-function selectView(view) {
-    currentView = view;
-    document.getElementById('viewModal').style.display = 'none';
-    const sensor = window._selectedSensorForModal || currentSensor;
-    if (!sensor) return;
+// Quando uma opção (Tabela ou Gráfico) é clicada, marca como selecionada
+function selectViewOption(view) {
+    window._selectedView = view;
+    // Atualiza a classe 'active' nos botões
+    document.querySelectorAll('.view-option').forEach(el => {
+        el.classList.toggle('active', el.dataset.view === view);
+    });
+}
 
+// Confirma a escolha e prossegue para o aviso
+function confirmViewSelection() {
+    const view = window._selectedView;
+    const sensor = window._selectedSensorForModal || currentSensor;
+    if (!view || !sensor) return;
+
+    // Fecha o modal de escolha
+    document.getElementById('viewModal').style.display = 'none';
     // Salva a escolha pendente até o aviso ser confirmado.
     window._pendingViewSelection = { sensor, view };
     showWarningModal(sensor, view);

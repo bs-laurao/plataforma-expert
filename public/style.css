@@ -1,6 +1,4 @@
-/* ==========================================
-   VARIÁVEIS E CORES
-   ========================================== */
+/* VARIÁVEIS E CORES*/
 :root {
     --primary-color: #0a2d7a;
     --secondary-color: #2563eb;
@@ -79,9 +77,7 @@ body {
     padding: 0;
 }
 
-/* ==========================================
-   CABEÇALHO
-   ========================================== */
+/* CABEÇALHO*/
 header {
     background-color: var(--header-bg);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -107,9 +103,7 @@ header {
     object-fit: contain;
 }
 
-/* ==========================================
-   NAVEGAÇÃO
-   ========================================== */
+/*NAVEGAÇÃO*/
 nav ul {
     display: flex;
     list-style: none;
@@ -132,9 +126,7 @@ nav a:hover, nav a.active {
     color: white;
 }
 
-/* ==========================================
-   STATUS DE CONEXÃO
-   ========================================== */
+/*STATUS DE CONEXÃO*/
 .status {
     margin: 0;
     text-align: center;
@@ -163,9 +155,7 @@ nav a:hover, nav a.active {
     background-color: currentColor;
 }
 
-/* ==========================================
-   BOTÃO TEMA
-   ========================================== */
+/*BOTÃO TEMA*/
 .theme-toggle {
     background: none;
     border: 1px solid rgba(255,255,255,0.3);
@@ -186,82 +176,324 @@ nav a:hover, nav a.active {
     transform: rotate(180deg);
 }
 
-/* ==========================================
-   CONTROLE DE AMOSTRAGEM
-   ========================================== */
+/*CONTROLE DE AMOSTRAGEM*/
 .sampling-control {
     display: none;
-    padding: 12px 20px;
-    border-top: 1px solid rgba(255,255,255,0.1);
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    background: var(--header-bg);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
+
 .sampling-compact {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     font-size: 0.85rem;
     flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
 }
+
+/* Botão voltar (ícone) */
 .back-ball-btn {
-    background-color: var(--back-ball-bg);
-    color: var(--back-ball-text);
+    background: rgba(255,255,255,0.12);
+    color: white;
     border: none;
     border-radius: 50%;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    position: relative;
+}
+.back-ball-btn::before {
+    content: '';
+    width: 15px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: width 0.2s ease;
+}
+.back-ball-btn::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    border-radius: 1px;
+    transform: rotate(45deg);
+    left: 10px;
 }
 .back-ball-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.25);
+    transform: scale(1.05);
 }
+.back-ball-btn:hover::before {
+    width: 17px;
+}
+
+/* Labels */
 .sampling-label {
-    color: rgba(255,255,255,0.9);
+    color: rgba(255,255,255,0.85);
     font-weight: 500;
+    font-size: 0.8rem;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
+.sampling-label i {
+    font-size: 1rem;
+}
+
+/* Selects estilizados com seta do Bootstrap */
 .sampling-compact select {
-    background-color: rgba(255,255,255,0.1);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: rgba(255,255,255,0.08);
     color: white;
-    border: 1px solid rgba(255,255,255,0.3);
-    padding: 6px 10px;
-    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 36px 6px 16px;
+    border-radius: 30px;
     font-size: 0.85rem;
-    min-width: 80px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    min-width: 100px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px;
+}
+.sampling-compact select:hover {
+    background-color: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.3);
+}
+.sampling-compact select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
 }
 .sampling-compact select option {
     background-color: var(--modal-bg);
     color: var(--modal-text);
 }
+
+/* Botão Trocar Dispositivo */
 .change-device-btn {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
     color: white;
-    border: 1px solid rgba(255,255,255,0.3);
-    padding: 6px 14px;
-    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 18px;
+    border-radius: 30px;
     cursor: pointer;
-    font-size: 0.85rem;
-    transition: background 0.2s;
+    font-size: 0.8rem;
+    transition: all 0.25s ease;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 .change-device-btn:hover {
-    background: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
 }
 
-/* ==========================================
-   CONTEÚDO PRINCIPAL
-   ========================================== */
+/* MODAL DE ESCOLHA (TABELA / GRÁFICO)*/
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+.modal-content {
+    background-color: var(--modal-bg);
+    padding: 35px 30px 30px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: var(--text-color);
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.modal-close:hover {
+    background-color: var(--slider-bg);
+}
+
+/* Opções de visualização (Tabela e Gráfico) */
+.modal-options {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 25px 0 20px;
+}
+.view-option {
+    flex: 1;
+    padding: 20px 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+.view-option:hover {
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+.view-option.active {
+    border-color: var(--secondary-color);
+    background: rgba(37, 99, 235, 0.08);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+.view-option .view-icon {
+    font-size: 2.4rem;
+    color: var(--secondary-color);
+}
+
+
+/*MODAL DE AVISO*/
+#warnModal .modal-content {
+    max-width: 440px;
+}
+#warnModal .warn-text {
+    margin-top: 10px;
+    color: var(--text-color);
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+#warnModal .view-btn {
+    min-width: 120px;
+}
+
+/* Responsividade da barra de controles e modal */
+@media (max-width: 768px) {
+    .sampling-compact {
+        gap: 10px;
+        justify-content: center;
+    }
+    .sampling-compact select {
+        min-width: 80px;
+        padding: 5px 30px 5px 12px;
+        font-size: 0.75rem;
+    }
+    .sampling-label {
+        font-size: 0.7rem;
+    }
+    .change-device-btn {
+        padding: 5px 14px;
+        font-size: 0.7rem;
+    }
+    .back-ball-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
+    }
+    .modal-options {
+        flex-direction: column;
+    }
+    .modal-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .view-btn {
+        min-width: unset;
+    }
+}
+
+/* BOTÃO TROCAR DISPOSITIVO*/
+.change-device-btn {
+    background: rgba(255,255,255,0.08);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 8px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.25s ease;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(2px);
+}
+.change-device-btn:hover {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.change-device-btn i {
+    font-size: 1rem;
+}
+
+.chart-type-label {
+    margin-left: 4px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .sampling-compact {
+        gap: 10px;
+    }
+    .sampling-compact select {
+        min-width: 90px;
+        padding: 6px 28px 6px 12px;
+        font-size: 0.75rem;
+    }
+    .sampling-label {
+        font-size: 0.7rem;
+    }
+    .change-device-btn {
+        padding: 6px 14px;
+        font-size: 0.75rem;
+    }
+}
+   
+/* CONTEÚDO PRINCIPAL */
 .main-content {
     padding: 30px 20px;
     flex: 1;
@@ -276,9 +508,7 @@ nav a:hover, nav a.active {
     font-weight: 600;
 }
 
-/* ==========================================
-   CARDS DOS SENSORES (MENU PRINCIPAL)
-   ========================================== */
+/* CARDS DOS SENSORES */
 .devices-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -346,9 +576,7 @@ nav a:hover, nav a.active {
     min-width: 0;
 }
 
-/* ==========================================
-   TAGS DOS SENSORES (ÍCONES SVG)
-   ========================================== */
+/* TAGS DOS SENSORES (ÍCONES SVG)*/
 .device-tag {
     width: 34px;
     height: 34px;
@@ -416,9 +644,7 @@ nav a:hover, nav a.active {
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='9' cy='12' r='6.5' fill='none' stroke='black' stroke-width='1.7'/%3E%3Cpath d='M9 8.5V15.5M6.5 10L11.5 14M6.5 14L11.5 10' fill='none' stroke='black' stroke-width='1' stroke-linecap='round'/%3E%3Cpath d='M17 8C19 9 19 15 17 16M19.5 5.5C23 8 23 16 19.5 18.5' fill='none' stroke='black' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-/* ==========================================
-   SENSOR BADGE (PARA TELAS DOS SENSORES)
-   ========================================== */
+/* SENSOR BADGE */
 .sensor-header-left {
     display: flex;
     align-items: center;
@@ -450,9 +676,7 @@ nav a:hover, nav a.active {
     display: none;
 }
 
-/* ==========================================
-   MODAL DE ESCOLHA (TABELA/GRÁFICO)
-   ========================================== */
+/* MODAL DE ESCOLHA (TABELA/GRÁFICO)*/
 .modal {
     display: none;
     position: fixed;
@@ -525,9 +749,7 @@ nav a:hover, nav a.active {
     line-height: 1;
 }
 
-/* ==========================================
-   MODAL DE AVISO
-   ========================================== */
+/* MODAL DE AVISO*/
 #warnModal .modal-content {
     max-width: 440px;
 }
@@ -543,9 +765,7 @@ nav a:hover, nav a.active {
     justify-content: center;
 }
 
-/* ==========================================
-   TELAS DOS SENSORES
-   ========================================== */
+/* TELAS DOS SENSORES*/
 .monitor-screen {
     display: none;
     background-color: var(--card-bg);
@@ -569,9 +789,7 @@ nav a:hover, nav a.active {
     margin: 0;
 }
 
-/* ==========================================
-   ABAS (TABELA / GRÁFICO)
-   ========================================== */
+/* ABAS (TABELA / GRÁFICO)*/
 .tabs {
     display: flex;
     background-color: var(--slider-bg);
@@ -594,9 +812,7 @@ nav a:hover, nav a.active {
     color: var(--button-text);
 }
 
-/* ==========================================
-   VIEW CONTAINERS
-   ========================================== */
+/* VIEW CONTAINERS*/
 .view-container {
     display: none;
     margin-bottom: 20px;
@@ -605,9 +821,7 @@ nav a:hover, nav a.active {
     display: block;
 }
 
-/* ==========================================
-   VALOR NUMÉRICO GRANDE (TABELA)
-   ========================================== */
+/*TABELA*/
 .big-value {
     text-align: center;
     padding: 40px 20px;
@@ -635,9 +849,7 @@ nav a:hover, nav a.active {
     opacity: 0.8;
 }
 
-/* ==========================================
-   CONTROLES DO GRÁFICO
-   ========================================== */
+/* CONTROLES DO GRÁFICO*/
 .chart-controls {
     margin-bottom: 15px;
     display: flex;
@@ -668,9 +880,7 @@ nav a:hover, nav a.active {
     position: relative;
 }
 
-/* ==========================================
-   ZOOM INDICATOR
-   ========================================== */
+/* ZOOM INDICATOR*/
 .zoom-indicator {
     position: absolute;
     top: 12px;
@@ -720,9 +930,7 @@ nav a:hover, nav a.active {
     display: block;
 }
 
-/* ==========================================
-   DICA DE ZOOM
-   ========================================== */
+/* DICA DE ZOOM */
 .zoom-hint {
     position: absolute;
     left: 0;
@@ -750,9 +958,7 @@ nav a:hover, nav a.active {
     color: #5a9aff;
 }
 
-/* ==========================================
-   BOTÕES DE CONTROLE (INICIAR/PAUSAR/LIMPAR)
-   ========================================== */
+/* BOTÕES DE CONTROLE (INICIAR/PAUSAR/LIMPAR)*/
 .compact-controls {
     display: flex;
     gap: 10px;
@@ -809,9 +1015,7 @@ nav a:hover, nav a.active {
     font-size: 1rem;
 }
 
-/* ==========================================
-   BOTÕES DE EXPORTAÇÃO
-   ========================================== */
+/* BOTÕES DE EXPORTAÇÃO*/
 .export-buttons {
     display: flex;
     gap: 10px;
@@ -848,9 +1052,7 @@ nav a:hover, nav a.active {
     background: #4a5568;
 }
 
-/* ==========================================
-   RODAPÉ
-   ========================================== */
+/*RODAPÉ*/
 footer {
     background-color: var(--footer-bg);
     color: var(--footer-text);
@@ -866,9 +1068,7 @@ footer p {
     margin: 0 auto;
 }
 
-/* ==========================================
-   PÁGINAS DE INFORMAÇÃO (SOBRE / TUTORIAL)
-   ========================================== */
+/* PÁGINA SOBRE  */
 .info-page {
     max-width: 900px;
     margin: 0 auto;
@@ -881,40 +1081,11 @@ footer p {
     margin-top: 1.8rem;
     color: var(--text-color);
 }
-.tutorial-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-}
-.tutorial-item {
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 2rem;
-}
-.tutorial-item:last-child {
-    border-bottom: none;
-}
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
-    background: #000;
-    border-radius: 8px;
-    margin-top: 1rem;
-}
-.video-container iframe,
-.video-container video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.info-content ul {
+    padding-left: 1.5rem;
 }
 
-/* ==========================================
-   RESPONSIVIDADE
-   ========================================== */
+/* RESPONSIVIDADE*/
 @media (max-width: 992px) {
     .devices-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -997,4 +1168,27 @@ footer p {
         margin-left: 0;
         flex-wrap: wrap;
     }
+}
+
+/* VER MAIS*/
+.view-detail-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 4px 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+    margin-top: 6px;
+}
+.view-detail-btn:hover {
+    color: var(--primary-color);
+    transform: translateX(4px);
+}
+.view-detail-btn i {
+    font-size: 0.7rem;
 }
