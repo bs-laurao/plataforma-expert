@@ -68,7 +68,7 @@ const SENSORS_CONFIG = [
         label: 'Motor CC', 
         icon: 'MotorCC.png', 
         desc: 'Controle em percentual da velocidade', 
-        detailedDesc: 'Motor de corrente contínua (DC) com controle de velocidade via PWM. A velocidade é ajustada em percentual (%), variando de 0% (parado) a 100% (rotação máxima).',
+        detailedDesc: 'Motor de corrente contínua com controle de velocidade via PWM. A velocidade é ajustada em percentual (%), variando de 0% (parado) a 100% (rotação máxima).',
         unit: '%', 
         tagClass: 'motor-tag', 
         cmd: '7' 
@@ -88,7 +88,7 @@ const SENSORS_CONFIG = [
         label: 'Piezoelétrico', 
         icon: 'Piezoeletrico.png', 
         desc: 'Detecção de vibrações', 
-        detailedDesc: 'Sensor piezoelétrico que converte vibrações mecânicas em sinais elétricos (diferença de potencial em volts – V). Utilizado para detectar batidas, toques ou choques em superfícies.',
+        detailedDesc: 'Sensor piezoelétrico que converte vibrações mecânicas em sinais elétricos (diferença de potencial em volts). Utilizado para detectar batidas, toques ou choques em superfícies.',
         unit: 'V', 
         tagClass: 'piezo-tag', 
         cmd: '9', 
@@ -154,7 +154,7 @@ function generateSensorScreens() {
     </button>
     <button class="export-btn" data-sensor="${sensor.id}" data-action="excel">
         <svg class="export-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16h-8v-2h8v2zm0-4h-8v-2h8v2zM13 9V3.5L18.5 9H13z"/></svg>
-        Salvar Excel
+        Salvar Dados
     </button>
 </div>
                 </div>
@@ -222,7 +222,7 @@ function setupEventListeners() {
         });
     });
 
-    // Botões de exportação (Imagem e Excel)
+    // Botões de exportação
 document.querySelectorAll('.export-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         const sensor = this.dataset.sensor;
