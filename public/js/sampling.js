@@ -31,6 +31,7 @@ function clampValueForSensor(sensor, raw) {
     
     const v = Number(raw);
     if (!Number.isFinite(v)) return raw;
+    // Temperatura permite valores negativos
     if (sensor === 'temperature') return v;
     if (sensor === 'light') {
         return Math.min(100, Math.max(0, v));
@@ -98,8 +99,19 @@ function processSample(sensor) {
         chartMaxValue[sensor] = numericValue;
         // Atualiza o eixo Y com a nova margem de 10%
         const newMax = getYAxisMax(sensor);
+        const newMin = getYAxisMin(sensor);
         if (chart.options.scales && chart.options.scales.y) {
             chart.options.scales.y.max = newMax;
+            chart.options.scales.y.min = newMin;
+        }
+    }
+    
+    // ESCALA DINÂMICA: atualiza o mínimo observado (para temperatura negativa)
+    if (sensor === 'temperature' && numericValue < (chartMinValue[sensor] || 0)) {
+        chartMinValue[sensor] = numericValue;
+        const newMin = getYAxisMin(sensor);
+        if (chart.options.scales && chart.options.scales.y) {
+            chart.options.scales.y.min = newMin;
         }
     }
 

@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ExpeRT - Sobre</title>
     
-    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="style.css" />
 </head>
@@ -18,22 +16,27 @@
                 <div class="logo">
                     <img src="imagem/logo.png" alt="Logo ExpeRT" class="logo-image" />
                 </div>
+
                 <nav>
                     <ul>
                         <li><a href="index.html">USAR DISPOSITIVOS</a></li>
-
                         <li><a href="sobre.html" class="active">SOBRE</a></li>
                     </ul>
                 </nav>
-                <div class="status">
-                    <div id="connectionStatus" class="status-disconnected">
-                        <span class="status-indicator"></span>
-                        Desconectado
+
+        
+                <!-- STATUS + TEMA -->
+                <div class="right-group">
+                    <div class="status">
+                        <div id="connectionStatus" class="status-disconnected">
+                            <span class="status-indicator"></span>
+                            Desconectado
+                        </div>
                     </div>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Ativar modo escuro">
+                        <i class="bi bi-sun-fill" aria-hidden="true"></i>
+                    </button>
                 </div>
-                <button class="theme-toggle" id="themeToggle" aria-label="Ativar modo escuro">
-                    <i class="bi bi-sun-fill" aria-hidden="true"></i>
-                </button>
             </div>
         </header>
 
@@ -41,9 +44,7 @@
             <div class="info-page">
                 <h2 class="page-title">Sobre a Plataforma ExpeRT</h2>
                 <div class="info-content">
-                    <p><strong> Plataforma ExpeRT</strong> é uma plataforma de monitoramento de sensores desenvolvida para facilitar a coleta, visualização e exportação de dados em tempo real.</p>
-                    <p>Ideal para experimentos educacionais e laboratórios.</p>
-                    <hr />
+                    <p><strong>Plataforma ExpeRT</strong>é uma plataforma de monitoramento de sensores desenvolvida para facilitar a coleta, visualização e exportação de dados em tempo real.</p>
                 </div>
             </div>
         </main>

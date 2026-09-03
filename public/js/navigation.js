@@ -13,11 +13,16 @@ function closeModal() {
 // Botão Voltar para a coleta, reseta o sensor e retorna ao menu
 function closeView() {
     if (currentSensor) resetSensor(currentSensor);
+    setSensorViewMode(false);
     showMenu();
     currentSensor = '';
     currentView = 'table';
     window._selectedSensorForModal = '';
     window._selectedView = null;
+}
+
+function setSensorViewMode(active) {
+    document.body.classList.toggle('sensor-view', active);
 }
 
 // Alterna entre visualização em tabela ou gráfico (usando as abas dentro da tela do sensor)
@@ -68,6 +73,7 @@ function setActiveNav(activeId) {
 // Exibe o menu principal (com os cards)
 function showMenu() {
     showSamplingControl(false);
+    setSensorViewMode(false);
     hideAllInfoPages();
 
     if (currentSensor) resetSensor(currentSensor);
@@ -153,6 +159,7 @@ function closeWarningModal() {
 
 function openSensorScreen(sensor, view) {
     showSamplingControl(true); // Mostra o seletor de intervalo de amostragem
+    setSensorViewMode(true);
 
     // Oculta todas as telas de monitoramento e mostra apenas a do sensor escolhido
     document.querySelectorAll('.monitor-screen').forEach(s => s.style.display = 'none');

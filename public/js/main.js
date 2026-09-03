@@ -161,8 +161,10 @@ function generateSensorScreens() {
 
                 <div class="view-container table-view active">
                     <div class="big-value">
-                        <span id="${sensor.id}">${defaultVal}</span>
-                        ${unitHtml}
+                        <div class="value-wrapper">
+                            <span class="number" id="${sensor.id}">${defaultVal}</span>
+                            ${unitHtml}
+                        </div>
                         <div class="time-display">Tempo: <span id="${sensor.id}Time">00:00</span></div>
                     </div>
                 </div>
@@ -191,7 +193,6 @@ function generateSensorScreens() {
 
     console.log('Telas geradas:', container.children.length);
 }
-
 
 //CONFIGURAR EVENT LISTENERS
 function setupEventListeners() {

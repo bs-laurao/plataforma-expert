@@ -10,6 +10,8 @@ let chartStartTime = {};
 let chartElapsedOffset = {};
 // Maior valor observado para cada sensor (usado para escala dinâmica)
 let chartMaxValue = {};
+// Menor valor observado para cada sensor (usado para temperatura negativa)
+let chartMinValue = {};
 // Tipo de visualização atual: 'table' ou 'graph'
 let currentView = 'table';
 // Sensor atualmente selecionado (ex: 'temperature')

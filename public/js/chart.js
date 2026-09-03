@@ -5,17 +5,26 @@ function getDefaultYAxisMax(sensor) {
     // Para o Hall, o gráfico vai de -2 a 2
     if (sensor === 'hall') return 2;
     
+    // Para temperatura, permite negativos
+    if (sensor === 'temperature') return 10;
+    
     switch (sensor) {
-        case 'temperature': return 10;  // inicial baixo, será ajustado dinamicamente
         case 'distance': return 10;
         case 'period': return 10;
-        case 'light': return 10; // inicia baixo e cresce dinamicamente até 100
+        case 'light': return 10; // inicia baixo e cresce dinamicamente
         case 'buzzer': return 10; 
         case 'motor': return 10; 
         case 'servo': return 10; 
         case 'piezo': return 3; 
         default: return 10;
     }
+}
+
+// Retorna o valor mínimo inicial para cada sensor (para permitir negativos)
+function getDefaultYAxisMin(sensor) {
+    if (sensor === 'hall') return -2;
+    if (sensor === 'temperature') return -5; // Permite temperaturas negativas
+    return 0;
 }
 
 // Obtém o valor máximo atual para o eixo Y.
@@ -36,16 +45,34 @@ function getYAxisMax(sensor) {
     return Math.ceil(observed + margin);
 }
 
-//  Obtém o min/max dos dados VISÍVEIS
+// Obtém o valor mínimo atual para o eixo Y (para permitir negativos)
+function getYAxisMin(sensor) {
+    if (sensor === 'hall') return -2;
+    if (sensor === 'temperature') {
+        const minObserved = chartMinValue[sensor] || 0;
+        if (minObserved === 0) return -5;
+        // Adiciona margem de 10% para baixo
+        const margin = Math.max(1, Math.ceil(Math.abs(minObserved) * 0.1));
+        return Math.floor(minObserved - margin);
+    }
+    return 0;
+}
 
+//  Obtém o min/max dos dados VISÍVEIS
 function getVisibleDataRange(sensor, chart) {
     if (!chart || chart.data.labels.length === 0) {
-        return { min: 0, max: getDefaultYAxisMax(sensor) };
+        return { 
+            min: getDefaultYAxisMin(sensor), 
+            max: getDefaultYAxisMax(sensor) 
+        };
     }
     
     const xScale = chart.scales.x;
     if (!xScale) {
-        return { min: 0, max: getDefaultYAxisMax(sensor) };
+        return { 
+            min: getDefaultYAxisMin(sensor), 
+            max: getDefaultYAxisMax(sensor) 
+        };
     }
     
     // Obtém os índices visíveis no eixo X
@@ -57,7 +84,10 @@ function getVisibleDataRange(sensor, chart) {
     const visibleData = data.slice(minIndex, maxIndex + 1);
     
     if (visibleData.length === 0) {
-        return { min: 0, max: getDefaultYAxisMax(sensor) };
+        return { 
+            min: getDefaultYAxisMin(sensor), 
+            max: getDefaultYAxisMax(sensor) 
+        };
     }
     
     // Para o Hall, mantém escala fixa
@@ -71,7 +101,10 @@ function getVisibleDataRange(sensor, chart) {
     );
     
     if (validData.length === 0) {
-        return { min: 0, max: getDefaultYAxisMax(sensor) };
+        return { 
+            min: getDefaultYAxisMin(sensor), 
+            max: getDefaultYAxisMax(sensor) 
+        };
     }
     
     // Calcula min e max dos dados visíveis
@@ -84,7 +117,18 @@ function getVisibleDataRange(sensor, chart) {
         max = Math.min(100, max);
     }
     
-    // Para sensores que não podem ser negativos
+    // Para temperatura, permite negativos
+    if (sensor === 'temperature') {
+        // Mantém os valores negativos
+        const range = max - min;
+        const margin = Math.max(1, range * 0.1);
+        return {
+            min: min - margin,
+            max: max + margin
+        };
+    }
+    
+    // Para sensores que não podem ser negativos (exceto temperatura e hall)
     if (sensor !== 'temperature' && sensor !== 'hall') {
         min = Math.max(0, min);
     }
@@ -275,8 +319,9 @@ function resetZoom(sensor) {
     // Restaura o eixo Y para a escala global
     if (sensor !== 'hall') {
         const newMax = getYAxisMax(sensor);
+        const newMin = getYAxisMin(sensor);
         if (chart.options.scales && chart.options.scales.y) {
-            chart.options.scales.y.min = 0;
+            chart.options.scales.y.min = newMin;
             chart.options.scales.y.max = newMax;
             chart.update('none');
         }
@@ -313,8 +358,10 @@ function initChart(sensor) {
         const existing = charts[sensor];
         // Atualiza o máximo com base no valor atual (pode ser zero)
         const newMax = getYAxisMax(sensor);
+        const newMin = getYAxisMin(sensor);
         if (existing.options && existing.options.scales && existing.options.scales.y) {
             existing.options.scales.y.max = newMax;
+            existing.options.scales.y.min = newMin;
             existing.update('none');
         }
         return charts[sensor];
@@ -332,6 +379,7 @@ function initChart(sensor) {
 
     // Para o Hall, usamos valores -1 (Sul) e 1 (Norte)
     const isHall = sensor === 'hall';
+    const isTemperature = sensor === 'temperature';
 
     // Configuração do gráfico 
     const cfg = {
@@ -362,12 +410,13 @@ function initChart(sensor) {
                     grid: { color: gridColor }
                 },
                 y: {
-                    beginAtZero: isHall ? false : true,
-                    min: isHall ? -2 : 0,
+                    beginAtZero: isHall ? false : (isTemperature ? false : true), // Temperatura não começa em zero
+                    min: isHall ? -2 : getYAxisMin(sensor),
                     max: getYAxisMax(sensor), // valor dinâmico inicial
                     title: { display: true, text: getYAxisLabel(sensor), color: textColor },
                     ticks: { 
                         color: textColor,
+                        // Formatação para evitar muitas casas decimais
                         callback: function(value) {
                             if (isHall) {
                                 if (value === 1) return 'Norte';
@@ -375,7 +424,11 @@ function initChart(sensor) {
                                 if (value === 0) return '---';
                                 return '';
                             }
-                            return value;
+                            // Formata com no máximo 1 casa decimal
+                            if (Number.isInteger(value)) {
+                                return value.toString();
+                            }
+                            return Number(value.toFixed(1)).toString();
                         }
                     },
                     grid: { color: gridColor }
@@ -394,6 +447,7 @@ function initChart(sensor) {
     chartStartTime[sensor] = null;
     chartElapsedOffset[sensor] = 0;
     chartMaxValue[sensor] = 0; // inicia sem dados
+    chartMinValue[sensor] = 0; // inicia sem dados (para temperatura negativa)
     
     // Inicializa o estado do zoom
     zoomState[sensor] = {
@@ -513,8 +567,12 @@ function changeChartType(sensor, type) {
     // Atualiza a escala Y com o valor dinâmico atual
     if (chart.options.scales && chart.options.scales.y) {
         chart.options.scales.y.max = getYAxisMax(sensor);
+        chart.options.scales.y.min = getYAxisMin(sensor);
         if (sensor === 'hall') {
             chart.options.scales.y.min = -2;
+            chart.options.scales.y.beginAtZero = false;
+        }
+        if (sensor === 'temperature') {
             chart.options.scales.y.beginAtZero = false;
         }
     }
@@ -529,6 +587,7 @@ function ensureScales(chart, sensor) {
         const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
         const textColor = isDark ? '#e2e8f0' : '#666666';
         const isHall = sensor === 'hall';
+        const isTemperature = sensor === 'temperature';
         
         chart.options.scales = {
             x: {
@@ -538,8 +597,8 @@ function ensureScales(chart, sensor) {
                 grid: { color: gridColor }
             },
             y: {
-                beginAtZero: isHall ? false : true,
-                min: isHall ? -2 : 0,
+                beginAtZero: isHall ? false : (isTemperature ? false : true),
+                min: isHall ? -2 : getYAxisMin(sensor),
                 max: getYAxisMax(sensor),
                 title: { display: true, text: getYAxisLabel(sensor), color: textColor },
                 ticks: { 
@@ -551,7 +610,11 @@ function ensureScales(chart, sensor) {
                             if (value === 0) return '---';
                             return '';
                         }
-                        return value;
+                        // Formata com no máximo 1 casa decimal
+                        if (Number.isInteger(value)) {
+                            return value.toString();
+                        }
+                        return Number(value.toFixed(1)).toString();
                     }
                 },
                 grid: { color: gridColor }

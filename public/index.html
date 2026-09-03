@@ -14,7 +14,7 @@
 </head>
 <body>
     <div class="container">
-        <!--CABEÇALHO  -->
+        <!-- CABEÇALHO -->
         <header>
             <div class="header-content">
                 <div class="logo">
@@ -26,47 +26,52 @@
                         <li><a href="sobre.html">SOBRE</a></li>
                     </ul>
                 </nav>
-                <div class="status">
-                    <div id="connectionStatus" class="status-disconnected">
-                        <span class="status-indicator"></span>
-                        Desconectado
+
+                <!-- CONTROLES DE AMOSTRAGEM - CENTRALIZADOS -->
+                <div id="samplingWrapper" class="sampling-control">
+                    <div class="sampling-compact">
+                        <button class="back-ball-btn" id="backBtn" aria-label="Voltar">
+                            <i class="bi bi-arrow-left"></i>
+                        </button>
+                        <span class="sampling-label"><i class="bi bi-clock-history"></i> Amostragem:</span>
+                        <select id="samplingSelect" class="form-select-sm">
+                            <option value="0.01">0.01 s</option>
+                            <option value="0.1" selected>0.1 s</option>
+                            <option value="0.5">0.5 s</option>
+                            <option value="1">1 s</option>
+                            <option value="5">5 s</option>
+                            <option value="10">10 s</option>
+                        </select>
+                        <span class="sampling-label chart-type-label"><i class="bi bi-bar-chart-line"></i> Tipo:</span>
+                        <select id="chartTypeSelect" class="form-select-sm">
+                            <option value="area">Área</option>
+                            <option value="bar">Barras</option>
+                            <option value="scatter">Dispersão</option>
+                            <option value="line" selected>Linha</option>
+                            <option value="line-points">Linha c/ Pontos</option>
+                        </select>
+                        <button class="change-device-btn" id="changeDeviceBtn">
+                            <i class="bi bi-arrow-left-right"></i> Trocar Dispositivo
+                        </button>
                     </div>
                 </div>
-                <button class="theme-toggle" id="themeToggle" aria-label="Ativar modo escuro">
-                    <i class="bi bi-sun-fill" aria-hidden="true"></i>
-                </button>
-            </div>
 
-            <!-- BARRA DE CONTROLES  AMOSTRAGEM E TIPO -->
-            <div id="samplingWrapper" class="sampling-control">
-                <div class="sampling-compact">
-                    <button class="back-ball-btn" id="backBtn" aria-label="Voltar">
-                    </button>
-                    <span class="sampling-label"><i class="bi bi-clock-history"></i> Amostragem:</span>
-                    <select id="samplingSelect" class="form-select-sm">
-                        <option value="0.01">0.01 s</option>
-                        <option value="0.1" selected>0.1 s</option>
-                        <option value="0.5">0.5 s</option>
-                        <option value="1">1 s</option>
-                        <option value="5">5 s</option>
-                        <option value="10">10 s</option>
-                    </select>
-                    <span class="sampling-label chart-type-label"><i class="bi bi-bar-chart-line"></i> Tipo:</span>
-                    <select id="chartTypeSelect" class="form-select-sm">
-                        <option value="area">Área</option>
-                        <option value="bar">Barras</option>
-                        <option value="scatter">Dispersão</option>
-                        <option value="line" selected>Linha</option>
-                        <option value="line-points">Linha c/ Pontos</option>
-                    </select>
-                    <button class="change-device-btn" id="changeDeviceBtn">
-                        <i class="bi bi-arrow-left-right"></i> Trocar Dispositivo
+                <!-- STATUS + TEMA - FIXOS À DIREITA -->
+                <div class="right-group">
+                    <div class="status">
+                        <div id="connectionStatus" class="status-disconnected">
+                            <span class="status-indicator"></span>
+                            Desconectado
+                        </div>
+                    </div>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Ativar modo escuro">
+                        <i class="bi bi-sun-fill" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
         </header>
 
-        <!--CONTEÚDO PRINCIPAL-->
+        <!-- CONTEÚDO PRINCIPAL -->
         <main class="main-content">
             <!-- MENU INICIAL COM CARDS DOS SENSORES -->
             <div class="main-menu" id="mainMenu">
@@ -76,7 +81,7 @@
                 </div>
             </div>
 
-            <!--  MODAIS -->
+            <!-- MODAIS -->
             <!-- Modal de escolha (Tabela / Gráfico) -->
             <div class="modal" id="viewModal" aria-hidden="true">
                 <div class="modal-content">
