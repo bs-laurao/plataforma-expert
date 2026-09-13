@@ -37,7 +37,7 @@ jobs:
           cache: npm
 
       - name: Instalar dependencias
-        run: npm ci
+        run: npm install
 
       - name: Recompilar modulo serialport para Electron
         run: npx electron-rebuild
