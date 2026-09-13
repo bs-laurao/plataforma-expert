@@ -2,10 +2,12 @@
   "name": "projeto-arduino",
   "version": "1.0.0",
   "description": "Sistema para visualizar dados do Arduino",
+  "author": "Laura Bitencourt Silveira <laurabitencourtsilveira@gmail.com>",
   "main": "electron-main.js",
   "scripts": {
     "start": "electron .",
     "start:server": "node server.js",
+    "postinstall": "electron-builder install-app-deps",
     "build": "electron-builder",
     "build:win": "electron-builder --win",
     "build:linux": "electron-builder --linux",
@@ -58,7 +60,8 @@
           ]
         }
       ],
-      "category": "Utility"
+      "category": "Utility",
+      "maintainer": "Laura Bitencourt Silveira <laurabitencourtsilveira@gmail.com>"
     },
     "mac": {
       "target": [

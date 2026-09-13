@@ -39,9 +39,6 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
-      - name: Recompilar modulo serialport para Electron
-        run: npx electron-rebuild -f -w serialport
-
       - name: Gerar build
         run: npx electron-builder --${{ matrix.platform }} --publish never
         env:
