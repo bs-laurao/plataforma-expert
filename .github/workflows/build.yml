@@ -1,0 +1,77 @@
+name: Build e Release
+
+on:
+  # Dispara quando você cria uma tag no formato v1.0.0
+  push:
+    tags:
+      - 'v*'
+  # Permite rodar manualmente pelo site do GitHub
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: win
+            artifact: windows-installer
+          - os: macos-latest
+            platform: mac
+            artifact: macos-installer
+          - os: ubuntu-latest
+            platform: linux
+            artifact: linux-installer
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout do repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Recompilar modulo serialport para Electron
+        run: npx electron-rebuild
+
+      - name: Gerar build
+        run: npx electron-builder --${{ matrix.platform }} --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload do instalador
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.AppImage
+            dist/*.deb
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Baixar todos os instaladores
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Criar Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true
