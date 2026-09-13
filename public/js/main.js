@@ -181,9 +181,9 @@ function generateSensorScreens() {
                         <span class="zoom-hint-reset" data-sensor="${sensor.id}">Resetar Zoom</span>
                     </div>
                     <div class="compact-controls">
-                        <button class="control-btn start" data-sensor="${sensor.id}" data-action="start"><span class="btn-icon">▶</span> Iniciar</button>
-                        <button class="control-btn pause" data-sensor="${sensor.id}" data-action="pause"><span class="btn-icon">⏸</span> Pausar</button>
-                        <button class="control-btn clear" id="clearBtn-${sensor.id}" data-sensor="${sensor.id}" data-action="clear"><span class="btn-icon">✕</span> Limpar</button>
+                        <button class="control-btn start" data-sensor="${sensor.id}" data-action="start"><i class="btn-icon bi bi-play-fill" aria-hidden="true"></i> Iniciar</button>
+                        <button class="control-btn pause" data-sensor="${sensor.id}" data-action="pause"><i class="btn-icon bi bi-pause-fill" aria-hidden="true"></i> Pausar</button>
+                        <button class="control-btn clear" id="clearBtn-${sensor.id}" data-sensor="${sensor.id}" data-action="clear"><i class="btn-icon bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reiniciar</button>
                     </div>
                 </div>
 

@@ -4,13 +4,17 @@ const { SerialPort } = require('serialport');        // Comunicacao serial com A
 const { ReadlineParser } = require('@serialport/parser-readline'); // Leitura linha por linha
 const http = require('http');
 const WebSocket = require('ws');                     // Comunicacao em tempo real com o frontend
+const path = require('path');                        // Resolucao de caminhos (para Electron)
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+const PORT = 3000;
+
 // Servir os arquivos estaticos (HTML, CSS, JS) da pasta 'public'
-app.use(express.static('public'));
+// Quando empacotado no Electron, __dirname aponta para dentro do app.asar
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Variavel global para a porta serial
 let port = null;
@@ -271,15 +275,28 @@ app.get('/port/:path', async (req, res) => {
     }
 });
 
-// Inicia o servidor na porta 3000
-server.listen(3000, () => {
-    console.log('Servidor rodando em http://localhost:3000');
-});
+// Funcao que inicia o servidor HTTP (usada pelo Electron ou pelo modo Node direto)
+function startServer() {
+    return new Promise((resolve) => {
+        server.listen(PORT, () => {
+            console.log('Servidor rodando em http://localhost:' + PORT);
+            resolve(server);
+        });
+    });
+}
 
-// Tratamento para fechar a porta ao encerrar o servidor
-process.on('SIGINT', () => {
-    if (port && port.isOpen) {
-        port.close();
-    }
-    process.exit();
-});
+// Exporta a funcao para o Electron (electron-main.js)
+module.exports = { startServer, app, server };
+
+// Se este arquivo for executado diretamente (npm run start:server), inicia sozinho
+if (require.main === module) {
+    startServer();
+
+    // Tratamento para fechar a porta ao encerrar o servidor
+    process.on('SIGINT', () => {
+        if (port && port.isOpen) {
+            port.close();
+        }
+        process.exit();
+    });
+}

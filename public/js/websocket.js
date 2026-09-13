@@ -4,7 +4,10 @@ let ws;
 
 function initWebSocket() {
     try {
-        ws = new WebSocket('ws://localhost:3000');
+        // Usa o mesmo host e porta da pagina (funciona em dev, Electron e producao)
+        const wsProtocol = location.protocol === 'https:' ? 'wss' : 'ws';
+        const wsUrl = wsProtocol + '://' + location.host;
+        ws = new WebSocket(wsUrl);
     } catch (e) {
         console.error('WebSocket init error', e);
         return;

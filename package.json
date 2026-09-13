@@ -4,13 +4,53 @@
   "name": "projeto-arduino",
   "version": "1.0.0",
   "description": "Sistema para visualizar dados do Arduino",
-  "main": "server.js",
+  "main": "electron-main.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "electron .",
+    "start:server": "node server.js",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "build:mac": "electron-builder --mac"
   },
   "dependencies": {
     "express": "^4.18.2",
     "serialport": "^10.5.0",
     "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.expert.plataforma",
+    "productName": "ExpeRT",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron-main.js",
+      "server.js",
+      "public/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ]
+    },
+    "linux": {
+      "target": [
+        { "target": "AppImage", "arch": ["x64"] },
+        { "target": "deb", "arch": ["x64"] }
+      ],
+      "category": "Utility"
+    },
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": ["x64", "arm64"] }
+      ],
+      "category": "public.app-category.utilities"
+    }
   }
 }
