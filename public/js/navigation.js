@@ -4,8 +4,7 @@
 function closeModal() {
     document.getElementById('viewModal').style.display = 'none';
     window._selectedSensorForModal = '';
-    window._selectedView = null; // limpa a seleção
-    // Remove a classe 'active' das opções
+    window._selectedView = null; 
     document.querySelectorAll('.view-option').forEach(el => el.classList.remove('active'));
     showMenu();
 }
@@ -34,7 +33,6 @@ function selectViewType(viewType) {
 
     screenEl.classList.toggle('graph-mode', viewType === 'graph');
 
-    // Remove a classe 'active' de todos os containers e abas
     screenEl.querySelectorAll('.view-container').forEach(c => c.classList.remove('active'));
     screenEl.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
@@ -96,15 +94,13 @@ function showMonitor(type) {
     document.getElementById('mainMenu').style.display = 'none';
     document.getElementById('viewModal').style.display = 'flex';
     window._selectedSensorForModal = type;
-    window._selectedView = null; // reseta a seleção
-    // Remove a classe 'active' de ambas as opções
+    window._selectedView = null; 
     document.querySelectorAll('.view-option').forEach(el => el.classList.remove('active'));
 }
 
 // Quando uma opção (Tabela ou Gráfico) é clicada, marca como selecionada
 function selectViewOption(view) {
     window._selectedView = view;
-    // Atualiza a classe 'active' nos botões
     document.querySelectorAll('.view-option').forEach(el => {
         el.classList.toggle('active', el.dataset.view === view);
     });
@@ -120,24 +116,21 @@ function confirmViewSelection() {
     document.getElementById('viewModal').style.display = 'none';
     // Salva a escolha pendente até o aviso ser confirmado.
     window._pendingViewSelection = { sensor, view };
-    showWarningModal(sensor, view);
+    showWarningModal();
 }
 
-// Abre o modal de aviso com mensagem personalizada para sensor e tipo.
-function showWarningModal(sensor, view) {
+// Abre o modal com o aviso antes de iniciar a coleta.
+function showWarningModal() {
     const warnModal = document.getElementById('warnModal');
     if (!warnModal) return;
 
-    const warnTitle = warnModal.querySelector('.warn-title');
     const warnText = warnModal.querySelector('.warn-text');
-    if (warnTitle) {
-        warnTitle.textContent = `Aviso antes de iniciar ${view === 'graph' ? 'o gráfico' : 'a tabela'}`;
-    }
     if (warnText) {
         warnText.textContent = `Certifique-se de que o dispositivo conectado no Arduino corresponde ao sensor selecionado. Antes de iniciar a coleta de dados, lembre-se de reiniciar o Arduino.`;
     }
 
     warnModal.style.display = 'flex';
+    warnModal.setAttribute('aria-hidden', 'false');
 }
 
 function confirmWarningSelection() {
@@ -146,13 +139,17 @@ function confirmWarningSelection() {
     if (!pending) return;
 
     window._pendingViewSelection = null;
-    document.getElementById('warnModal').style.display = 'none';
+    const warnModal = document.getElementById('warnModal');
+    warnModal.style.display = 'none';
+    warnModal.setAttribute('aria-hidden', 'true');
     openSensorScreen(pending.sensor, pending.view);
 }
 
 function closeWarningModal() {
     // Se o aviso for fechado, cancela a seleção pendente e volta ao menu.
-    document.getElementById('warnModal').style.display = 'none';
+    const warnModal = document.getElementById('warnModal');
+    warnModal.style.display = 'none';
+    warnModal.setAttribute('aria-hidden', 'true');
     window._pendingViewSelection = null;
     showMenu();
 }

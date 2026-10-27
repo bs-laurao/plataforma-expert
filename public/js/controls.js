@@ -30,13 +30,14 @@ function handleLocalCommand(command) {
 function startChartForSensor(sensor) {
     initChart(sensor);
     if (!chartElapsedOffset[sensor]) chartElapsedOffset[sensor] = 0;
-    if (chartsActive[sensor]) return;
+    if (chartsActive[sensor]) {
+        updateSensorControlButton(sensor, true);
+        return;
+    }
     chartStartTime[sensor] = Date.now();
     chartsActive[sensor] = true;
 
-    // Mostra o botão "Limpar"
-    const clearBtn = document.getElementById(`clearBtn-${sensor}`);
-    if (clearBtn) clearBtn.style.display = 'block';
+    updateSensorControlButton(sensor, true);
 
     console.log(`Start chart ${sensor}`);
 }
@@ -48,7 +49,19 @@ function pauseChartForSensor(sensor) {
     if (chartStartTime[sensor]) chartElapsedOffset[sensor] += (now - chartStartTime[sensor]);
     chartStartTime[sensor] = null;
     chartsActive[sensor] = false;
+    updateSensorControlButton(sensor, true);
     console.log(`Pause chart ${sensor}`);
+}
+
+function updateSensorControlButton(sensor, showClear) {
+    const isActive = Boolean(chartsActive[sensor]);
+    const startBtn = document.querySelector(`.control-btn.start[data-sensor="${sensor}"]`);
+    const pauseBtn = document.querySelector(`.control-btn.pause[data-sensor="${sensor}"]`);
+    if (startBtn) startBtn.style.display = isActive ? 'none' : 'inline-flex';
+    if (pauseBtn) pauseBtn.style.display = isActive ? 'inline-flex' : 'none';
+
+    const clearBtn = document.getElementById(`clearBtn-${sensor}`);
+    if (clearBtn) clearBtn.style.display = showClear ? 'inline-flex' : 'none';
 }
 
 // Reinicia a coleta (limpa dados e começa de novo)
@@ -75,6 +88,7 @@ function restartChartForSensor(sensor) {
     chartElapsedOffset[sensor] = 0;
     chartStartTime[sensor] = Date.now();
     chartsActive[sensor] = true;
+    updateSensorControlButton(sensor, true);
 
     lastReceivedValues[sensor] = undefined;
     const el = document.getElementById(sensor);
@@ -114,6 +128,7 @@ function resetSensor(sensor) {
     chartStartTime[sensor] = null;
     chartElapsedOffset[sensor] = 0;
     chartMaxValue[sensor] = 0; // zera o máximo observado
+    updateSensorControlButton(sensor, false);
 
     lastReceivedValues[sensor] = undefined;
     lastReceivedAt[sensor] = undefined;
@@ -133,7 +148,7 @@ function resetSensor(sensor) {
     }
 }
 
-// Botão "Limpar" – zera os dados e para o sensor, sem sair da tela
+// Botão "Limpar", zera os dados e para o sensor, sem sair da tela
 function clearSensorData(sensor) {
     // Resetar zoom antes de limpar
     if (typeof resetZoom === 'function') resetZoom(sensor);
@@ -171,8 +186,7 @@ function clearSensorData(sensor) {
     lastReceivedValues[sensor] = undefined;
     lastReceivedAt[sensor] = 0; // adicionado para consistência
 
-    const clearBtn = document.getElementById(`clearBtn-${sensor}`);
-    if (clearBtn) clearBtn.style.display = 'none';
+    updateSensorControlButton(sensor, false);
 
     console.log(`Clear data for ${sensor}`);
 }

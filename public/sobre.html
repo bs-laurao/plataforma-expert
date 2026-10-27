@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ExpeRT - Sobre</title>
-    
+
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="about-page">
     <div class="container">
         <header>
             <div class="header-content">
@@ -24,8 +24,6 @@
                     </ul>
                 </nav>
 
-        
-                <!-- STATUS + TEMA -->
                 <div class="right-group">
                     <div class="status">
                         <div id="connectionStatus" class="status-disconnected">
@@ -40,17 +38,119 @@
             </div>
         </header>
 
-        <main class="main-content">
-            <div class="info-page">
-                <h2 class="page-title">Sobre a Plataforma ExpeRT</h2>
-                <div class="info-content">
-                    <p><strong>Plataforma ExpeRT</strong>é uma plataforma de monitoramento de sensores desenvolvida para facilitar a coleta, visualização e exportação de dados em tempo real.</p>
-                </div>
+        <main class="main-content about-main">
+            <div class="about-layout">
+                <section id="o-que-e" class="about-section">
+                    <h1 class="section-title">O que é a Plataforma ExpeRT?</h1>
+                    <div class="institution-card">
+                        <p>A Plataforma ExpeRT é uma ferramenta educativa do <strong>Instituto Federal Catarinense — Campus Sombrio</strong>, que ajuda professores e alunos a realizar experimentos de Ciências e Matemática e observar os resultados no computador, aproximando teoria e prática.</p>
+                        <ul class="platform-parts">
+                            <li><span><strong>Placa Arduino:</strong> placa programável ligada aos componentes; lê os sensores e envia os dados ao computador.</span></li>
+                            <li><span><strong>Sensores e outros componentes:</strong> os sensores medem grandezas como temperatura, distância ou luminosidade; LEDs e motores mostram respostas ou executam ações.</span></li>
+                            <li><span><strong>Programa de visualização (SVD):</strong> recebe os valores do Arduino e os apresenta em tabelas ou gráficos, permitindo salvar os resultados para consulta ou comparação.</span></li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="historia" class="about-section">
+                    <h2 class="section-title">Nossa História e Evolução</h2>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <span class="timeline-date"><i class="bi bi-calendar-event" aria-hidden="true"></i> 2016 — Concepção e Primeira Versão (SVD)</span>
+                            <div class="timeline-card">
+                                <h3><i class="bi bi-cpu" aria-hidden="true"></i> Os primeiros experimentos com Arduino</h3>
+                                <p>O projeto começou com a ideia de facilitar atividades práticas de Ciências e Matemática, inclusive em escolas com poucos equipamentos de laboratório. Em 2016, foi criada a primeira versão do Sistema de Visualização de Dados (SVD). Ela foi desenvolvida em Java — uma linguagem usada para escrever programas — e podia receber informações de sensores conectados a uma placa Arduino.</p>
+                                <p>Na prática, o sensor fazia uma medição, o Arduino enviava o valor ao computador e o programa apresentava o resultado. Entre os primeiros exemplos estavam medições de temperatura e distância. Ver os valores em um gráfico ajudava os alunos a perceber mudanças que poderiam passar despercebidas olhando apenas para o objeto do experimento.</p>
+                                <div class="tech-tags">
+                                    <span>Java</span><span>Arduino</span><span>Medição de temperatura</span><span>Medição de distância</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <span class="timeline-date"><i class="bi bi-calendar-event" aria-hidden="true"></i> 2020 — Consolidação e Portal Web</span>
+                            <div class="timeline-card">
+                                <h3><i class="bi bi-sliders" aria-hidden="true"></i> Mais controle para as atividades</h3>
+                                <p>Com as melhorias realizadas em 2020, o professor passou a poder definir com que frequência os dados seriam registrados. Por exemplo, uma medição a cada segundo permite acompanhar uma mudança rápida; medições mais espaçadas podem ser suficientes quando o fenômeno acontece devagar. Os resultados podiam ser consultados em uma tabela, que mostra os valores organizados, ou em um gráfico, que facilita perceber tendências e diferenças.</p>
+                                <p>Nesse período também foi criado um portal na internet para reunir o programa, instruções de uso e materiais de apoio. A ideia era facilitar o acesso às informações necessárias para preparar uma atividade e usar a plataforma em sala de aula.</p>
+                                <div class="tech-tags">
+                                    <span>Intervalo das medições</span><span>Tabelas</span><span>Gráficos</span><span>Guias para professores</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <span class="timeline-date"><i class="bi bi-calendar-event" aria-hidden="true"></i> 2026 — Reformulação Tecnológica e Arquitetura Moderna</span>
+                            <div class="timeline-card">
+                                <h3><i class="bi bi-display" aria-hidden="true"></i> Uma nova versão para computador</h3>
+                                <p>Em 2026, a plataforma passou por uma reformulação para funcionar como um aplicativo de computador. Em vez de abrir a interface dentro de uma página do navegador, a pessoa pode iniciar o programa instalado no computador. Isso simplifica o acesso e permite usar os recursos do aplicativo sem estar conectada à internet; a conexão do Arduino e a coleta de novas medições ainda dependem da montagem e do equipamento usados.</p>
+                                <p>A versão atual mantém a apresentação dos dados em tabelas e gráficos e oferece formas de guardar os resultados: os dados podem ser exportados para uma planilha, onde é possível organizar ou analisar os valores, e o gráfico pode ser salvo como imagem para incluir em um relatório ou apresentação.</p>
+                                <div class="tech-tags">
+                                    <span>Aplicativo para computador</span><span>Uso sem internet</span><span>Salvar resultados</span><span>Gráficos</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="equipe" class="about-section">
+                    <h2 class="section-title">Sobre Nós (Desenvolvedores e Mentores)</h2>
+                    <p class="section-intro">Conheça as pessoas que criaram, aprimoraram e orientam a Plataforma ExpeRT.</p>
+                    <div class="team-grid">
+                        <div class="team-card">
+                            <h3><i class="bi bi-code-slash" aria-hidden="true"></i> Desenvolvedores (2016)</h3>
+                            <div class="role">Co-Fundadoras da Plataforma</div>
+                            <ul>
+                                <li><span>Helena Borges Daré</span></li>
+                                <li><span>Vitória Rodrigues dos Santos</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="team-card">
+                            <h3><i class="bi bi-code-slash" aria-hidden="true"></i> Desenvolvedores (2020)</h3>
+                            <div class="role">Aprimoramento SVD e Portal Web</div>
+                            <ul>
+                                <li><span>Eduardo Marmitt</span></li>
+                                <li><span>Mariangela Mendes Recco</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="team-card">
+                            <h3><i class="bi bi-code-slash" aria-hidden="true"></i> Desenvolvedores (2026)</h3>
+                            <div class="role">Reformulação Web/Desktop</div>
+                            <ul>
+                                <li><span>Arthur Correa Pacheco</span></li>
+                                <li><span>Laura Bitencourt Silveira</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faculty-section">
+                        <h3 class="faculty-title"><i class="bi bi-mortarboard-fill" aria-hidden="true"></i> Corpo docente e orientação</h3>
+                        <div class="faculty-grid">
+                            <article class="team-card destaque">
+                                <h3><i class="bi bi-person-badge-fill" aria-hidden="true"></i> Prof. Helmo Alan Batista de Araújo</h3>
+                                <div class="role">Orientador / Idealizador</div>
+                                <a href="mailto:helmo.araujo@ifc.edu.br">helmo.araujo@ifc.edu.br</a>
+                            </article>
+                            <article class="team-card destaque">
+                                <h3><i class="bi bi-person-badge-fill" aria-hidden="true"></i> Prof. Matheus Lorenzato Braga</h3>
+                                <div class="role">Coorientador</div>
+                                <a href="mailto:mateus.braga@ifc.edu.br">mateus.braga@ifc.edu.br</a>
+                            </article>
+                            <article class="team-card destaque">
+                                <h3><i class="bi bi-person-badge-fill" aria-hidden="true"></i> Marcos Antonio Silvera de Souza</h3>
+                                <div class="role">Coorientador</div>
+                                <a href="mailto:marco.souza@ifc.edu.br">marco.souza@ifc.edu.br</a>
+                            </article>
+                        </div>
+                    </div>
+                </section>
             </div>
         </main>
 
         <footer>
-            <p>&copy; 2026 ExpeRT Plataforma</p>
+            <p>&copy; 2026 Plataforma ExpeRT — Instituto Federal Catarinense Campus Sombrio</p>
         </footer>
     </div>
 

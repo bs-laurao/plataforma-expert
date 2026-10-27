@@ -94,7 +94,7 @@ function processSample(sensor) {
     
     chart.data.datasets[0].data.push(numericValue);
 
-    // ESCALA DINÂMICA: atualiza o máximo observado 
+    //  atualiza o máximo observado 
     if (sensor !== 'hall' && numericValue > (chartMaxValue[sensor] || 0)) {
         chartMaxValue[sensor] = numericValue;
         // Atualiza o eixo Y com a nova margem de 10%
@@ -106,7 +106,7 @@ function processSample(sensor) {
         }
     }
     
-    // ESCALA DINÂMICA: atualiza o mínimo observado (para temperatura negativa)
+    // atualiza o mínimo observado (para temperatura negativa)
     if (sensor === 'temperature' && numericValue < (chartMinValue[sensor] || 0)) {
         chartMinValue[sensor] = numericValue;
         const newMin = getYAxisMin(sensor);
@@ -115,7 +115,7 @@ function processSample(sensor) {
         }
     }
 
-    chart.update('none'); // atualização silenciosa (sem animação)
+    chart.update('none'); 
 }
 
 // Função chamada a cada intervalo de amostragem (ex: a cada 100ms)

@@ -1,10 +1,10 @@
 // Importacao dos modulos necessarios
 const express = require('express');
-const { SerialPort } = require('serialport');        // Comunicacao serial com Arduino
-const { ReadlineParser } = require('@serialport/parser-readline'); // Leitura linha por linha
+const { SerialPort } = require('serialport');       
+const { ReadlineParser } = require('@serialport/parser-readline');
 const http = require('http');
-const WebSocket = require('ws');                     // Comunicacao em tempo real com o frontend
-const path = require('path');                        // Resolucao de caminhos (para Electron)
+const WebSocket = require('ws');                     
+const path = require('path');                        
 
 const app = express();
 const server = http.createServer(app);
@@ -12,8 +12,7 @@ const wss = new WebSocket.Server({ server });
 
 const PORT = 3000;
 
-// Servir os arquivos estaticos (HTML, CSS, JS) da pasta 'public'
-// Quando empacotado no Electron, __dirname aponta para dentro do app.asar
+// Servir os arquivos estaticos (HTML, CSS, JS) da pasta public
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Variavel global para a porta serial

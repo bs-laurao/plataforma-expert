@@ -1,0 +1,14 @@
+public/js/navigation.js:7: trailing whitespace.
+[32m+[m[32m    window._selectedView = null;[m[41m [m
+public/js/navigation.js:97: trailing whitespace.
+[32m+[m[32m    window._selectedView = null;[m[41m [m
+public/js/sampling.js:97: trailing whitespace.
+[32m+[m[32m    //  atualiza o máximo observado[m[41m [m
+public/js/sampling.js:118: trailing whitespace.
+[32m+[m[32m    chart.update('none');[m[41m [m
+server.js:3: trailing whitespace.
+[32m+[m[32mconst { SerialPort } = require('serialport');[m[41m       [m
+server.js:6: trailing whitespace.
+[32m+[m[32mconst WebSocket = require('ws');[m[41m                     [m
+server.js:7: trailing whitespace.
+[32m+[m[32mconst path = require('path');[m[41m                        [m

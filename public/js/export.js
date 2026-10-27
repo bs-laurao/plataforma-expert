@@ -21,11 +21,11 @@ function getExportSensorName(sensor) {
 function saveChartImage(sensor) {
     const chart = charts[sensor];
     if (!chart) {
-        alert('Gráfico não encontrado para este sensor.');
+        showNotice('Gráfico não encontrado para este sensor.');
         return;
     }
     if (chart.data.labels.length === 0) {
-        alert('Não há dados no gráfico para salvar. Inicie a coleta primeiro.');
+        showNotice('Não há dados no gráfico para salvar. Inicie a coleta primeiro.');
         return;
     }
     const link = document.createElement('a');
@@ -39,13 +39,13 @@ function saveChartImage(sensor) {
 function saveDataExcel(sensor) {
     const chart = charts[sensor];
     if (!chart) {
-        alert('Dados não encontrados para este sensor.');
+        showNotice('Dados não encontrados para este sensor.');
         return;
     }
 
     const values = chart.data.datasets[0].data || [];
     if (values.length === 0) {
-        alert('Não há dados para exportar. Inicie a coleta primeiro.');
+        showNotice('Não há dados para exportar. Inicie a coleta primeiro.');
         return;
     }
 

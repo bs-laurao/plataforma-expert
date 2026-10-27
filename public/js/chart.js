@@ -495,7 +495,7 @@ function getYAxisLabel(sensor) {
 function changeChartType(sensor, type) {
     const chart = charts[sensor];
     if (!chart) {
-        alert('Gráfico não inicializado. Inicie a coleta primeiro.');
+        showNotice('Gráfico não inicializado. Inicie a coleta primeiro.');
         return;
     }
 

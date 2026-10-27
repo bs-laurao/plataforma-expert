@@ -181,9 +181,9 @@ function generateSensorScreens() {
                         <span class="zoom-hint-reset" data-sensor="${sensor.id}">Resetar Zoom</span>
                     </div>
                     <div class="compact-controls">
-                        <button class="control-btn start" data-sensor="${sensor.id}" data-action="start"><i class="btn-icon bi bi-play-fill" aria-hidden="true"></i> Iniciar</button>
-                        <button class="control-btn pause" data-sensor="${sensor.id}" data-action="pause"><i class="btn-icon bi bi-pause-fill" aria-hidden="true"></i> Pausar</button>
-                        <button class="control-btn clear" id="clearBtn-${sensor.id}" data-sensor="${sensor.id}" data-action="clear"><i class="btn-icon bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reiniciar</button>
+                        <button class="control-btn start" data-sensor="${sensor.id}" data-action="start" aria-label="Iniciar coleta" title="Iniciar coleta"><i class="btn-icon bi bi-play-fill" aria-hidden="true"></i></button>
+                        <button class="control-btn pause" data-sensor="${sensor.id}" data-action="pause" aria-label="Pausar coleta" title="Pausar coleta"><i class="btn-icon bi bi-pause-fill" aria-hidden="true"></i></button>
+                        <button class="control-btn clear" id="clearBtn-${sensor.id}" data-sensor="${sensor.id}" data-action="clear" aria-label="Limpar dados" title="Limpar dados"><i class="btn-icon bi bi-trash3" aria-hidden="true"></i></button>
                     </div>
                 </div>
 
@@ -278,7 +278,7 @@ document.querySelectorAll('.export-btn').forEach(btn => {
         });
     });
 
-    // ========== NOVOS EVENT LISTENERS PARA O MODAL "VER MAIS" ==========
+    // EVENT LISTENERS PARA O MODAL VER MAIS
     const closeDetailModalBtn = document.getElementById('closeDetailModalBtn');
     if (closeDetailModalBtn) closeDetailModalBtn.addEventListener('click', closeDetailModal);
 
@@ -384,9 +384,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmWarnBtn = document.getElementById('confirmWarnBtn');
     if (confirmWarnBtn) confirmWarnBtn.addEventListener('click', confirmWarningSelection);
 
-    // Os eventos dos botões de visualização (viewTableBtn e viewGraphBtn) foram substituídos
-    // pelas novas opções do modal, então não precisamos mais deles.
-    // Mantenho apenas para compatibilidade, mas podem ser removidos.
+    const closeNoticeModalBtn = document.getElementById('closeNoticeModalBtn');
+    if (closeNoticeModalBtn) closeNoticeModalBtn.addEventListener('click', closeNoticeModal);
+
+    const confirmNoticeBtn = document.getElementById('confirmNoticeBtn');
+    if (confirmNoticeBtn) confirmNoticeBtn.addEventListener('click', closeNoticeModal);
+
     const viewTableBtn = document.getElementById('viewTableBtn');
     if (viewTableBtn) viewTableBtn.addEventListener('click', function() { selectView('table'); });
 
@@ -403,6 +406,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('Aplicação inicializada com sucesso!');
 });
+
+function showNotice(message, title = 'Aviso') {
+    const modal = document.getElementById('noticeModal');
+    const titleEl = document.getElementById('noticeTitle');
+    const textEl = document.getElementById('noticeText');
+    if (!modal || !titleEl || !textEl) {
+        console.error('Não foi possível exibir o aviso: elementos do modal não encontrados.');
+        return;
+    }
+
+    titleEl.textContent = title;
+    textEl.textContent = message;
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeNoticeModal() {
+    const modal = document.getElementById('noticeModal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+}
 
 
 // REDIMENSIONAMENTO DA JANELA
