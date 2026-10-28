@@ -1,6 +1,6 @@
 {
   "name": "projeto-arduino",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Sistema para visualizar dados do Arduino",
   "author": "Arthur Correa Pacheco <arthurcorreapacheco5@gmail.com>; Laura Bitencourt Silveira <laurabitencourtsilveira@gmail.com>",
   "main": "electron-main.js",
