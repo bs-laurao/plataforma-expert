@@ -5,7 +5,8 @@ function updateThemeIcon(theme) {
     const themeToggle = document.getElementById('themeToggle');
     if (!themeToggle) return;
     const isLightTheme = theme === 'light';
-    themeToggle.innerHTML = `<i class="bi ${isLightTheme ? 'bi-sun-fill' : 'bi-moon-stars-fill'}" aria-hidden="true"></i>`;
+    const themeIcon = themeToggle.querySelector('i');
+    themeIcon.className = `bi ${isLightTheme ? 'bi-brightness-high-fill' : 'bi-moon-stars-fill'}`;
     themeToggle.setAttribute('aria-label', isLightTheme ? 'Ativar modo escuro' : 'Ativar modo claro');
 }
 
@@ -38,3 +39,26 @@ function updateChartTheme(sensor) {
 
     chart.update('none');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+
+    if (!themeToggle) return;
+
+    themeToggle.addEventListener('click', function(event) {
+        const newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+
+        Object.keys(charts).forEach(function(sensor) {
+            if (charts[sensor]) updateChartTheme(sensor);
+        });
+
+        if (event.detail > 0) themeToggle.blur();
+    });
+});

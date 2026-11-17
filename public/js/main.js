@@ -338,26 +338,6 @@ document.addEventListener('DOMContentLoaded', function() {
     //  CONFIGURA OS EVENT LISTENERS
     setupEventListeners();
 
-    // TEMA (CLARO/ESCURO)
-    const themeToggle = document.getElementById('themeToggle');
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    updateThemeIcon(currentTheme);
-
-    if (themeToggle) {
-        themeToggle.addEventListener('click', function() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-            
-            Object.keys(charts).forEach(sensor => {
-                if (charts[sensor]) updateChartTheme(sensor);
-            });
-        });
-    }
-
     // BOTÕES DO HEADER
 
     const backBtn = document.getElementById('backBtn');

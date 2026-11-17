@@ -18,10 +18,8 @@
                 </div>
 
                 <nav>
-                    <ul>
-                        <li><a href="index.html">USAR DISPOSITIVOS</a></li>
-                        <li><a href="sobre.html" class="active">SOBRE</a></li>
-                    </ul>
+                    <a href="index.html">Usar Dispositivos</a>
+                    <a href="sobre.html" class="active">Sobre</a>
                 </nav>
 
                 <div class="right-group">
@@ -32,7 +30,7 @@
                         </div>
                     </div>
                     <button class="theme-toggle" id="themeToggle" aria-label="Ativar modo escuro">
-                        <i class="bi bi-sun-fill" aria-hidden="true"></i>
+                        <i class="bi bi-brightness-high-fill" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -40,9 +38,9 @@
 
         <main class="main-content about-main">
             <div class="about-layout">
-                <section id="o-que-e" class="about-section">
+                <section id="o-que-e" class="about-section about-platform">
                     <h1 class="section-title">O que é a Plataforma ExpeRT?</h1>
-                    <div class="institution-card">
+                    <div class="about-platform-card">
                         <p>A Plataforma ExpeRT é uma ferramenta educativa do <strong>Instituto Federal Catarinense — Campus Sombrio</strong>, que ajuda professores e alunos a realizar experimentos de Ciências e Matemática e observar os resultados no computador, aproximando teoria e prática.</p>
                         <ul class="platform-parts">
                             <li><span><strong>Placa Arduino:</strong> placa programável ligada aos componentes; lê os sensores e envia os dados ao computador.</span></li>
@@ -53,7 +51,7 @@
                 </section>
 
                 <section id="historia" class="about-section">
-                    <h2 class="section-title">Nossa História e Evolução</h2>
+                    <h2 class="section-title"><i class="bi bi-clock-history section-icon" aria-hidden="true"></i>Nossa História e Evolução</h2>
                     <div class="timeline">
                         <div class="timeline-item">
                             <span class="timeline-date"><i class="bi bi-calendar-event" aria-hidden="true"></i> 2016 — Concepção e Primeira Versão (SVD)</span>
@@ -94,7 +92,7 @@
                 </section>
 
                 <section id="equipe" class="about-section">
-                    <h2 class="section-title">Sobre Nós (Desenvolvedores e Mentores)</h2>
+                    <h2 class="section-title"><i class="bi bi-people-fill section-icon" aria-hidden="true"></i>Sobre Nós (Desenvolvedores e Mentores)</h2>
                     <p class="section-intro">Conheça as pessoas que criaram, aprimoraram e orientam a Plataforma ExpeRT.</p>
                     <div class="team-grid">
                         <div class="team-card">
@@ -155,9 +153,7 @@
     </div>
 
     <script src="js/state.js"></script>
-    <script src="js/config.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/websocket.js"></script>
-    <script src="js/main.js"></script>
 </body>
 </html>
